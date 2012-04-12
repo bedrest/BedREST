@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BedREST" default="build" basedir=".">
+    <!-- Generate timestamp for use elsewhere -->
+    <tstamp/>
+    
+    <!-- Load build properties -->
+    <property file="build.properties" />
+    
+    <!-- Base build task -->
+    <target name="build">
+        
+    </target>
+    
+    <!-- PHPUnit test suites -->
+    <target name="unit-clean" description="Cleans up test folders.">
+        <delete dir="${tests.reports}"/>
+        <delete dir="${tests.coverage}"/>
+        <delete dir="${tests.html}"/>
+        <delete dir="${tests.logs}"/>
+    </target>
+
+    <target name="unit-prepare" description="Prepares test folders.">
+        <mkdir dir="${tests.reports}"/>
+        <mkdir dir="${tests.coverage}"/>
+        <mkdir dir="${tests.html}"/>
+        <mkdir dir="${tests.logs}"/>
+    </target>
+    
+    <target name="unit-test" 
+            description="Runs the full test suite." 
+            depends="unit-clean, unit-prepare">
+        <phpunit printsummary="true"
+                 haltonfailure="false" 
+                 haltonerror="false">
+            <formatter todir="${tests.logs}" type="xml" />
+            <batchtest>
+                <fileset dir="${tests}">
+                    <include name="${tests.fileset}" />
+                </fileset>
+            </batchtest>
+        </phpunit>
+        
+        <phpunitreport infile="${tests.logs}/testsuites.xml" 
+                       format="frames" 
+                       todir="${tests.reports}" />
+    </target>
+    
+    <target name="test" description="Runs all available tests" depends="unit-test">
+        
+    </target>
+    
+    <!-- PHP Lint -->
+    <target name="php-lint" description="Run PHP Lint">
+        <phplint haltonfailure="true">
+            <fileset dir="${project.basedir}/library">
+                <include name="${phplint.fileset}"/>
+            </fileset>
+        </phplint>
+    </target>
+    
+    <!-- PHP Mess Detector -->
+    <target name="php-md" description="Run PHP Mess Detector">
+        <phpmd rulesets="codesize,design,unusedcode">
+            <fileset dir="${project.basedir}/library">
+                <include name="${phpmd.fileset}"/>
+            </fileset>
+            <formatter type="html" outfile="${phpmd.output}/index.html"/>
+        </phpmd>
+    </target>
+    
+    <!-- API documentation -->
+    <target name="api-doc" description="Generates the BedREST API Documentation">
+        <phpdoc2 title="BedREST API Documentation" destdir="${apidocs.location}" template="responsive">
+            <fileset dir="${project.basedir}/library">
+                <include name="${apidocs.fileset}" />
+            </fileset>
+        </phpdoc2>
+    </target>
+</project>
