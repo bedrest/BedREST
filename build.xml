@@ -34,7 +34,7 @@
                  haltonerror="false">
             <formatter todir="${tests.logs}" type="xml" />
             <batchtest>
-                <fileset dir="${tests}">
+                <fileset dir="${project.basedir}/tests">
                     <include name="${tests.fileset}" />
                 </fileset>
             </batchtest>
