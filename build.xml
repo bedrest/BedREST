@@ -31,7 +31,8 @@
             depends="unit-clean, unit-prepare">
         <phpunit printsummary="true"
                  haltonfailure="false" 
-                 haltonerror="false">
+                 haltonerror="false"
+                 bootstrap="tests/bootstrap.php">
             <formatter todir="${tests.logs}" type="xml" />
             <batchtest>
                 <fileset dir="${project.basedir}/tests">
