@@ -11,6 +11,11 @@
         
     </target>
     
+    <!-- Vendor tasks -->
+    <target name="vendor-update" description="Pulls the latest version of the vendor libraries">
+        <exec command="git submodule update --init --recursive" passthru="true" />
+    </target>
+    
     <!-- PHPUnit test suites -->
     <target name="unit-clean" description="Cleans up test folders.">
         <delete dir="${tests.reports}"/>
