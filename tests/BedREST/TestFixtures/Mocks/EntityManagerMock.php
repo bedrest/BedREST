@@ -19,7 +19,10 @@ class EntityManagerMock extends \Doctrine\ORM\EntityManager
             $config->setProxyDir(BEDREST_TESTS_PATH . 'BedREST/TextFixtures/Proxies');
             $config->setProxyNamespace('BedREST\TextFixtures\Proxies');
             $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache());
-            $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver());
+            
+            // set the annotation driver manually to enable custom annotations
+            $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(new \Doctrine\Common\Annotations\AnnotationReader());
+            $config->setMetadataDriverImpl($annotationDriver);
         }
 
         if (is_null($eventManager)) {
