@@ -9,7 +9,7 @@ use BedREST\DataMapper\AbstractMapper,
 /**
  * BedREST\Tests\DataMapper\ArrayMapperTest
  * 
- * Tests BedREST\DataMapper\ArrayMapper
+ * Tests BedREST\DataMapper\ArrayMapper.
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
@@ -26,6 +26,9 @@ class ArrayMapperTest extends BaseTestCase
         );
     }
     
+    /**
+     * Test the class fulfills all contracts demanded of it. 
+     */
     public function testClassContract()
     {
         $mapper = new ArrayMapper();
@@ -33,6 +36,9 @@ class ArrayMapperTest extends BaseTestCase
         $this->assertTrue($mapper instanceof AbstractMapper);
     }
     
+    /**
+     * Test that instantiation without an entity manager will fail. 
+     */
     public function testInsantiationWithoutEntityManagerThrowsException()
     {
         $this->setExpectedException('BedREST\DataMapper\DataMappingException');
@@ -45,6 +51,10 @@ class ArrayMapperTest extends BaseTestCase
         $mapper->map($resource, $data);
     }
     
+    /**
+     * Test basic mapping to ensure data is correctly mapped over. No casting
+     * involved at this stage. 
+     */
     public function testBasicMapping()
     {
         $mapper = new ArrayMapper(array('entityManager' => self::getEntityManager()));
@@ -59,6 +69,9 @@ class ArrayMapperTest extends BaseTestCase
         }
     }
     
+    /**
+     * Test basic reverse mapping to ensure data is correctly reversed.
+     */
     public function testBasicReverse()
     {
         $mapper = new ArrayMapper(array('entityManager' => self::getEntityManager()));

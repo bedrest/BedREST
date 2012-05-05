@@ -10,13 +10,16 @@ namespace BedREST\DataMapper;
 class ArrayMapper extends AbstractMapper
 {
     /**
-     * Maps data into a RestResource.
+     * Maps data into an entity from an array.
      * @param mixed $resource Entity to map the data into.
-     * @param mixed $data Data to be mapped.
+     * @param array $data Data to be mapped.
      */
     public function map($resource, $data)
     {
-        // map the data over
+        if (!is_array($data)) {
+            throw new DataMappingException('Supplied data is not an array');
+        }
+        
         $data = $this->castData($resource, $data);
         
         foreach ($data as $property => $value) {
@@ -25,9 +28,9 @@ class ArrayMapper extends AbstractMapper
     }
     
     /**
-     * Maps data from a RestResource into the desired format.
+     * Maps data from an entity into an array.
      * @param mixed $resource Entity to map data from.
-     * @return mixed
+     * @return array
      */
     public function reverse($resource)
     {
