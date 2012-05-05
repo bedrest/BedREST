@@ -7,7 +7,7 @@
     <property file="build.properties" />
     
     <!-- Base build task -->
-    <target name="build">
+    <target name="build" depends="vendor-update, php-lint, api-doc, test">
         
     </target>
     
@@ -34,9 +34,15 @@
     <target name="unit-test" 
             description="Runs the full test suite." 
             depends="unit-clean, unit-prepare">
+        <coverage-setup database="${tests.coverage}/coverage.db">
+            <fileset dir="${library.basedir}">
+                <include name="${library.fileset}"/>
+            </fileset>
+        </coverage-setup>
         <phpunit printsummary="true"
                  haltonfailure="false" 
                  haltonerror="false"
+                 codecoverage="true"
                  bootstrap="tests/bootstrap.php">
             <formatter todir="${tests.logs}" type="xml" />
             <batchtest>
@@ -45,10 +51,12 @@
                 </fileset>
             </batchtest>
         </phpunit>
-        
         <phpunitreport infile="${tests.logs}/testsuites.xml" 
                        format="frames" 
                        todir="${tests.reports}" />
+        <coverage-report outfile="${tests.coverage}/coverage.db">
+            <report todir="${tests.coverage}" usesorttable="true"/>
+        </coverage-report>
     </target>
     
     <target name="test" description="Runs all available tests" depends="unit-test">
@@ -59,7 +67,7 @@
     <target name="php-lint" description="Run PHP Lint">
         <phplint haltonfailure="true">
             <fileset dir="${project.basedir}/library">
-                <include name="${phplint.fileset}"/>
+                <include name="${library.fileset}"/>
             </fileset>
         </phplint>
     </target>
@@ -67,8 +75,8 @@
     <!-- PHP Mess Detector -->
     <target name="php-md" description="Run PHP Mess Detector">
         <phpmd rulesets="codesize,design,unusedcode">
-            <fileset dir="${project.basedir}/library">
-                <include name="${phpmd.fileset}"/>
+            <fileset dir="${library.basedir}">
+                <include name="${library.fileset}"/>
             </fileset>
             <formatter type="html" outfile="${phpmd.output}/index.html"/>
         </phpmd>
@@ -77,8 +85,8 @@
     <!-- API documentation -->
     <target name="api-doc" description="Generates the BedREST API Documentation">
         <phpdoc2 title="BedREST API Documentation" destdir="${apidocs.location}" template="responsive">
-            <fileset dir="${project.basedir}/library">
-                <include name="${apidocs.fileset}" />
+            <fileset dir="${library.basedir}">
+                <include name="${library.fileset}" />
             </fileset>
         </phpdoc2>
     </target>
