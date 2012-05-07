@@ -2,7 +2,8 @@
 
 namespace BedREST\DataMapper;
 
-use Doctrine\ORM\EntityManager,
+use BedREST\Configuration,
+    Doctrine\ORM\EntityManager,
     Doctrine\DBAL\Types\Type;
 
 /**
@@ -13,25 +14,37 @@ use Doctrine\ORM\EntityManager,
 abstract class AbstractMapper
 {
     /**
-     * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * Configuration.
+     * @var \BedREST\Configuration
      */
-    protected $entityManager;
+    protected $configuration;
 
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
      * @param Adapter\AdapterInterface $adapter 
      */
-    public function __construct(array $options = array())
+    public function __construct(Configuration $configuration = null)
     {
-        foreach ($options as $key => $value) {
-            $setterMethod = 'set' . ucfirst($key);
-            
-            if (method_exists($this, $setterMethod)) {
-                $this->$setterMethod($value);
-            }
-        }
+        $this->configuration = $configuration;
+    }
+    
+    /**
+     * Returns the configuration.
+     * @return \BedREST\Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * Sets the configuration.
+     * @param \BedREST\Configuration $em 
+     */
+    public function setConfiguration(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
     }
     
     /**
@@ -40,20 +53,17 @@ abstract class AbstractMapper
      */
     public function getEntityManager()
     {
-        if (!$this->entityManager instanceof EntityManager) {
+        if (!$this->configuration instanceof Configuration) {
+            throw new DataMappingException('Configuration not provided');
+        }
+        
+        $em = $this->configuration->getEntityManager();
+        
+        if (!$em instanceof EntityManager) {
             throw new DataMappingException('EntityManager not provided');
         }
         
-        return $this->entityManager;
-    }
-
-    /**
-     * Sets the entity manager.
-     * @param Doctrine\ORM\EntityManager $em 
-     */
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->entityManager = $em;
+        return $em;
     }
 
     /**
@@ -65,7 +75,7 @@ abstract class AbstractMapper
      * @return array
      * @throws DataMappingException 
      */
-    public function castData($resource, array $data)
+    public function castFieldData($resource, array $data)
     {
         // get the class meta data for the entity
         $em = $this->getEntityManager();

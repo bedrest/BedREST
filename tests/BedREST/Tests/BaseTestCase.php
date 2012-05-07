@@ -16,6 +16,12 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     protected static $em;
     
     /**
+     * Configuration used for tests.
+     * @var BedREST\Configuration
+     */
+    protected static $config;
+    
+    /**
      * Retrieves an entity manager to be used by tests requiring one.
      * @param mixed $conn
      * @return \BedREST\TestFixtures\Mocks\EntityManagerMock
@@ -48,5 +54,21 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         }
         
         return self::$em;
+    }
+    
+    /**
+     * Returns a configuration object for use in tests.
+     * @return BedREST\Configuration 
+     */
+    public static function getConfiguration()
+    {
+        if (!self::$config) {
+            $config = new \BedREST\Configuration();
+            $config->setEntityManager(self::getEntityManager());
+            
+            self::$config = $config;
+        }
+        
+        return self::$config;
     }
 }

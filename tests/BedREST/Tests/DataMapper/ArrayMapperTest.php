@@ -52,12 +52,12 @@ class ArrayMapperTest extends BaseTestCase
     }
     
     /**
-     * Test basic mapping to ensure data is correctly mapped over. No casting
-     * involved at this stage. 
+     * Test basic field mapping to ensure data is correctly mapped over. No casting
+     * involved at this stage.
      */
-    public function testBasicMapping()
+    public function testBasicFieldMapping()
     {
-        $mapper = new ArrayMapper(array('entityManager' => self::getEntityManager()));
+        $mapper = new ArrayMapper($this->getConfiguration());
         
         $resource = new \BedREST\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
@@ -70,11 +70,11 @@ class ArrayMapperTest extends BaseTestCase
     }
     
     /**
-     * Test basic reverse mapping to ensure data is correctly reversed.
+     * Test basic field reverse mapping to ensure data is correctly reversed.
      */
-    public function testBasicReverse()
+    public function testBasicFieldReverse()
     {
-        $mapper = new ArrayMapper(array('entityManager' => self::getEntityManager()));
+        $mapper = new ArrayMapper($this->getConfiguration());
         
         $resource = new \BedREST\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();

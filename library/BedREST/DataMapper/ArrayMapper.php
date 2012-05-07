@@ -20,7 +20,7 @@ class ArrayMapper extends AbstractMapper
             throw new DataMappingException('Supplied data is not an array');
         }
         
-        $data = $this->castData($resource, $data);
+        $data = $this->castFieldData($resource, $data);
         
         foreach ($data as $property => $value) {
             $resource->$property = $value;
