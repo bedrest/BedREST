@@ -53,6 +53,13 @@ class Employee
      */
     protected $dob;
     
+    /**
+     * Whether the employee is active or not.
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    protected $active;
+    
     public function __set($property, $value)
     {
         $this->$property = $value;

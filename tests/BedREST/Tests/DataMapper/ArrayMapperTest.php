@@ -21,8 +21,23 @@ class ArrayMapperTest extends BaseTestCase
             'id' => 1,
             'name' => 'John Doe',
             'department' => 'Administration',
-            'ssn' => '123-456',
-            'dob' => new \DateTime()
+            'ssn' => '123456',
+            'dob' => new \DateTime('1st May 2012 00:00:00 +00:00'),
+            'active' => true
+        );
+    }
+    
+    protected function getUncastTestData()
+    {
+        $dob = new \DateTime('1st May 2012 00:00:00 +00:00');
+        
+        return array(
+            'id' => '1',
+            'name' => 'John Doe',
+            'department' => 'Administration',
+            'ssn' => 123456,
+            'dob' => $dob->format(\DateTime::ISO8601),
+            'active' => '1'
         );
     }
     
@@ -52,12 +67,11 @@ class ArrayMapperTest extends BaseTestCase
     }
     
     /**
-     * Test basic field mapping to ensure data is correctly mapped over. No casting
-     * involved at this stage.
+     * Test basic field mapping to ensure data is correctly mapped over.
      */
     public function testBasicFieldMapping()
     {
-        $mapper = new ArrayMapper($this->getConfiguration());
+        $mapper = new ArrayMapper(self::getConfiguration());
         
         $resource = new \BedREST\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
@@ -74,7 +88,7 @@ class ArrayMapperTest extends BaseTestCase
      */
     public function testBasicFieldReverse()
     {
-        $mapper = new ArrayMapper($this->getConfiguration());
+        $mapper = new ArrayMapper(self::getConfiguration());
         
         $resource = new \BedREST\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
@@ -83,6 +97,50 @@ class ArrayMapperTest extends BaseTestCase
         
         foreach ($mapper->reverse($resource) as $property => $value) {
             $this->assertEquals($value, $data[$property]);
+        }
+    }
+    
+    /**
+     * Test basic field mapping with a dataset including fields which are not
+     * present in the target resource. Data should be mapped as expected, with
+     * non-existant fields not throwing any errors. 
+     */
+    public function testBasicFieldMappingWithNonExistentFields()
+    {
+        $mapper = new ArrayMapper(self::getConfiguration());
+        
+        $resource = new \BedREST\TestFixtures\Models\Company\Employee();
+        
+        $data = $this->getTestData();
+        $nonExistentFields = array(
+            'dummyField' => 'dummyValue'
+        );
+        
+        $mapper->map($resource, array_merge($data, $nonExistentFields));
+        
+        foreach ($data as $property => $value) {
+            $this->assertEquals($value, $resource->{$property});
+        }
+    }
+    
+    /**
+     * Tests basic field mapping with a dataset which requires casting and then
+     * checks the resultant casting was successful.
+     */
+    public function testBasicFieldMappingWithCasting()
+    {
+        $mapper = new ArrayMapper(self::getConfiguration());
+        
+        $resource = new \BedREST\TestFixtures\Models\Company\Employee();
+        
+        $data = $this->getTestData();
+        $uncastData = $this->getUncastTestData();
+        
+        $mapper->map($resource, $uncastData);
+        
+        foreach ($data as $property => $value) {
+            $this->assertEquals(gettype($value), gettype($resource->{$property}));
+            $this->assertEquals($value, $resource->{$property});
         }
     }
 }
