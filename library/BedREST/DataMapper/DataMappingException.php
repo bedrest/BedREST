@@ -13,10 +13,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedREST\DataMapper;
+namespace BedRest\DataMapper;
 
 /**
- * BedREST\DataMapper\DataMappingException
+ * BedRest\DataMapper\DataMappingException
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

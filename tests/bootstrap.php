@@ -17,15 +17,15 @@ $classLoader->register();
 $classLoader = new \Doctrine\Common\ClassLoader('Doctrine\ORM', DOCTRINE_LIB_PATH);
 $classLoader->register();
 
-$classLoader = new \Doctrine\Common\ClassLoader('BedREST\TestFixtures', __DIR__);
+$classLoader = new \Doctrine\Common\ClassLoader('BedRest\TestFixtures', __DIR__);
 $classLoader->register();
 
-$classLoader = new \Doctrine\Common\ClassLoader('BedREST\Tests', __DIR__);
+$classLoader = new \Doctrine\Common\ClassLoader('BedRest\Tests', __DIR__);
 $classLoader->register();
 
-$classLoader = new \Doctrine\Common\ClassLoader('BedREST', BEDREST_LIB_PATH);
+$classLoader = new \Doctrine\Common\ClassLoader('BedRest', BEDREST_LIB_PATH);
 $classLoader->register();
 
 // register custom annotations
 Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DOCTRINE_LIB_PATH . '/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
-Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('BedREST\Mapping\\', BEDREST_LIB_PATH);
+Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace('BedRest\Mapping\\', BEDREST_LIB_PATH);

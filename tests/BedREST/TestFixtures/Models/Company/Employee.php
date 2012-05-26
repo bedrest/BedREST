@@ -1,18 +1,18 @@
 <?php
 
-namespace BedREST\TestFixtures\Models\Company;
+namespace BedRest\TestFixtures\Models\Company;
 
 use Doctrine\ORM\Mapping as ORM,
-    BedREST\Mapping as BedREST;
+    BedRest\Mapping as BedRest;
 
 /**
- * BedREST\Test\Models\Company\Employee
+ * BedRest\Test\Models\Company\Employee
  *
  * @author Geoff Adams <geoff@dianode.net>
  * 
  * @ORM\Entity
  * @ORM\Table(name="employee")
- * @BedREST\RestResource
+ * @BedRest\RestResource
  */
 class Employee
 {

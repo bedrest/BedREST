@@ -1,9 +1,9 @@
 <?php
 
-namespace BedREST\TestFixtures\Mocks;
+namespace BedRest\TestFixtures\Mocks;
 
 /**
- * BedREST\TestFixtures\Mocks\DriverMock
+ * BedRest\TestFixtures\Mocks\DriverMock
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

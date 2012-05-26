@@ -13,12 +13,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedREST;
+namespace BedRest;
 
 /**
- * BedREST\Configuration
+ * BedRest\Configuration
  * 
- * Configuration container for BedREST.
+ * Configuration container for BedRest.
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

@@ -13,14 +13,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedREST\DataMapper;
+namespace BedRest\DataMapper;
 
-use BedREST\Configuration,
+use BedRest\Configuration,
     Doctrine\ORM\EntityManager,
     Doctrine\DBAL\Types\Type;
 
 /**
- * BedREST\Model\AbstractMapper
+ * BedRest\Model\AbstractMapper
  * 
  * @author Geoff Adams <geoff@dianode.net>
  */
@@ -28,7 +28,7 @@ abstract class AbstractMapper
 {
     /**
      * Configuration.
-     * @var \BedREST\Configuration
+     * @var \BedRest\Configuration
      */
     protected $configuration;
 
@@ -44,7 +44,7 @@ abstract class AbstractMapper
     
     /**
      * Returns the configuration.
-     * @return \BedREST\Configuration
+     * @return \BedRest\Configuration
      */
     public function getConfiguration()
     {
@@ -53,7 +53,7 @@ abstract class AbstractMapper
 
     /**
      * Sets the configuration.
-     * @param \BedREST\Configuration $em 
+     * @param \BedRest\Configuration $em 
      */
     public function setConfiguration(Configuration $configuration)
     {

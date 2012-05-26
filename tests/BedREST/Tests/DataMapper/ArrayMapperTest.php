@@ -1,15 +1,15 @@
 <?php
 
-namespace BedREST\Tests\DataMapper;
+namespace BedRest\Tests\DataMapper;
 
-use BedREST\DataMapper\AbstractMapper,
-    BedREST\DataMapper\ArrayMapper,
-    BedREST\Tests\BaseTestCase;
+use BedRest\DataMapper\AbstractMapper,
+    BedRest\DataMapper\ArrayMapper,
+    BedRest\Tests\BaseTestCase;
 
 /**
- * BedREST\Tests\DataMapper\ArrayMapperTest
+ * BedRest\Tests\DataMapper\ArrayMapperTest
  * 
- * Tests BedREST\DataMapper\ArrayMapper.
+ * Tests BedRest\DataMapper\ArrayMapper.
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
@@ -56,11 +56,11 @@ class ArrayMapperTest extends BaseTestCase
      */
     public function testInsantiationWithoutEntityManagerThrowsException()
     {
-        $this->setExpectedException('BedREST\DataMapper\DataMappingException');
+        $this->setExpectedException('BedRest\DataMapper\DataMappingException');
         
         $mapper = new ArrayMapper();
         
-        $resource = new \BedREST\TestFixtures\Models\Company\Employee();
+        $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
         
         $mapper->map($resource, $data);
@@ -73,7 +73,7 @@ class ArrayMapperTest extends BaseTestCase
     {
         $mapper = new ArrayMapper(self::getConfiguration());
         
-        $resource = new \BedREST\TestFixtures\Models\Company\Employee();
+        $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
         
         $mapper->map($resource, $data);
@@ -90,7 +90,7 @@ class ArrayMapperTest extends BaseTestCase
     {
         $mapper = new ArrayMapper(self::getConfiguration());
         
-        $resource = new \BedREST\TestFixtures\Models\Company\Employee();
+        $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
         
         $mapper->map($resource, $data);
@@ -109,7 +109,7 @@ class ArrayMapperTest extends BaseTestCase
     {
         $mapper = new ArrayMapper(self::getConfiguration());
         
-        $resource = new \BedREST\TestFixtures\Models\Company\Employee();
+        $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         
         $data = $this->getTestData();
         $nonExistentFields = array(
@@ -131,7 +131,7 @@ class ArrayMapperTest extends BaseTestCase
     {
         $mapper = new ArrayMapper(self::getConfiguration());
         
-        $resource = new \BedREST\TestFixtures\Models\Company\Employee();
+        $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         
         $data = $this->getTestData();
         $uncastData = $this->getUncastTestData();

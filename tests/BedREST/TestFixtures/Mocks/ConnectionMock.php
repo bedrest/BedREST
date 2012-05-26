@@ -1,9 +1,9 @@
 <?php
 
-namespace BedREST\TestFixtures\Mocks;
+namespace BedRest\TestFixtures\Mocks;
 
 /**
- * BedREST\TestFixtures\Mocks\ConnectionMock
+ * BedRest\TestFixtures\Mocks\ConnectionMock
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

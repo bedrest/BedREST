@@ -1,9 +1,9 @@
 <?php
 
-namespace BedREST\TestFixtures\Mocks;
+namespace BedRest\TestFixtures\Mocks;
 
 /**
- * BedREST\TestFixtures\Mocks\DatabasePlatformMock
+ * BedRest\TestFixtures\Mocks\DatabasePlatformMock
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

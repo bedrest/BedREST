@@ -1,9 +1,9 @@
 <?php
 
-namespace BedREST\Tests;
+namespace BedRest\Tests;
 
 /**
- * BedREST\Tests\BaseTestCase
+ * BedRest\Tests\BaseTestCase
  *
  * @author Geoff Adams <geoff@dianode.net
  */
@@ -11,27 +11,27 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * Entity manager used for tests.
-     * @var BedREST\TestFixtures\Mocks\EntityManagerMock
+     * @var BedRest\TestFixtures\Mocks\EntityManagerMock
      */
     protected static $em;
     
     /**
      * Configuration used for tests.
-     * @var BedREST\Configuration
+     * @var BedRest\Configuration
      */
     protected static $config;
     
     /**
      * Retrieves an entity manager to be used by tests requiring one.
      * @param mixed $conn
-     * @return \BedREST\TestFixtures\Mocks\EntityManagerMock
+     * @return \BedRest\TestFixtures\Mocks\EntityManagerMock
      */
     public static function getEntityManager($conn = null)
     {
         if (!self::$em) {
             $config = new \Doctrine\ORM\Configuration();
-            $config->setProxyDir(BEDREST_TESTS_PATH . 'BedREST/TextFixtures/Proxies');
-            $config->setProxyNamespace('BedREST\TextFixtures\Proxies');
+            $config->setProxyDir(BEDREST_TESTS_PATH . 'BedRest/TextFixtures/Proxies');
+            $config->setProxyNamespace('BedRest\TextFixtures\Proxies');
             $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache());
             $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver());
 
@@ -39,8 +39,8 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         
             if ($conn == null) {
                 $conn = array(
-                    'driverClass'  => '\BedREST\TestFixtures\Mocks\DriverMock',
-                    'wrapperClass' => '\BedREST\TestFixtures\Mocks\ConnectionMock',
+                    'driverClass'  => '\BedRest\TestFixtures\Mocks\DriverMock',
+                    'wrapperClass' => '\BedRest\TestFixtures\Mocks\ConnectionMock',
                     'user'         => 'test',
                     'password'     => 'connection'
                 );
@@ -50,7 +50,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
                 $conn = \Doctrine\DBAL\DriverManager::getConnection($conn, $config, $eventManager);
             }
             
-            self::$em = \BedREST\TestFixtures\Mocks\EntityManagerMock::create($conn);
+            self::$em = \BedRest\TestFixtures\Mocks\EntityManagerMock::create($conn);
         }
         
         return self::$em;
@@ -58,12 +58,12 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     
     /**
      * Returns a configuration object for use in tests.
-     * @return BedREST\Configuration 
+     * @return BedRest\Configuration 
      */
     public static function getConfiguration()
     {
         if (!self::$config) {
-            $config = new \BedREST\Configuration();
+            $config = new \BedRest\Configuration();
             $config->setEntityManager(self::getEntityManager());
             
             self::$config = $config;
