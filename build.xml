@@ -7,13 +7,8 @@
     <property file="build.properties" />
     
     <!-- Base build task -->
-    <target name="build" depends="update-core-dependencies, php-lint, api-doc, test">
+    <target name="build" depends="php-lint, api-doc, test">
         
-    </target>
-    
-    <!-- Vendor tasks -->
-    <target name="update-core-dependencies" description="Pulls the latest version of the vendor libraries">
-        <exec command="git submodule update --init --recursive" passthru="true" />
     </target>
     
     <!-- PHPUnit test suites -->

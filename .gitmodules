@@ -1,3 +1,0 @@
-[submodule "vendor/doctrine2"]
-	path = vendor/doctrine2
-	url = https://github.com/doctrine/doctrine2.git
