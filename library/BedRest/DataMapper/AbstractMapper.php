@@ -20,7 +20,7 @@ use BedRest\Configuration,
     Doctrine\DBAL\Types\Type;
 
 /**
- * BedRest\Model\AbstractMapper
+ * BedRest\DataMapper\AbstractMapper
  * 
  * @author Geoff Adams <geoff@dianode.net>
  */
@@ -118,8 +118,18 @@ abstract class AbstractMapper
                 case Type::DATETIME:
                 case Type::DATETIMETZ:
                 case Type::TIME:
-                    if (!$value instanceof \DateTime) {
+                    if ($value instanceof \DateTime) {
+                        // do nothing
+                    } elseif (is_array($value)) {
+                        if (!isset($value['date'])) {
+                            throw new DataMappingException('Cannot cast an array to a date/time field, unless it follows DateTime array format');
+                        }
+                        
+                        $value = new \DateTime($value['date'] . (isset($value['timezone']) ? ' ' . $value['timezone'] : ''));
+                    } elseif (is_string($value)) {
                         $value = new \DateTime($value);
+                    } elseif (is_integer($value)) {
+                        $value = \DateTime::createFromFormat('U', $value);
                     }
                     break;
                 case Type::DECIMAL:
