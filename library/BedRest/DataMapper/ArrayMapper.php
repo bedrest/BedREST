@@ -16,7 +16,7 @@
 namespace BedRest\DataMapper;
 
 /**
- * BedRest\DataMapper\Adapter\PhpArray
+ * ArrayMapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

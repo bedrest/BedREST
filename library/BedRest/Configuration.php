@@ -16,7 +16,7 @@
 namespace BedRest;
 
 /**
- * BedRest\Configuration
+ * Configuration
  * 
  * Configuration container for BedRest.
  *

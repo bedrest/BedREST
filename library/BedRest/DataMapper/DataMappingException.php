@@ -16,7 +16,7 @@
 namespace BedRest\DataMapper;
 
 /**
- * BedRest\DataMapper\DataMappingException
+ * DataMappingException
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

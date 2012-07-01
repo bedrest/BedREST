@@ -20,7 +20,7 @@ use BedRest\Configuration,
     Doctrine\DBAL\Types\Type;
 
 /**
- * BedRest\DataMapper\AbstractMapper
+ * AbstractMapper
  * 
  * @author Geoff Adams <geoff@dianode.net>
  */
