@@ -39,29 +39,25 @@ class JsonMapper extends AbstractMapper
         $data = json_decode($data, true);
         
         // check if an error occurred during decoding
-        $errorMessage = false;
+        if ($error = json_last_error()) {
+            switch (json_last_error()) {
+                case JSON_ERROR_DEPTH:
+                    $errorMessage = 'Maximum stack depth exceeded';
+                break;
+                case JSON_ERROR_STATE_MISMATCH:
+                    $errorMessage = 'Invalid or malformed JSON';
+                break;
+                case JSON_ERROR_CTRL_CHAR:
+                    $errorMessage = 'Unexpected control character found';
+                break;
+                case JSON_ERROR_SYNTAX:
+                    $errorMessage = 'Syntax error, malformed JSON';
+                break;
+                default:
+                    $errorMessage = '';
+                break;
+            }
         
-        switch (json_last_error()) {
-            case JSON_ERROR_NONE:
-            break;
-            case JSON_ERROR_DEPTH:
-                echo 'Maximum stack depth exceeded';
-            break;
-            case JSON_ERROR_STATE_MISMATCH:
-                echo 'Invalid or malformed JSON';
-            break;
-            case JSON_ERROR_CTRL_CHAR:
-                echo 'Unexpected control character found';
-            break;
-            case JSON_ERROR_SYNTAX:
-                echo 'Syntax error, malformed JSON';
-            break;
-            default:
-                $errorMessage = '';
-            break;
-        }
-        
-        if ($errorMessage) {
             throw new DataMappingException("Error during JSON deocding: $errorMessage");
         }
         

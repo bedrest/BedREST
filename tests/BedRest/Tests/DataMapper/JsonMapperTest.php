@@ -11,8 +11,6 @@ use BedRest\DataMapper\AbstractMapper,
  * 
  * Tests BedRest\DataMapper\JsonMapper.
  * 
- * @todo Include tests for \DateTime casting.
- *
  * @author Geoff Adams <geoff@dianode.net>
  */
 class JsonMapperTest extends BaseTestCase
@@ -82,6 +80,17 @@ class JsonMapperTest extends BaseTestCase
         $data = $this->getTestData();
         
         $mapper->map($resource, json_encode($data));
+    }
+    
+    public function testInvalidJsonThrowsException()
+    {
+        $this->setExpectedException('BedRest\DataMapper\DataMappingException');
+        
+        $mapper = new JsonMapper();
+        
+        $resource = new \BedRest\TestFixtures\Models\Company\Employee();
+        
+        $mapper->map($resource, '{not valid JSON');
     }
     
     /**
