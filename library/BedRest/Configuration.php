@@ -31,6 +31,12 @@ class Configuration
     protected $entityManager;
     
     /**
+     * Array of service namespaces, analogous to Doctrine\ORM\Configuration's entity namespace storage.
+     * @var array
+     */
+    protected $serviceNamespaces;
+    
+    /**
      * Returns the entity manager.
      * @return \Doctrine\ORM\EntityManager
      */
@@ -46,5 +52,33 @@ class Configuration
     public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+    
+    /**
+     * Returns all registered service namespace mappings.
+     * @return array
+     */
+    public function getServiceNamespaces()
+    {
+        return $this->serviceNamespaces;
+    }
+    
+    /**
+     * Sets all service namespace mappings.
+     * @param array $serviceNamespaces 
+     */
+    public function setServiceNamespaces(array $serviceNamespaces)
+    {
+        $this->serviceNamespaces = $serviceNamespaces;
+    }
+    
+    /**
+     * Adds a single service namespace mapping.
+     * @param string $alias
+     * @param string $namespace
+     */
+    public function addServiceNamespace($alias, $namespace)
+    {
+        $this->serviceNamespaces[$alias] = $namespace;
     }
 }
