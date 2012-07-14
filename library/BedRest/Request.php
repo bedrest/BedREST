@@ -31,16 +31,39 @@ class Request
     const METHOD_PUT = 'PUT';
     const METHOD_DELETE = 'DELETE';
     
+    /**
+     * HTTP method of the request.
+     * @var string
+     */
     protected $method;
     
+    /**
+     * Name of the resource being requested.
+     * @var string 
+     */
     protected $resource = '';
     
+    /**
+     * Content type of any request payload.
+     * @var string 
+     */
     protected $contentType = '';
     
+    /**
+     * Parsed and ordered 'Accept' header.
+     * @var array 
+     */
     protected $accept = array();
     
+    /**
+     * Parsed and ordered 'Accept-Encoding' header.
+     * @var array 
+     */
     protected $acceptEncoding = array();
     
+    /**
+     * Constructor. 
+     */
     public function __construct()
     {
         $this->setMethod();
@@ -52,11 +75,20 @@ class Request
         $this->setAcceptEncoding();
     }
     
+    /**
+     * Returns the HTTP method of the request.
+     * @return string 
+     */
     public function getMethod()
     {
         return $this->method;
     }
     
+    /**
+     * Sets the HTTP method of the request. If the provided value is null, it is automatically detected from the 
+     * environment.
+     * @param string $method 
+     */
     public function setMethod($method = null)
     {
         if ($method === null) {
@@ -66,11 +98,19 @@ class Request
         $this->method = $method;
     }
     
+    /**
+     * Returns the resource referenced by the request.
+     * @return string
+     */
     public function getResource()
     {
         return $this->resource;
     }
     
+    /**
+     * Sets the resource referenced by the request.
+     * @param string $resource 
+     */
     public function setResource($resource = null)
     {
         if ($resource === null) {
@@ -80,11 +120,20 @@ class Request
         $this->resource = $resource;
     }
     
+    /**
+     * Returns the content type of the request payload, usually determined from the 'Content-Type' HTTP header.
+     * @return string
+     */
     public function getContentType()
     {
         return $this->contentType;
     }
     
+    /**
+     * Sets the content type of the request payload. If the provided value is null, it is automatically detected 
+     * from the environment.
+     * @param string $contentType 
+     */
     public function setContentType($contentType = null)
     {
         if ($contentType === null) {
@@ -94,11 +143,20 @@ class Request
         $this->contentType = $contentType;
     }
     
+    /**
+     * Returns the parsed accepted content types of the request, usually determined by the 'Accept' HTTP header.
+     * @return array
+     */
     public function getAccept()
     {
         return $this->accept;
     }
     
+    /**
+     * Sets the accepted content types of the request. If the provided value is null, it is automatically detected 
+     * from the environment. The provided value is parsed into an array and ordered by weighting of each format.
+     * @param array $accept 
+     */
     public function setAccept($accept = null)
     {
         if ($accept === null) {
@@ -134,11 +192,20 @@ class Request
         $this->mergeSort($this->accept, array($this, 'sortQualityComparator'));
     }
     
+    /**
+     * Returns the parsed accepted content types of the request, usually determined by the 'Accept-Encoding' HTTP header.
+     * @return array
+     */
     public function getAcceptEncoding()
     {
         return $this->acceptEncoding;
     }
     
+    /**
+     * Sets the accepted content types of the request. If the provided value is null, it is automatically detected 
+     * from the environment. The provided value is parsed into an array and ordered by weighting of each format.
+     * @param array $accept 
+     */
     public function setAcceptEncoding($acceptEncoding = null)
     {
         if ($acceptEncoding === null) {
