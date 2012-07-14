@@ -43,6 +43,10 @@ class Request
      */
     protected $resource = '';
     
+    const CONTENTTYPE_JSON = 'application/json';
+    const CONTENTTYPE_URLENCODED = 'application/x-www-form-urlencoded';
+    const CONTENTTYPE_XML = 'text/xml';
+    
     /**
      * Content type of any request payload.
      * @var string 
@@ -60,6 +64,12 @@ class Request
      * @var array 
      */
     protected $acceptEncoding = array();
+    
+    /**
+     * Raw payload of the request.
+     * @var mixed
+     */
+    protected $payload = false;
     
     /**
      * Constructor. 
@@ -239,6 +249,40 @@ class Request
         
         // sort according to quality factor
         $this->mergeSort($this->acceptEncoding, array($this, 'sortQualityComparator'));
+    }
+    
+    public function setPayload($payload)
+    {
+        $this->payload = $payload;
+    }
+    
+    /**
+     * Returns the request payload. 
+     * @param boolean $autoDecode
+     * @return mixed
+     */
+    public function getPayload($autoDecode = true)
+    {
+        if (!$autoDecode || $this->payload == false) {
+            return $this->payload;
+        }
+        
+        switch ($this->contentType) {
+            case self::CONTENTTYPE_JSON:
+                $data = json_decode($this->payload);
+                break;
+            case self::CONTENTTYPE_URLENCODED:
+                $data = urldecode($this->payload);
+                break;
+            case self::CONTENTTYPE_XML:
+                $data = simplexml_load_string($this->payload);
+                break;
+            default:
+                throw new \RuntimeException("The content type '{$this->contentType}' cannot be decoded");
+                break;
+        }
+        
+        return $data;
     }
     
     /**
