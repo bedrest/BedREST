@@ -62,53 +62,120 @@ class ResourceMeta
      */
     protected $identifierFields = array();
     
+    /**
+     * Class metadata for the entity.
+     * @var Doctrine\ORM\Mapping\ClassMetadata
+     */
+    protected $classMetadata;
+    
+    /**
+     * Constructor.
+     * @param string $name 
+     */
     public function __construct($name)
     {
         $this->name = $name;
     }
     
+    /**
+     * Returns the name of the resource.
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
     
+    /**
+     * Sets the class name of the service for this resource.
+     * @param string $serviceClass 
+     */
     public function setServiceClass($serviceClass)
     {
         $this->serviceClass = $serviceClass;
     }
     
+    /**
+     * Returns the class name of the service for this resource.
+     * @return string
+     */
     public function getServiceClass()
     {
         return $this->serviceClass;
     }
     
+    /**
+     * Sets the methods within the service class for set actions relating to this resource, for instance listing
+     * collections, retrieving single resources or modifying existing resources.
+     * @param array $methods 
+     */
     public function setServiceMethods($methods)
     {
         $this->serviceMethods = $methods;
     }
     
+    /**
+     * Returns the methods within the service class used for set actions relating to this resource.
+     * @return array
+     */
     public function getServiceMethods()
     {
         return $this->serviceMethods;
     }
     
-    public function setServiceMethod($type, $method)
+    /**
+     * Defines a method within the service class for a single action.
+     * @param string $action
+     * @param string $method 
+     */
+    public function setServiceMethod($action, $method)
     {
-        $this->serviceMethods[$type] = $method;
+        $this->serviceMethods[$action] = $method;
     }
     
-    public function getServiceMethod($type)
+    /**
+     * Returns the name of the method within a service class for a single action.
+     * @param string $action
+     * @return string
+     */
+    public function getServiceMethod($action)
     {
-        return $this->serviceMethods[$type];
+        return $this->serviceMethods[$action];
     }
     
+    /**
+     * Sets the entity class name. Must be a Doctrine entity.
+     * @param string $entityClass 
+     */
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;
     }
     
+    /**
+     * Returns the Doctrine entity class name.
+     * @return string
+     */
     public function getEntityClass()
     {
         return $this->entityClass;
+    }
+    
+    /**
+     * Sets the class metadata object for the entity associated with this resource.
+     * @param Doctrine\ORM\Mapping\ClassMetadata $classMetadata 
+     */
+    public function setClassMetadata(ClassMetadata $classMetadata)
+    {
+        $this->classMetadata = $classMetadata;
+    }
+    
+    /**
+     * Returns the class metadata for the entity associated with this resource.
+     * @return Doctrine\ORM\Mapping\ClassMetadata
+     */
+    public function getClassMetadata()
+    {
+        return $this->classMetadata;
     }
 }
