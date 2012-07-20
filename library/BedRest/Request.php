@@ -27,9 +27,13 @@ class Request
 {
     const METHOD_HEAD = 'HEAD';
     const METHOD_GET = 'GET';
+    const METHOD_GET_COLLECTION = 'GET_COLLECTION';
     const METHOD_POST = 'POST';
+    const METHOD_POST_COLLECTION = 'POST_COLLECTION';
     const METHOD_PUT = 'PUT';
+    const METHOD_PUT_COLLECTION = 'PUT_COLLECTION';
     const METHOD_DELETE = 'DELETE';
+    const METHOD_DELETE_COLLECTION = 'DELETE_COLLECTION';
     
     /**
      * HTTP method of the request.
@@ -251,6 +255,10 @@ class Request
         $this->mergeSort($this->acceptEncoding, array($this, 'sortQualityComparator'));
     }
     
+    /**
+     * Set the request payload.
+     * @param mixed $payload 
+     */
     public function setPayload($payload)
     {
         $this->payload = $payload;
