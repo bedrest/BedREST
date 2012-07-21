@@ -13,24 +13,5 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping;
-
-use Doctrine\ORM\Mapping\Annotation;
-
-/**
- * BedRest\Mapping\Annotation\RestResource
- *
- * @author Geoff Adams <geoff@dianode.net>
- * 
- * @Annotation
- * @Target("CLASS")
- */
-class RestResource implements Annotation
-{
-    /**
-     * Fully-qualified class name (without preceding slash) of the service used
-     * for interacting with entities of this type.
-     * @var string
-     */
-    public $serviceClass = '';
-}
+require_once __DIR__ . '/Property.php';
+require_once __DIR__ . '/Resource.php';
