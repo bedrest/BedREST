@@ -26,9 +26,15 @@ class Configuration
 {
     /**
      * Doctrine entity manager.
-     * @var \Doctrine\ORM\EntityManager
+     * @var Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+    
+    /**
+     * Resource metadata factory.
+     * @var BedRest\Mapping\ResourceMetadataFactory
+     */
+    protected $resourceMetadataFactory;
     
     /**
      * Array of service namespaces, analogous to Doctrine\ORM\Configuration's entity namespace storage.

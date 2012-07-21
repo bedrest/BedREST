@@ -28,14 +28,14 @@ abstract class AbstractMapper
 {
     /**
      * Configuration.
-     * @var \BedRest\Configuration
+     * @var BedRest\Configuration
      */
     protected $configuration;
 
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
-     * @param Adapter\AdapterInterface $adapter 
+     * @param Configuration $configuration
      */
     public function __construct(Configuration $configuration = null)
     {
@@ -44,7 +44,7 @@ abstract class AbstractMapper
     
     /**
      * Returns the configuration.
-     * @return \BedRest\Configuration
+     * @return BedRest\Configuration
      */
     public function getConfiguration()
     {
@@ -53,7 +53,7 @@ abstract class AbstractMapper
 
     /**
      * Sets the configuration.
-     * @param \BedRest\Configuration $em 
+     * @param BedRest\Configuration $em 
      */
     public function setConfiguration(Configuration $configuration)
     {
@@ -83,7 +83,7 @@ abstract class AbstractMapper
      * Takes an input array of data and a resource, then proceeds to process each
      * property of the resource by finding data and casting it to the appropriate
      * format.
-     * @param RestResource $resource
+     * @param object $resource
      * @param array $data
      * @return array
      * @throws DataMappingException 
@@ -162,15 +162,15 @@ abstract class AbstractMapper
     }
     
     /**
-     * Maps data into a RestResource.
-     * @param RestResource $resource Entity to map the data into.
+     * Maps data into a resource.
+     * @param object $resource Entity to map the data into.
      * @param mixed $data Data to be mapped.
      */
     abstract public function map($resource, $data);
     
     /**
-     * Maps data from a RestResource into the desired format.
-     * @param RestResource $resource Entity to map data from.
+     * Maps data from a resource into the desired format.
+     * @param mixed $resource Entity to map data from.
      * @return mixed
      */
     abstract public function reverse($resource);
