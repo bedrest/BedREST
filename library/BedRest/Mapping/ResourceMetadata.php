@@ -20,11 +20,11 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\DBAL\Types\Type;
 
 /**
- * ResourceMapping
+ * ResourceMetadata
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class ResourceMeta
+class ResourceMetadata
 {
     /**
      * Name of the resource.
@@ -43,18 +43,6 @@ class ResourceMeta
      * @var string
      */
     protected $serviceClass;
-    
-    /**
-     * Service method names.
-     * @var array
-     */
-    protected $serviceMethods = array(
-        'index' => 'index',
-        'get' => 'get',
-        'post' => 'post',
-        'put' => 'put',
-        'delete' => 'delete'
-    );
     
     /**
      * Identifier fields for the resource.
@@ -102,45 +90,6 @@ class ResourceMeta
     public function getServiceClass()
     {
         return $this->serviceClass;
-    }
-    
-    /**
-     * Sets the methods within the service class for set actions relating to this resource, for instance listing
-     * collections, retrieving single resources or modifying existing resources.
-     * @param array $methods 
-     */
-    public function setServiceMethods($methods)
-    {
-        $this->serviceMethods = $methods;
-    }
-    
-    /**
-     * Returns the methods within the service class used for set actions relating to this resource.
-     * @return array
-     */
-    public function getServiceMethods()
-    {
-        return $this->serviceMethods;
-    }
-    
-    /**
-     * Defines a method within the service class for a single action.
-     * @param string $action
-     * @param string $method 
-     */
-    public function setServiceMethod($action, $method)
-    {
-        $this->serviceMethods[$action] = $method;
-    }
-    
-    /**
-     * Returns the name of the method within a service class for a single action.
-     * @param string $action
-     * @return string
-     */
-    public function getServiceMethod($action)
-    {
-        return $this->serviceMethods[$action];
     }
     
     /**
