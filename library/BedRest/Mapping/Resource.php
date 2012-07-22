@@ -32,5 +32,11 @@ class Resource implements Annotation
      * for interacting with entities of this type.
      * @var string
      */
-    public $serviceClass = '';
+    public $serviceClass;
+    
+    /**
+     * Resource name, used for routing, amongst other things.
+     * @var string
+     */
+    public $name;
 }
