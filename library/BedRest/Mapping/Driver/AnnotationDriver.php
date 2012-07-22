@@ -15,8 +15,10 @@
 
 namespace BedRest\Mapping\Driver;
 
+use BedRest\Mapping\MappingException;
 use BedRest\Mapping\ResourceMetadata;
 use BedRest\Mapping\Driver\Driver;
+use Doctrine\Common\Annotations\Reader;
 
 /**
  * AnnotationDriver
@@ -25,36 +27,58 @@ use BedRest\Mapping\Driver\Driver;
  */
 class AnnotationDriver implements Driver
 {
-    protected $annotationReader;
+    /**
+     * Annotation reader instance.
+     * @var Doctrine\Common\Annotations\Reader
+     */
+    protected $reader;
     
+    /**
+     * Constructor.
+     * @param Doctrine\Common\Annotations\Reader $reader 
+     */
+    public function __construct(Reader $reader)
+    {
+        $this->reader = $reader;
+    }
+    
+    /**
+     * Loads resource metadata from PHP docblock annotations.
+     * @param string $className
+     * @param ResourceMetadata $resourceMetadata
+     * @throws BedRest\Mapping\MappingException 
+     */
     public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata)
     {
+        // get all class annotations
         $reflClass = $resourceMetadata->getClassMetadata()->getReflectionClass();
         
-        $classAnnotations = $this->annotationReader->getClassAnnotation($reflClass);
+        $classAnnotations = $this->reader->getClassAnnotations($reflClass);
         
+        // if we are receiving annotations indexed by number, transform it to by class name
         if ($classAnnotations && is_numeric(key($classAnnotations))) {
             foreach ($classAnnotations as $annotation) {
                 $classAnnotations[get_class($annotation)] = $annotation;
             }
         }
         
+        // load headline resource information
         if (isset($classAnnotations['BedRest\Mapping\Resource'])) {
             $resourceAnnotation = $classAnnotations['BedRest\Mapping\Resource'];
             
+            // resource name
             if (!empty($resourceAnnotation->name)) {
                 $resourceMetadata->setName($resourceAnnotation->name);
             } else {
                 $resourceMetadata->setName(substr($className, strrpos($className, '\\') + 1));
             }
             
+            // service class
             if (!empty($resourceAnnotation->serviceClass)) {
                 $resourceMetadata->setName($resourceAnnotation->serviceClass);
             } else {
                 throw MappingException::serviceClassNotProvided($className);
             }
         }
-        
-        
     }
 }
