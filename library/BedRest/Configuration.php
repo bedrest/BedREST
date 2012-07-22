@@ -15,6 +15,8 @@
 
 namespace BedRest;
 
+use BedRest\Mapping\Driver\Driver;
+
 /**
  * Configuration
  * 
@@ -86,5 +88,23 @@ class Configuration
     public function addServiceNamespace($alias, $namespace)
     {
         $this->serviceNamespaces[$alias] = $namespace;
+    }
+    
+    /**
+     * Sets the metadata driver implementation.
+     * @param BedRest\Mapping\Driver\Driver $driver 
+     */
+    public function setMetadataDriverImpl(Driver $driver)
+    {
+        $this->metadataDriverImpl = $driver;
+    }
+    
+    /**
+     * Returns the metadata driver implementation.
+     * @return BedRest\Mapping\Driver\Driver
+     */
+    public function getMetadataDriverImpl()
+    {
+        return $this->metadataDriverImpl;
     }
 }
