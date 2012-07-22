@@ -13,23 +13,5 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping;
-
-use Doctrine\ORM\Mapping\Annotation;
-
-/**
- * Property
- *
- * @author Geoff Adams <geoff@dianode.net>
- * 
- * @Annotation
- * @Target("PROPERTY")
- */
-class Property implements Annotation
-{
-    /**
-     * Whether the property is read-only from a REST perspective.
-     * @var boolean
-     */
-    public $readOnly = false;
-}
+require_once __DIR__ . '/Annotations/Property.php';
+require_once __DIR__ . '/Annotations/Resource.php';

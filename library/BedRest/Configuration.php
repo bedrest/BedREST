@@ -15,7 +15,7 @@
 
 namespace BedRest;
 
-use BedRest\Mapping\Driver\Driver;
+use BedRest\Mapping\Resource\Driver\Driver;
 
 /**
  * Configuration
@@ -34,7 +34,7 @@ class Configuration
     
     /**
      * Resource metadata factory.
-     * @var BedRest\Mapping\ResourceMetadataFactory
+     * @var BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
     
@@ -92,18 +92,18 @@ class Configuration
     
     /**
      * Sets the metadata driver implementation.
-     * @param BedRest\Mapping\Driver\Driver $driver 
+     * @param BedRest\Mapping\Resource\Driver\Driver $driver 
      */
-    public function setMetadataDriverImpl(Driver $driver)
+    public function setResourceMetadataDriverImpl(Driver $driver)
     {
         $this->metadataDriverImpl = $driver;
     }
     
     /**
      * Returns the metadata driver implementation.
-     * @return BedRest\Mapping\Driver\Driver
+     * @return BedRest\Mapping\Resource\Driver\Driver
      */
-    public function getMetadataDriverImpl()
+    public function getResourceMetadataDriverImpl()
     {
         return $this->metadataDriverImpl;
     }

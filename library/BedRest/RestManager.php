@@ -18,7 +18,7 @@ namespace BedRest;
 use BedRest\Configuration;
 use BedRest\Request;
 use BedRest\Response;
-use BedRest\Mapping\ResourceMetadataFactory;
+use BedRest\Mapping\Resource\ResourceMetadataFactory;
 use Doctrine\Common\EventManager;
 
 /**
@@ -50,7 +50,7 @@ class RestManager
     
     /**
      * The resource metadata factory.
-     * @var BedRest\Mapping\ResourceMetadataFactory
+     * @var BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
     
@@ -64,7 +64,7 @@ class RestManager
         
         $this->resourceMetadataFactory = new ResourceMetadataFactory();
         $this->resourceMetadataFactory->setClassMetadataFactory($this->configuration->getEntityManager()->getMetadataFactory());
-        $this->resourceMetadataFactory->setMetadataDriver($configuration->getMetadataDriverImpl());
+        $this->resourceMetadataFactory->setMetadataDriver($configuration->getResourceMetadataDriverImpl());
     }
     
     /**
@@ -79,7 +79,7 @@ class RestManager
     /**
      * Returns resource metadata for a class.
      * @param string $className
-     * @return BedRest\Mapping\ResourceMetadata
+     * @return BedRest\Mapping\Resource\ResourceMetadata
      */
     public function getResourceMetadata($className)
     {
@@ -88,7 +88,7 @@ class RestManager
     
     /**
      * Returns the resource metadata factory.
-     * @return BedRest\Mapping\ResourceMetadataFactory
+     * @return BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     public function getResourceMetadataFactory()
     {

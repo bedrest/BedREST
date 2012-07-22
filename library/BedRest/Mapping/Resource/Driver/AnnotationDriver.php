@@ -13,11 +13,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping\Driver;
+namespace BedRest\Mapping\Resource\Driver;
 
 use BedRest\Mapping\MappingException;
-use BedRest\Mapping\ResourceMetadata;
-use BedRest\Mapping\Driver\Driver;
+use BedRest\Mapping\Resource\ResourceMetadata;
+use BedRest\Mapping\Resource\Driver\Driver;
 use Doctrine\Common\Annotations\Reader;
 
 /**
@@ -63,8 +63,8 @@ class AnnotationDriver implements Driver
         }
         
         // load headline resource information
-        if (isset($classAnnotations['BedRest\Mapping\Resource'])) {
-            $resourceAnnotation = $classAnnotations['BedRest\Mapping\Resource'];
+        if (isset($classAnnotations['BedRest\Mapping\Resource\Annotations\Resource'])) {
+            $resourceAnnotation = $classAnnotations['BedRest\Mapping\Resource\Annotations\Resource'];
             
             // resource name
             if (!empty($resourceAnnotation->name)) {

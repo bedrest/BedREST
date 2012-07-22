@@ -13,16 +13,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping\Driver;
+namespace BedRest\Mapping\Resource\Annotations;
 
-use BedRest\Mapping\ResourceMetadata;
+use Doctrine\ORM\Mapping\Annotation;
 
 /**
- * Driver
- * 
+ * Resource
+ *
  * @author Geoff Adams <geoff@dianode.net>
+ * 
+ * @Annotation
+ * @Target("CLASS")
  */
-interface Driver
+class Resource implements Annotation
 {
-    public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata);
+    /**
+     * Fully-qualified class name (without preceding slash) of the service used
+     * for interacting with entities of this type.
+     * @var string
+     */
+    public $serviceClass;
+    
+    /**
+     * Resource name, used for routing, amongst other things.
+     * @var string
+     */
+    public $name;
 }

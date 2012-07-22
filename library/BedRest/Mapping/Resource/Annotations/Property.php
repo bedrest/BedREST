@@ -13,30 +13,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping;
+namespace BedRest\Mapping\Resource\Annotations;
 
 use Doctrine\ORM\Mapping\Annotation;
 
 /**
- * Resource
+ * Property
  *
  * @author Geoff Adams <geoff@dianode.net>
  * 
  * @Annotation
- * @Target("CLASS")
+ * @Target("PROPERTY")
  */
-class Resource implements Annotation
+class Property implements Annotation
 {
     /**
-     * Fully-qualified class name (without preceding slash) of the service used
-     * for interacting with entities of this type.
-     * @var string
+     * Whether the property is read-only from a REST perspective.
+     * @var boolean
      */
-    public $serviceClass;
-    
-    /**
-     * Resource name, used for routing, amongst other things.
-     * @var string
-     */
-    public $name;
+    public $readOnly = false;
 }

@@ -13,5 +13,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once __DIR__ . '/Property.php';
-require_once __DIR__ . '/Resource.php';
+namespace BedRest\Mapping\Resource\Driver;
+
+use BedRest\Mapping\Resource\ResourceMetadata;
+
+/**
+ * Driver
+ * 
+ * @author Geoff Adams <geoff@dianode.net>
+ */
+interface Driver
+{
+    public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata);
+}

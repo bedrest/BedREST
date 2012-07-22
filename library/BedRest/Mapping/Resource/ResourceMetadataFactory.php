@@ -13,9 +13,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping;
+namespace BedRest\Mapping\Resource;
 
-use BedRest\Mapping\Driver\Driver;
+use BedRest\Mapping\Resource\Driver\Driver;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache;
@@ -30,7 +30,7 @@ class ResourceMetadataFactory
 {
     /**
      * Mapping metadata driver.
-     * @var BedRest\Mapping\Driver\Driver
+     * @var BedRest\Mapping\Resource\Driver\Driver
      */
     protected $driver;
     
@@ -48,7 +48,7 @@ class ResourceMetadataFactory
     
     /**
      * Sets the metadata driver.
-     * @param BedRest\Mapping\Driver\Driver $driver 
+     * @param BedRest\Mapping\Resource\Driver\Driver $driver 
      */
     public function setMetadataDriver(Driver $driver)
     {
@@ -57,7 +57,7 @@ class ResourceMetadataFactory
     
     /**
      * Returns the metadata driver.
-     * @return BedRest\Mapping\Driver\Driver
+     * @return BedRest\Mapping\Resource\Driver\Driver
      */
     public function getMetadataDriver()
     {
@@ -85,7 +85,7 @@ class ResourceMetadataFactory
     /**
      * Returns ResourceMetadata for the specified class.
      * @param string $className
-     * @return BedRest\Mapping\ResourceMetadata
+     * @return BedRest\Mapping\Resource\ResourceMetadata
      */
     public function getMetadataFor($className)
     {
