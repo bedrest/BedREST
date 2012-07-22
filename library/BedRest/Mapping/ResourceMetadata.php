@@ -58,9 +58,18 @@ class ResourceMetadata
     
     /**
      * Constructor.
+     * @param string $entityClass
+     */
+    public function __construct($entityClass)
+    {
+        $this->entityClass = $entityClass;
+    }
+    
+    /**
+     * Sets the name of the resource.
      * @param string $name 
      */
-    public function __construct($name)
+    public function setName($name)
     {
         $this->name = $name;
     }
