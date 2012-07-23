@@ -16,7 +16,6 @@
 namespace BedRest\Mapping\Resource;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\DBAL\Types\Type;
 
 /**
  * ResourceMetadata

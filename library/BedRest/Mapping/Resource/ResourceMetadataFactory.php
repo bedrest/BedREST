@@ -16,9 +16,6 @@
 namespace BedRest\Mapping\Resource;
 
 use BedRest\Mapping\Resource\Driver\Driver;
-use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Cache;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 
 /**
