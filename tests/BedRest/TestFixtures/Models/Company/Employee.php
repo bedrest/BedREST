@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM,
  * 
  * @ORM\Entity
  * @ORM\Table(name="employee")
- * @BedRest\Resource
+ * @BedRest\Resource(name="employee", serviceClass="BedRest\TestFixtures\Services\Company\Employee")
  */
 class Employee
 {
