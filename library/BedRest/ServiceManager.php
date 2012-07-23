@@ -16,7 +16,6 @@
 namespace BedRest;
 
 use BedRest\Configuration;
-use Doctrine\ORM\EntityManager;
 
 /**
  * ServiceManager
@@ -35,10 +34,10 @@ class ServiceManager
     protected $configuration;
     
     /**
-     * Doctrine entity manager to be provided to services.
-     * @var Doctrine\ORM\EntityManager
+     * Stores all loaded service instances.
+     * @var array
      */
-    protected $entityManager;
+    protected $loadedServices;
     
     /**
      * Constructor.
@@ -47,8 +46,6 @@ class ServiceManager
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
-        
-        $this->entityManager = $configuration->getEntityManager();
     }
     
     /**
@@ -57,6 +54,30 @@ class ServiceManager
      */
     public function getService($serviceClass)
     {
-        // TODO: implement
+        if (!isset($this->loadedServices[$serviceClass])) {
+            $this->loadService($serviceClass);
+        }
+        
+        return $this->loadedServices[$serviceClass];
+    }
+    
+    /**
+     * Loads the specified service class.
+     * @param string $serviceClass
+     * @throws \Exception 
+     */
+    protected function loadService($serviceClass)
+    {
+        if (!class_exists($serviceClass)) {
+            throw new Exception("Service '$serviceClass' not found.");
+        }
+        
+        $service = new $serviceClass();
+        
+        if (method_exists($service, 'setEntityManager')) {
+            $service->setEntityManager($this->configuration->getEntityManager());
+        }
+        
+        $this->loadedServices[$serviceClass] = $service;
     }
 }
