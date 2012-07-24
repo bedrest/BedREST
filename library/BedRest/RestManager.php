@@ -131,10 +131,10 @@ class RestManager
     }
     
     /**
-     * Dispatches a request to a service to be handled and then returns the result in a Response object.
+     * Processes a REST request, returning a Response object.
      * @param BedRest\Request $request
      */
-    public function dispatch(Request $request)
+    public function process(Request $request)
     {
         $rm = $this->getResourceMetadata($request->getResource());
         
