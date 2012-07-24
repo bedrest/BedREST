@@ -132,8 +132,7 @@ class RestManager
     
     /**
      * Dispatches a request to a service to be handled and then returns the result in a Response object.
-     * @param Request $request
-     * @param Response $response 
+     * @param BedRest\Request $request
      */
     public function dispatch(Request $request)
     {
@@ -149,5 +148,7 @@ class RestManager
         
         // TODO: dispatch event
         //$this->getEventManager()->dispatchEvent($eventName, $eventArgs);
+        
+        return new Response();
     }
 }
