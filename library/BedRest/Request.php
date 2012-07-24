@@ -328,8 +328,8 @@ class Request
         $array2 = array_slice($array, $halfway);
         
         // use recursion to sort both halves
-        $this->mergeSort($array1);
-        $this->mergeSort($array2);
+        $this->mergeSort($array1, $comparator);
+        $this->mergeSort($array2, $comparator);
         
         // optimisation, if the end of $array1 is less than the start of $array2, append and return
         if (call_user_func($comparator, end($array1), $array2[0]) < 1) {
