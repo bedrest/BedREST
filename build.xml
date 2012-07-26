@@ -26,6 +26,7 @@
         <mkdir dir="${reports.phpunit.logs}" />
         <mkdir dir="${reports.phpunit.report}" />
         <mkdir dir="${reports.phpunit.coverage}" />
+        <mkdir dir="${reports.phpunit.coverage_status}" />
         
         <coverage-setup database="${reports.phpunit.logs}/coverage.xml">
             <fileset dir="${library.basedir}">
