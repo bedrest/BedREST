@@ -18,17 +18,16 @@
     
     <!-- PHPUnit test suites -->
     <target name="clean-test" description="Cleans up test folders.">
-        <delete dir="${tests.docs}" />
+        <delete dir="${reports.phpunit.docs}" />
     </target>
     
     <target name="test" description="Runs all available tests" depends="clean-test">
-        <mkdir dir="${tests.docs}" />
-        <mkdir dir="${tests.reports}" />
-        <mkdir dir="${tests.coverage}" />
-        <mkdir dir="${tests.html}" />
-        <mkdir dir="${tests.logs}" />
+        <mkdir dir="${reports.phpunit.dir}" />
+        <mkdir dir="${reports.phpunit.logs}" />
+        <mkdir dir="${reports.phpunit.report}" />
+        <mkdir dir="${reports.phpunit.coverage}" />
         
-        <coverage-setup database="${tests.coverage}/coverage.db">
+        <coverage-setup database="${reports.phpunit.logs}/coverage.xml">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
@@ -39,28 +38,28 @@
                  haltonerror="false"
                  codecoverage="true"
                  bootstrap="tests/bootstrap.php">
-            <formatter todir="${tests.logs}" type="xml" />
+            <formatter todir="${reports.phpunit.logs}" type="xml" />
             <batchtest>
-                <fileset dir="${project.basedir}/tests">
+                <fileset dir="${tests.dir}">
                     <include name="${tests.fileset}" />
                 </fileset>
             </batchtest>
         </phpunit>
         
-        <phpunitreport infile="${tests.logs}/testsuites.xml" 
+        <phpunitreport infile="${reports.phpunit.logs}/testsuites.xml" 
                        format="frames" 
-                       todir="${tests.reports}" />
+                       todir="${reports.phpunit.report}" />
         
-        <coverage-report outfile="${tests.coverage}/coverage.db">
-            <report todir="${tests.coverage}" usesorttable="true" />
+        <coverage-report outfile="${reports.phpunit.logs}/coverage.xml">
+            <report todir="${reports.phpunit.coverage}" usesorttable="true" />
         </coverage-report>
     </target>
     
     <!-- API documentation -->
     <target name="api-doc" description="Generates the BedREST API Documentation">
-        <mkdir dir="${apidocs.location}" />
+        <mkdir dir="${docs.api.dir}" />
         
-        <phpdoc2 title="BedREST API Documentation" destdir="${apidocs.location}" template="responsive">
+        <phpdoc2 title="BedREST API Documentation" destdir="${docs.api.dir}" template="responsive">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
@@ -69,7 +68,7 @@
     
     <!-- Cleans all documentation -->
     <target name="clean-docs">
-        <delete dir="${apidocs.location}" />
+        <delete dir="${docs.api.dir}" />
     </target>
     
     <!-- Generate all documentation -->
@@ -88,36 +87,36 @@
     
     <!-- PHP Mess Detector -->
     <target name="php-md" description="Run PHP Mess Detector">
-        <mkdir dir="${phpmd.output}" />
+        <mkdir dir="${reports.phpmd.dir}" />
         
         <phpmd rulesets="codesize,design,unusedcode">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
-            <formatter type="html" outfile="${phpmd.output}/index.html" />
+            <formatter type="html" outfile="${reports.phpmd.dir}/report.html" />
         </phpmd>
     </target>
 
     <!-- PHP Code Sniffer -->
     <target name="php-cs" description="Runs PHP Code Sniffer">
-        <mkdir dir="${phpcs.output}" />
+        <mkdir dir="${reports.phpcs.dir}" />
         
         <phpcodesniffer standard="PSR2" format="full"
-                        docGenerator="HTML" docFile="${phpcs.output}/doc.html">
+                        docGenerator="HTML" docFile="${reports.phpcs.dir}/doc.html">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
-            <fileset dir="${tests.basedir}">
-                <include name="*.php" />
+            <fileset dir="${tests.dir}">
+                <include name="*${tests.fileset}" />
             </fileset>
-            <formatter type="full" outfile="${phpcs.output}/report.txt" />
+            <formatter type="full" outfile="${reports.phpcs.dir}/report.txt" />
         </phpcodesniffer>
     </target>
     
     <!-- Cleans all reports -->
     <target name="clean-reports">
-        <delete dir="${phpmd.output}" />
-        <delete dir="${phpcs.output}" />
+        <delete dir="${reports.phpmd.dir}" />
+        <delete dir="${reports.phpcs.dir}" />
     </target>
     
     <!-- Generates all reports -->
