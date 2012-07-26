@@ -90,7 +90,7 @@
                 <include name="${library.fileset}" />
             </fileset>
             <fileset dir="${tests.basedir}">
-                <include name="${tests.fileset}" />
+                <include name="*.php" />
             </fileset>
             <formatter type="full" outfile="${phpcs.output}/report.txt" />
         </phpcodesniffer>

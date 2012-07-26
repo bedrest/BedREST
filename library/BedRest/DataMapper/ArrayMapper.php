@@ -32,14 +32,14 @@ class ArrayMapper extends AbstractMapper
         if (!is_array($data)) {
             throw new DataMappingException('Supplied data is not an array');
         }
-        
+
         $data = $this->castFieldData($resource, $data);
-        
+
         foreach ($data as $property => $value) {
             $resource->$property = $value;
         }
     }
-    
+
     /**
      * Maps data from an entity into an array.
      * @param mixed $resource Entity to map data from.
@@ -48,12 +48,13 @@ class ArrayMapper extends AbstractMapper
     public function reverse($resource)
     {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
-        
+
         $return = array();
         foreach ($classMetadata->fieldMappings as $property => $mapping) {
             $return[$property] = $resource->$property;
         }
-        
+
         return $return;
     }
 }
+

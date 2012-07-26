@@ -14,25 +14,25 @@ class Response
      * @var string
      */
     protected $rawBody = '';
-    
+
     /**
      * Content type of the response.
      * @var string
      */
     protected $contentType = '';
-    
+
     /**
      * HTTP headers.
      * @var array
      */
     protected $headers = array();
-    
+
     /**
      * HTTP response code.
      * @var integer
      */
     protected $code = 200;
-    
+
     /**
      * Sets the raw body content.
      * @param string $rawBody
@@ -41,7 +41,7 @@ class Response
     {
         $this->rawBody = $rawBody;
     }
-    
+
     /**
      * Returns the raw body content.
      * @return string
@@ -50,7 +50,7 @@ class Response
     {
         return $this->rawBody;
     }
-    
+
     /**
      * Sets the Content-Type of the response.
      * @param string $contentType
@@ -59,7 +59,7 @@ class Response
     {
         $this->contentType = $contentType;
     }
-    
+
     /**
      * Returns the Content-Type of the response.
      * @return string
@@ -68,7 +68,7 @@ class Response
     {
         return $this->contentType;
     }
-    
+
     /**
      * Sets all HTTP headers, replacing all existing headers unless the $merge parameter is set to true.
      * @param array $headers
@@ -78,10 +78,10 @@ class Response
         if ($merge) {
             $headers = array_merge($this->headers, $headers);
         }
-        
+
         $this->headers = $headers;
     }
-    
+
     /**
      * Gets all HTTP headers as an array.
      * @return array
@@ -90,7 +90,7 @@ class Response
     {
         return $this->headers;
     }
-    
+
     /**
      * Sets a single HTTP header.
      * @param string $name
@@ -100,7 +100,7 @@ class Response
     {
         $this->headers[$name] = $value;
     }
-    
+
     /**
      * Returns a single HTTP header.
      * @param string $name
@@ -112,10 +112,10 @@ class Response
         if (!isset($this->headers[$name])) {
             throw new \BedRest\Exception("HTTP header with name '$name' does not exist.");
         }
-        
+
         return $this->headers[$name];
     }
-    
+
     /**
      * Sets the HTTP response code.
      * @param integer $code
@@ -125,10 +125,10 @@ class Response
         if (!is_int($code) || ($code < 100) || ($code > 599)) {
             throw new \BedRest\Exception("Invalid HTTP response code.");
         }
-        
+
         $this->code = $code;
     }
-    
+
     /**
      * Returns the HTTP response code.
      * @return integer
@@ -138,3 +138,4 @@ class Response
         return $this->code;
     }
 }
+

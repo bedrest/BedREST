@@ -22,5 +22,5 @@ namespace BedRest;
  */
 class Exception extends \Exception
 {
-    
 }
+

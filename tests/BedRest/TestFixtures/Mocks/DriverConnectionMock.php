@@ -14,7 +14,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function beginTransaction()
     {
-        
+
     }
 
     /**
@@ -22,7 +22,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function commit()
     {
-        
+
     }
 
     /**
@@ -30,7 +30,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function errorCode()
     {
-        
+
     }
 
     /**
@@ -38,7 +38,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function errorInfo()
     {
-        
+
     }
 
     /**
@@ -46,7 +46,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function exec($statement)
     {
-        
+
     }
 
     /**
@@ -54,7 +54,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function lastInsertId($name = null)
     {
-        
+
     }
 
     /**
@@ -62,7 +62,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function prepare($prepareString)
     {
-        
+
     }
 
     /**
@@ -70,7 +70,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function query()
     {
-        
+
     }
 
     /**
@@ -78,7 +78,7 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function quote($input, $type = \PDO::PARAM_STR)
     {
-        
+
     }
 
     /**
@@ -86,6 +86,6 @@ class DriverConnectionMock implements \Doctrine\DBAL\Driver\Connection
      */
     public function rollBack()
     {
-        
+
     }
 }

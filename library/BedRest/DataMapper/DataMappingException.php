@@ -22,5 +22,5 @@ namespace BedRest\DataMapper;
  */
 class DataMappingException extends \RuntimeException
 {
-    
 }
+

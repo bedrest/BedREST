@@ -19,7 +19,7 @@ use BedRest\Configuration;
 
 /**
  * ServiceManager
- * 
+ *
  * Service manager for controlling instances of various services in use by
  * the system.
  *
@@ -32,22 +32,22 @@ class ServiceManager
      * @var BedRest\Configuration
      */
     protected $configuration;
-    
+
     /**
      * Stores all loaded service instances.
      * @var array
      */
     protected $loadedServices;
-    
+
     /**
      * Constructor.
-     * @param BedRest\Configuration $configuration 
+     * @param BedRest\Configuration $configuration
      */
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
-    
+
     /**
      * Returns an instance of the specified service.
      * @param string $serviceClass
@@ -57,27 +57,28 @@ class ServiceManager
         if (!isset($this->loadedServices[$serviceClass])) {
             $this->loadService($serviceClass);
         }
-        
+
         return $this->loadedServices[$serviceClass];
     }
-    
+
     /**
      * Loads the specified service class.
      * @param string $serviceClass
-     * @throws \Exception 
+     * @throws \Exception
      */
     protected function loadService($serviceClass)
     {
         if (!class_exists($serviceClass)) {
             throw new Exception("Service '$serviceClass' not found.");
         }
-        
+
         $service = new $serviceClass();
-        
+
         if (method_exists($service, 'setEntityManager')) {
             $service->setEntityManager($this->configuration->getEntityManager());
         }
-        
+
         $this->loadedServices[$serviceClass] = $service;
     }
 }
+

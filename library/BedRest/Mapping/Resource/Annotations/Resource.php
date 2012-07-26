@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * Resource
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @Annotation
  * @Target("CLASS")
  */
@@ -33,10 +33,11 @@ class Resource implements Annotation
      * @var string
      */
     public $serviceClass;
-    
+
     /**
      * Resource name, used for routing, amongst other things.
      * @var string
      */
     public $name;
 }
+

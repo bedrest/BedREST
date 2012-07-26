@@ -17,8 +17,8 @@ namespace BedRest;
 
 /**
  * Request
- * 
- * Contains data about an HTTP request, along with utility 
+ *
+ * Contains data about an HTTP request, along with utility
  * functions for checking against various parameters supplied in the request.
  *
  * @author Geoff Adams <geoff@dianode.net>
@@ -34,84 +34,84 @@ class Request
     const METHOD_PUT_COLLECTION = 'PUT_COLLECTION';
     const METHOD_DELETE = 'DELETE';
     const METHOD_DELETE_COLLECTION = 'DELETE_COLLECTION';
-    
+
     /**
      * HTTP method of the request.
      * @var string
      */
     protected $method;
-    
+
     /**
      * Name of the resource being requested.
-     * @var string 
+     * @var string
      */
     protected $resource = '';
-    
+
     const CONTENTTYPE_JSON = 'application/json';
     const CONTENTTYPE_URLENCODED = 'application/x-www-form-urlencoded';
     const CONTENTTYPE_XML = 'text/xml';
-    
+
     /**
      * Content type of any request payload.
-     * @var string 
+     * @var string
      */
     protected $contentType = '';
-    
+
     /**
      * Parsed and ordered 'Accept' header.
-     * @var array 
+     * @var array
      */
     protected $accept = array();
-    
+
     /**
      * Parsed and ordered 'Accept-Encoding' header.
-     * @var array 
+     * @var array
      */
     protected $acceptEncoding = array();
-    
+
     /**
      * Raw payload of the request.
      * @var mixed
      */
     protected $payload = false;
-    
+
     /**
-     * Constructor. 
+     * Constructor.
      */
     public function __construct()
     {
         $this->setMethod();
-        
+
         $this->setContentType();
-        
+
         $this->setAccept();
-        
+
         $this->setAcceptEncoding();
     }
-    
+
     /**
      * Returns the HTTP method of the request.
-     * @return string 
+     * @return string
      */
     public function getMethod()
     {
         return $this->method;
     }
-    
+
     /**
-     * Sets the HTTP method of the request. If the provided value is null, it is automatically detected from the 
+     * Sets the HTTP method of the request. If the provided value is null, it is automatically detected from the
      * environment.
-     * @param string $method 
+     * @param string $method
      */
     public function setMethod($method = null)
     {
         if ($method === null) {
             $method = $_SERVER['REQUEST_METHOD'];
         }
-        
+
         $this->method = $method;
     }
-    
+
     /**
      * Returns the resource referenced by the request.
      * @return string
@@ -120,20 +120,20 @@ class Request
     {
         return $this->resource;
     }
-    
+
     /**
      * Sets the resource referenced by the request.
-     * @param string $resource 
+     * @param string $resource
      */
     public function setResource($resource = null)
     {
         if ($resource === null) {
             // TODO: detect resource? is this even possible at this stage of the request?
         }
-        
+
         $this->resource = $resource;
     }
-    
+
     /**
      * Returns the content type of the request payload, usually determined from the 'Content-Type' HTTP header.
      * @return string
@@ -142,21 +142,21 @@ class Request
     {
         return $this->contentType;
     }
-    
+
     /**
-     * Sets the content type of the request payload. If the provided value is null, it is automatically detected 
+     * Sets the content type of the request payload. If the provided value is null, it is automatically detected
      * from the environment.
-     * @param string $contentType 
+     * @param string $contentType
      */
     public function setContentType($contentType = null)
     {
         if ($contentType === null) {
             $contentType = isset($_SERVER['HTTP_CONTENT_TYPE']) ? $_SERVER['HTTP_CONTENT_TYPE'] : null;
         }
-        
+
         $this->contentType = $contentType;
     }
-    
+
     /**
      * Returns the parsed accepted content types of the request, usually determined by the 'Accept' HTTP header.
      * @return array
@@ -165,11 +165,11 @@ class Request
     {
         return $this->accept;
     }
-    
+
     /**
-     * Sets the accepted content types of the request. If the provided value is null, it is automatically detected 
+     * Sets the accepted content types of the request. If the provided value is null, it is automatically detected
      * from the environment. The provided value is parsed into an array and ordered by weighting of each format.
-     * @param array $accept 
+     * @param array $accept
      */
     public function setAccept($accept = null)
     {
@@ -179,33 +179,35 @@ class Request
 
         // split accept into components
         $accept = explode(',', $accept);
-        
+
         $this->accept = array();
-        
+
         foreach ($accept as $item) {
             $item = explode(';', trim($item));
-            
+
             $entry = array(
                 'media_range' => array_shift($item),
                 'q' => 1
             );
-            
+
             foreach ($item as $param) {
                 $param = explode('=', $param);
-                
+
                 // ignore malformed params
-                if (count($param) != 2) continue;
-                
+                if (count($param) != 2) {
+                    continue;
+                }
+
                 $entry[$param[0]] = $param[1];
             }
-            
+
             $this->accept[] = $entry;
         }
-        
+
         // @todo Take account of specificity with wildcard media ranges (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
         $this->mergeSort($this->accept, array($this, 'sortQualityComparator'));
     }
-    
+
     /**
      * Returns the parsed accepted content types of the request, usually determined by the 'Accept-Encoding' HTTP header.
      * @return array
@@ -214,58 +216,60 @@ class Request
     {
         return $this->acceptEncoding;
     }
-    
+
     /**
-     * Sets the accepted content types of the request. If the provided value is null, it is automatically detected 
+     * Sets the accepted content types of the request. If the provided value is null, it is automatically detected
      * from the environment. The provided value is parsed into an array and ordered by weighting of each format.
-     * @param array $accept 
+     * @param array $accept
      */
     public function setAcceptEncoding($acceptEncoding = null)
     {
         if ($acceptEncoding === null) {
             $acceptEncoding = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : null;
         }
-        
+
         // split accept into components
         $acceptEncoding = explode(',', $acceptEncoding);
-        
+
         $this->acceptEncoding = array();
-        
+
         foreach ($acceptEncoding as $item) {
             $item = explode(';', trim($item));
-            
+
             $entry = array(
                 'encoding' => array_shift($item),
                 'q' => 1
             );
-            
+
             foreach ($item as $param) {
                 $param = explode('=', $param);
-                
+
                 // ignore malformed params and anything which isn't the quality factor
-                if (count($param) != 2 || $param[0] != 'q') continue;
-                
+                if (count($param) != 2 || $param[0] != 'q') {
+                    continue;
+                }
+
                 $entry['q'] = $param[1];
             }
-            
+
             $this->acceptEncoding[] = $entry;
         }
-        
+
         // sort according to quality factor
         $this->mergeSort($this->acceptEncoding, array($this, 'sortQualityComparator'));
     }
-    
+
     /**
      * Set the request payload.
-     * @param mixed $payload 
+     * @param mixed $payload
      */
     public function setPayload($payload)
     {
         $this->payload = $payload;
     }
-    
+
     /**
-     * Returns the request payload. 
+     * Returns the request payload.
      * @param boolean $autoDecode
      * @return mixed
      */
@@ -274,7 +278,7 @@ class Request
         if (!$autoDecode || $this->payload == false) {
             return $this->payload;
         }
-        
+
         switch ($this->contentType) {
             case self::CONTENTTYPE_JSON:
                 $data = json_decode($this->payload);
@@ -289,26 +293,27 @@ class Request
                 throw new \RuntimeException("The content type '{$this->contentType}' cannot be decoded");
                 break;
         }
-        
+
         return $data;
     }
-    
+
     /**
      * Comparator function for sorting a list of arrays by their 'q' factor.
      * @param array $e1
      * @param array $e2
-     * @return integer 
+     * @return integer
      */
-    protected function sortQualityComparator($e1, $e2) {
+    protected function sortQualityComparator($e1, $e2)
+    {
         $r = $e2['q'] - $e1['q'];
-        
+
         // doesn't cope too well with values 1 > v > -1, so make sure we return simple integers
         if ($r > 0) {
             $r = 1;
         } elseif ($r < 0) {
             $r = -1;
         }
-        
+
         return $r;
     }
 
@@ -318,29 +323,32 @@ class Request
      * are purely for readability and code style.
      * @param array $array
      */
-    protected function mergeSort(array &$array, $comparator = 'strcmp') {
+    protected function mergeSort(array &$array, $comparator = 'strcmp')
+    {
         // optimisation, no sorting required on arrays with 0 or 1 items
-        if (count($array) < 2) return;
-        
+        if (count($array) < 2) {
+            return;
+        }
+
         // split the array in half
         $halfway = count($array) / 2;
         $array1 = array_slice($array, 0, $halfway);
         $array2 = array_slice($array, $halfway);
-        
+
         // use recursion to sort both halves
         $this->mergeSort($array1, $comparator);
         $this->mergeSort($array2, $comparator);
-        
+
         // optimisation, if the end of $array1 is less than the start of $array2, append and return
         if (call_user_func($comparator, end($array1), $array2[0]) < 1) {
             $array = array_merge($array1, $array2);
             return;
         }
-        
+
         // merge the arrays into a single array
         $array = array();
         $ptr1 = $ptr2 = 0;
-        
+
         while ($ptr1 < count($array1) && $ptr2 < count($array2)) {
             if (call_user_func($comparator, $array1[$ptr1], $array2[$ptr2]) < 1) {
                 $array[] = $array1[$ptr1++];
@@ -348,9 +356,15 @@ class Request
                 $array[] = $array2[$ptr2++];
             }
         }
-        
+
         // merge the remainder
-        while ($ptr1 < count($array1)) $array[] = $array1[$ptr1++];
-        while ($ptr2 < count($array2)) $array[] = $array2[$ptr2++];
+        while ($ptr1 < count($array1)) {
+            $array[] = $array1[$ptr1++];
+        }
+
+        while ($ptr2 < count($array2)) {
+            $array[] = $array2[$ptr2++];
+        }
     }
 }
+

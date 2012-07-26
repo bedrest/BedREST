@@ -14,13 +14,13 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @var BedRest\TestFixtures\Mocks\EntityManagerMock
      */
     protected static $em;
-    
+
     /**
      * Configuration used for tests.
      * @var BedRest\Configuration
      */
     protected static $config;
-    
+
     /**
      * Retrieves an entity manager to be used by tests requiring one.
      * @param mixed $conn
@@ -36,7 +36,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver());
 
             $eventManager = new \Doctrine\Common\EventManager();
-        
+
             if ($conn == null) {
                 $conn = array(
                     'driverClass'  => '\BedRest\TestFixtures\Mocks\DriverMock',
@@ -49,26 +49,27 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             if (is_array($conn)) {
                 $conn = \Doctrine\DBAL\DriverManager::getConnection($conn, $config, $eventManager);
             }
-            
+
             self::$em = \BedRest\TestFixtures\Mocks\EntityManagerMock::create($conn);
         }
-        
+
         return self::$em;
     }
-    
+
     /**
      * Returns a configuration object for use in tests.
-     * @return BedRest\Configuration 
+     * @return BedRest\Configuration
      */
     public static function getConfiguration()
     {
         if (!self::$config) {
             $config = new \BedRest\Configuration();
             $config->setEntityManager(self::getEntityManager());
-            
+
             self::$config = $config;
         }
-        
+
         return self::$config;
     }
 }
+

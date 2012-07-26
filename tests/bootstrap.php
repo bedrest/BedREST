@@ -20,3 +20,4 @@ $classLoader->register();
 // register custom annotations
 Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DOCTRINE_LIB_PATH . '/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
 Doctrine\Common\Annotations\AnnotationRegistry::registerFile(BEDREST_LIB_PATH . '/BedRest/Mapping/Resource/Annotations.php');
+

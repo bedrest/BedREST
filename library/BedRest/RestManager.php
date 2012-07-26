@@ -23,7 +23,7 @@ use Doctrine\Common\EventManager;
 
 /**
  * RestManager
- * 
+ *
  * Responsible for dispatching REST actions to the correct services. Sits between controllers and the service layer.
  *
  * @author Geoff Adams <geoff@dianode.net>
@@ -32,41 +32,41 @@ class RestManager
 {
     /**
      * Configuration instance.
-     * @var BedRest\Configuration 
+     * @var BedRest\Configuration
      */
     protected $configuration;
-    
+
     /**
      * Service manager instance.
      * @var BedRest\ServiceManagaer
      */
     protected $serviceManager;
-    
+
     /**
      * Event manager instance.
      * @var Doctrine\Common\EventManager
      */
     protected $eventManager;
-    
+
     /**
      * The resource metadata factory.
      * @var BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
-    
+
     /**
      * Constructor.
-     * @param BedRest\Configuration $configuration 
+     * @param BedRest\Configuration $configuration
      */
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
-        
+
         $this->resourceMetadataFactory = new ResourceMetadataFactory();
         $this->resourceMetadataFactory->setClassMetadataFactory($this->configuration->getEntityManager()->getMetadataFactory());
         $this->resourceMetadataFactory->setMetadataDriver($configuration->getResourceMetadataDriverImpl());
     }
-    
+
     /**
      * Returns the configuration object.
      * @return BedRest\Configuration
@@ -75,7 +75,7 @@ class RestManager
     {
         return $this->configuration;
     }
-    
+
     /**
      * Returns resource metadata for a class.
      * @param string $className
@@ -85,7 +85,7 @@ class RestManager
     {
         return $this->resourceMetadataFactory->getMetadataFor($className);
     }
-    
+
     /**
      * Returns the resource metadata factory.
      * @return BedRest\Mapping\Resource\ResourceMetadataFactory
@@ -94,16 +94,16 @@ class RestManager
     {
         return $this->resourceMetadataFactory;
     }
-    
+
     /**
      * Sets the service manager.
-     * @param BedRest\ServiceManager $serviceManager 
+     * @param BedRest\ServiceManager $serviceManager
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {
         $this->serviceManager = $serviceManager;
     }
-    
+
     /**
      * Returns the service manager.
      * @return BedRest\ServiceManager
@@ -112,24 +112,25 @@ class RestManager
     {
         return $this->serviceManager;
     }
-    
+
     /**
      * Sets the event manager.
-     * @param Doctrine\Common\EventManager $eventManager 
+     * @param Doctrine\Common\EventManager $eventManager
      */
-    public function setEventManager(EventManager $eventManager) {
+    public function setEventManager(EventManager $eventManager)
+    {
         $this->eventManager = $eventManager;
     }
-    
+
     /**
      * Returns the event manager.
-     * @return Doctrine\Common\EventManager 
+     * @return Doctrine\Common\EventManager
      */
     public function getEventManager()
     {
         return $this->eventManager;
     }
-    
+
     /**
      * Processes a REST request, returning a Response object.
      * @param BedRest\Request $request
@@ -137,18 +138,19 @@ class RestManager
     public function process(Request $request)
     {
         $rm = $this->getResourceMetadata($request->getResource());
-        
+
         $sm = $this->getServiceManager();
         $service = $sm->getService($rm->getServiceClass());
-        
+
         // determine event
         $method = $rm->getServiceMethod($request->getMethod());
-        
+
         // TODO: create event
-        
+
         // TODO: dispatch event
         //$this->getEventManager()->dispatchEvent($eventName, $eventArgs);
-        
+
         return new Response();
     }
 }
+

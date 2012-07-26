@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -21,7 +22,7 @@ use BedRest\Configuration,
 
 /**
  * AbstractMapper
- * 
+ *
  * @author Geoff Adams <geoff@dianode.net>
  */
 abstract class AbstractMapper
@@ -41,7 +42,7 @@ abstract class AbstractMapper
     {
         $this->configuration = $configuration;
     }
-    
+
     /**
      * Returns the configuration.
      * @return BedRest\Configuration
@@ -53,13 +54,13 @@ abstract class AbstractMapper
 
     /**
      * Sets the configuration.
-     * @param BedRest\Configuration $em 
+     * @param BedRest\Configuration $em
      */
     public function setConfiguration(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
-    
+
     /**
      * Gets the entity manager.
      * @return Doctrine\ORM\EntityManager
@@ -69,13 +70,13 @@ abstract class AbstractMapper
         if (!$this->configuration instanceof Configuration) {
             throw new DataMappingException('Configuration not provided');
         }
-        
+
         $em = $this->configuration->getEntityManager();
-        
+
         if (!$em instanceof EntityManager) {
             throw new DataMappingException('EntityManager not provided');
         }
-        
+
         return $em;
     }
 
@@ -86,25 +87,27 @@ abstract class AbstractMapper
      * @param object $resource
      * @param array $data
      * @return array
-     * @throws DataMappingException 
+     * @throws DataMappingException
      */
     public function castFieldData($resource, array $data)
     {
         // get the class meta data for the entity
         $em = $this->getEntityManager();
-        
+
         $classMetaInfo = $em->getClassMetadata(get_class($resource));
 
         // process basic fields
         $castData = array();
-        
+
         foreach ($classMetaInfo->fieldMappings as $fieldName => $fieldMapping) {
             // skip fields not included in the data
-            if (!isset($data[$fieldName])) continue;
+            if (!isset($data[$fieldName])) {
+                continue;
+            }
 
             // cast the data to the correct type
             $value = $data[$fieldName];
-            
+
             switch ($fieldMapping['type']) {
                 case Type::INTEGER:
                 case Type::BIGINT:
@@ -124,7 +127,7 @@ abstract class AbstractMapper
                         if (!isset($value['date'])) {
                             throw new DataMappingException('Cannot cast an array to a date/time field, unless it follows DateTime array format');
                         }
-                        
+
                         $value = new \DateTime($value['date'] . (isset($value['timezone']) ? ' ' . $value['timezone'] : ''));
                     } elseif (is_string($value)) {
                         $value = new \DateTime($value);
@@ -153,21 +156,21 @@ abstract class AbstractMapper
                     throw new DataMappingException("Unknown type \"{$fieldMapping['type']}\"");
                     break;
             }
-            
+
             // enter into the final cast data array
             $castData[$fieldName] = $value;
-    	}
-        
+        }
+
         return $castData;
     }
-    
+
     /**
      * Maps data into a resource.
      * @param object $resource Entity to map the data into.
      * @param mixed $data Data to be mapped.
      */
     abstract public function map($resource, $data);
-    
+
     /**
      * Maps data from a resource into the desired format.
      * @param mixed $resource Entity to map data from.
@@ -175,3 +178,4 @@ abstract class AbstractMapper
      */
     abstract public function reverse($resource);
 }
+

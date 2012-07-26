@@ -14,7 +14,7 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     protected function _getCommonIntegerTypeDeclarationSQL(array $columnDef)
     {
-        
+
     }
 
     /**
@@ -22,7 +22,7 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     protected function initializeDoctrineTypeMappings()
     {
-        
+
     }
 
     /**
@@ -30,7 +30,7 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getBigIntTypeDeclarationSQL(array $columnDef)
     {
-        
+
     }
 
     /**
@@ -38,7 +38,7 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getBlobTypeDeclarationSQL(array $field)
     {
-        
+
     }
 
     /**
@@ -46,7 +46,7 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getBooleanTypeDeclarationSQL(array $columnDef)
     {
-        
+
     }
 
     /**
@@ -54,7 +54,7 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getClobTypeDeclarationSQL(array $field)
     {
-        
+
     }
 
     /**
@@ -62,7 +62,7 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getIntegerTypeDeclarationSQL(array $columnDef)
     {
-        
+
     }
 
     /**
@@ -78,6 +78,6 @@ class DatabasePlatformMock extends \Doctrine\DBAL\Platforms\AbstractPlatform
      */
     public function getSmallIntTypeDeclarationSQL(array $columnDef)
     {
-        
+
     }
 }

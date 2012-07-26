@@ -15,15 +15,18 @@
 
 namespace BedRest\Mapping;
 
+use BedRest\Exception as BedRestException;
+
 /**
  * MappingException
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class MappingException extends \BedRest\Exception
+class MappingException extends BedRestException
 {
     public static function serviceClassNotProvided($className)
     {
         return new self("Class '{$className}' does not have a specified service class.");
     }
 }
+

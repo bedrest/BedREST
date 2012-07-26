@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * Property
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @Annotation
  * @Target("PROPERTY")
  */
@@ -33,3 +33,4 @@ class Property implements Annotation
      */
     public $readOnly = false;
 }
+

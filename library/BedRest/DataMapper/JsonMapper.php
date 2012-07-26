@@ -19,7 +19,7 @@ use Doctrine\DBAL\Types\Type;
 
 /**
  * JsonMapper
- * 
+ *
  * @author Geoff Adams <geoff@dianode.net>
  */
 class JsonMapper extends AbstractMapper
@@ -27,17 +27,17 @@ class JsonMapper extends AbstractMapper
     /**
      * Maps data into an entity from a raw JSON string.
      * @param mixed $resource
-     * @param string $data 
+     * @param string $data
      */
     public function map($resource, $data)
     {
         if (!is_string($data)) {
             throw new DataMappingException('Supplied data is not a string');
         }
-        
+
         // decode the data
         $data = json_decode($data, true);
-        
+
         // check if an error occurred during decoding
         if ($error = json_last_error()) {
             switch (json_last_error()) {
@@ -57,18 +57,18 @@ class JsonMapper extends AbstractMapper
                     $errorMessage = '';
                 break;
             }
-        
+
             throw new DataMappingException("Error during JSON deocding: $errorMessage");
         }
-        
+
         // cast data
         $data = $this->castFieldData($resource, $data);
-        
+
         foreach ($data as $property => $value) {
             $resource->$property = $value;
         }
     }
-    
+
     /**
      * Maps data from an entity to a JSON string.
      * @param mixed $resource Entity to map data from.
@@ -77,9 +77,9 @@ class JsonMapper extends AbstractMapper
     public function reverse($resource)
     {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
-        
+
         $data = array();
-        
+
         foreach ($classMetadata->fieldMappings as $property => $mapping) {
             switch ($mapping['type']) {
                 case Type::DATE:
@@ -94,10 +94,11 @@ class JsonMapper extends AbstractMapper
                     $value = $resource->$property;
                 break;
             }
-            
+
             $data[$property] = $value;
         }
-        
+
         return json_encode($data);
     }
 }
+

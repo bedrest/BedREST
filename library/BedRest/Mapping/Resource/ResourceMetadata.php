@@ -29,31 +29,31 @@ class ResourceMetadata
      * @var string
      */
     protected $name;
-    
+
     /**
      * Name of the entity class for this resource.
      * @var string
      */
     protected $entityClass;
-    
+
     /**
      * Name of the service class for this resource.
      * @var string
      */
     protected $serviceClass;
-    
+
     /**
      * Identifier fields for the resource.
      * @var array
      */
     protected $identifierFields = array();
-    
+
     /**
      * Class metadata for the entity.
      * @var Doctrine\ORM\Mapping\ClassMetadata
      */
     protected $classMetadata;
-    
+
     /**
      * Constructor.
      * @param string $entityClass
@@ -62,16 +62,16 @@ class ResourceMetadata
     {
         $this->entityClass = $entityClass;
     }
-    
+
     /**
      * Sets the name of the resource.
-     * @param string $name 
+     * @param string $name
      */
     public function setName($name)
     {
         $this->name = $name;
     }
-    
+
     /**
      * Returns the name of the resource.
      * @return string
@@ -80,16 +80,16 @@ class ResourceMetadata
     {
         return $this->name;
     }
-    
+
     /**
      * Sets the class name of the service for this resource.
-     * @param string $serviceClass 
+     * @param string $serviceClass
      */
     public function setServiceClass($serviceClass)
     {
         $this->serviceClass = $serviceClass;
     }
-    
+
     /**
      * Returns the class name of the service for this resource.
      * @return string
@@ -98,16 +98,16 @@ class ResourceMetadata
     {
         return $this->serviceClass;
     }
-    
+
     /**
      * Sets the entity class name. Must be a Doctrine entity.
-     * @param string $entityClass 
+     * @param string $entityClass
      */
     public function setEntityClass($entityClass)
     {
         $this->entityClass = $entityClass;
     }
-    
+
     /**
      * Returns the Doctrine entity class name.
      * @return string
@@ -116,16 +116,16 @@ class ResourceMetadata
     {
         return $this->entityClass;
     }
-    
+
     /**
      * Sets the class metadata object for the entity associated with this resource.
-     * @param Doctrine\ORM\Mapping\ClassMetadata $classMetadata 
+     * @param Doctrine\ORM\Mapping\ClassMetadata $classMetadata
      */
     public function setClassMetadata(ClassMetadata $classMetadata)
     {
         $this->classMetadata = $classMetadata;
     }
-    
+
     /**
      * Returns the class metadata for the entity associated with this resource.
      * @return Doctrine\ORM\Mapping\ClassMetadata
@@ -135,3 +135,4 @@ class ResourceMetadata
         return $this->classMetadata;
     }
 }
+

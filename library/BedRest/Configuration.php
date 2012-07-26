@@ -19,7 +19,7 @@ use BedRest\Mapping\Resource\Driver\Driver;
 
 /**
  * Configuration
- * 
+ *
  * Configuration container for BedRest.
  *
  * @author Geoff Adams <geoff@dianode.net>
@@ -31,19 +31,19 @@ class Configuration
      * @var Doctrine\ORM\EntityManager
      */
     protected $entityManager;
-    
+
     /**
      * Resource metadata factory.
      * @var BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
-    
+
     /**
      * Array of service namespaces, analogous to Doctrine\ORM\Configuration's entity namespace storage.
      * @var array
      */
     protected $serviceNamespaces;
-    
+
     /**
      * Returns the entity manager.
      * @return \Doctrine\ORM\EntityManager
@@ -52,16 +52,16 @@ class Configuration
     {
         return $this->entityManager;
     }
-    
+
     /**
      * Sets the entity manager.
-     * @param \Doctrine\ORM\EntityManager $entityManager 
+     * @param \Doctrine\ORM\EntityManager $entityManager
      */
     public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
-    
+
     /**
      * Returns all registered service namespace mappings.
      * @return array
@@ -70,16 +70,16 @@ class Configuration
     {
         return $this->serviceNamespaces;
     }
-    
+
     /**
      * Sets all service namespace mappings.
-     * @param array $serviceNamespaces 
+     * @param array $serviceNamespaces
      */
     public function setServiceNamespaces(array $serviceNamespaces)
     {
         $this->serviceNamespaces = $serviceNamespaces;
     }
-    
+
     /**
      * Adds a single service namespace mapping.
      * @param string $alias
@@ -89,16 +89,16 @@ class Configuration
     {
         $this->serviceNamespaces[$alias] = $namespace;
     }
-    
+
     /**
      * Sets the metadata driver implementation.
-     * @param BedRest\Mapping\Resource\Driver\Driver $driver 
+     * @param BedRest\Mapping\Resource\Driver\Driver $driver
      */
     public function setResourceMetadataDriverImpl(Driver $driver)
     {
         $this->metadataDriverImpl = $driver;
     }
-    
+
     /**
      * Returns the metadata driver implementation.
      * @return BedRest\Mapping\Resource\Driver\Driver
@@ -108,3 +108,4 @@ class Configuration
         return $this->metadataDriverImpl;
     }
 }
+
