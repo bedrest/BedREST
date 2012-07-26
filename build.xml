@@ -85,7 +85,7 @@
         <mkdir dir="${phpcs.output}" />
         
         <phpcodesniffer standard="PSR2" format="full"
-                        docGenerator="html" docFile="${phpcs.output}/doc.html">
+                        docGenerator="HTML" docFile="${phpcs.output}/doc.html">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
