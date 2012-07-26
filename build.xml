@@ -40,6 +40,7 @@
                  codecoverage="true"
                  bootstrap="tests/bootstrap.php">
             <formatter todir="${reports.phpunit.logs}" type="xml" />
+            <formatter todir="${reports.phpunit.logs}" type="clover" outfile="clover.xml" />
             <batchtest>
                 <fileset dir="${tests.dir}">
                     <include name="${tests.fileset}" />
@@ -79,8 +80,10 @@
     
     <!-- PHP Lint -->
     <target name="php-lint" description="Run PHP Lint">
-        <phplint haltonfailure="true">
-            <fileset dir="${project.basedir}/library">
+        <mkdir dir="${reports.phplint.dir}" />
+        
+        <phplint haltonfailure="false" tofile="${reports.phplint.dir}/report.log">
+            <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
         </phplint>
@@ -117,6 +120,7 @@
     
     <!-- Cleans all reports -->
     <target name="clean-reports">
+        <delete dir="${reports.phplint.dir}" />
         <delete dir="${reports.phpmd.dir}" />
         <delete dir="${reports.phpcs.dir}" />
     </target>
