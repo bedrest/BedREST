@@ -7,33 +7,32 @@
     <property file="build.properties" />
     
     <!-- Base build task -->
-    <target name="build" depends="php-lint, api-doc, test">
+    <target name="build" depends="generate-docs, test">
         
     </target>
     
     <!-- PHPUnit test suites -->
     <target name="unit-clean" description="Cleans up test folders.">
-        <delete dir="${tests.reports}"/>
-        <delete dir="${tests.coverage}"/>
-        <delete dir="${tests.html}"/>
-        <delete dir="${tests.logs}"/>
-    </target>
-
-    <target name="unit-prepare" description="Prepares test folders.">
-        <mkdir dir="${tests.reports}"/>
-        <mkdir dir="${tests.coverage}"/>
-        <mkdir dir="${tests.html}"/>
-        <mkdir dir="${tests.logs}"/>
+        <delete dir="${tests.reports}" />
+        <delete dir="${tests.coverage}" />
+        <delete dir="${tests.html}" />
+        <delete dir="${tests.logs}" />
     </target>
     
     <target name="unit-test" 
             description="Runs the full test suite." 
-            depends="unit-clean, unit-prepare">
+            depends="unit-clean">
+        <mkdir dir="${tests.reports}" />
+        <mkdir dir="${tests.coverage}" />
+        <mkdir dir="${tests.html}" />
+        <mkdir dir="${tests.logs}" />
+        
         <coverage-setup database="${tests.coverage}/coverage.db">
             <fileset dir="${library.basedir}">
-                <include name="${library.fileset}"/>
+                <include name="${library.fileset}" />
             </fileset>
         </coverage-setup>
+        
         <phpunit printsummary="true"
                  haltonfailure="false" 
                  haltonerror="false"
@@ -46,11 +45,13 @@
                 </fileset>
             </batchtest>
         </phpunit>
+        
         <phpunitreport infile="${tests.logs}/testsuites.xml" 
                        format="frames" 
                        todir="${tests.reports}" />
+        
         <coverage-report outfile="${tests.coverage}/coverage.db">
-            <report todir="${tests.coverage}" usesorttable="true"/>
+            <report todir="${tests.coverage}" usesorttable="true" />
         </coverage-report>
     </target>
     
@@ -62,27 +63,59 @@
     <target name="php-lint" description="Run PHP Lint">
         <phplint haltonfailure="true">
             <fileset dir="${project.basedir}/library">
-                <include name="${library.fileset}"/>
+                <include name="${library.fileset}" />
             </fileset>
         </phplint>
     </target>
     
     <!-- PHP Mess Detector -->
     <target name="php-md" description="Run PHP Mess Detector">
+        <mkdir dir="${phpmd.output}" />
+        
         <phpmd rulesets="codesize,design,unusedcode">
             <fileset dir="${library.basedir}">
-                <include name="${library.fileset}"/>
+                <include name="${library.fileset}" />
             </fileset>
-            <formatter type="html" outfile="${phpmd.output}/index.html"/>
+            <formatter type="html" outfile="${phpmd.output}/index.html" />
         </phpmd>
+    </target>
+
+    <!-- PHP Code Sniffer -->
+    <target name="php-cs" description="Runs PHP Code Sniffer">
+        <mkdir dir="${phpcs.output}" />
+        
+        <phpcodesniffer standard="PSR2" format="full"
+                        docGenerator="html" docFile="${phpcs.output}/doc.html">
+            <fileset dir="${library.basedir}">
+                <include name="${library.fileset}" />
+            </fileset>
+            <fileset dir="${tests.basedir}">
+                <include name="${tests.fileset}" />
+            </fileset>
+            <formatter type="full" outfile="${phpcs.output}/report.txt" />
+        </phpcodesniffer>
     </target>
     
     <!-- API documentation -->
     <target name="api-doc" description="Generates the BedREST API Documentation">
+        <mkdir dir="${apidocs.location}" />
+        
         <phpdoc2 title="BedREST API Documentation" destdir="${apidocs.location}" template="responsive">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
         </phpdoc2>
+    </target>
+    
+    <!-- Cleans all documentation -->
+    <target name="clean-docs">
+        <delete dir="${phpmd.output}" />
+        <delete dir="${phpcs.output}" />
+        <delete dir="${apidocs.location}" />
+    </target>
+    
+    <!-- Generate all documentation -->
+    <target name="generate-docs" description="Generates all documentation and reports" depends="clean-docs, php-lint, php-cs, php-md, api-doc">
+        
     </target>
 </project>
