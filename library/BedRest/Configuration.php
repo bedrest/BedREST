@@ -101,7 +101,7 @@ class Configuration
 
     /**
      * Returns the metadata driver implementation.
-     * @return BedRest\Mapping\Resource\Driver\Driver
+     * @return \BedRest\Mapping\Resource\Driver\Driver
      */
     public function getResourceMetadataDriverImpl()
     {

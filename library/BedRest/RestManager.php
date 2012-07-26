@@ -69,7 +69,7 @@ class RestManager
 
     /**
      * Returns the configuration object.
-     * @return BedRest\Configuration
+     * @return \BedRest\Configuration
      */
     public function getConfiguration()
     {
@@ -79,7 +79,7 @@ class RestManager
     /**
      * Returns resource metadata for a class.
      * @param string $className
-     * @return BedRest\Mapping\Resource\ResourceMetadata
+     * @return \BedRest\Mapping\Resource\ResourceMetadata
      */
     public function getResourceMetadata($className)
     {
@@ -88,7 +88,7 @@ class RestManager
 
     /**
      * Returns the resource metadata factory.
-     * @return BedRest\Mapping\Resource\ResourceMetadataFactory
+     * @return \BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     public function getResourceMetadataFactory()
     {
@@ -106,7 +106,7 @@ class RestManager
 
     /**
      * Returns the service manager.
-     * @return BedRest\ServiceManager
+     * @return \BedRest\ServiceManager
      */
     public function getServiceManager()
     {
@@ -124,7 +124,7 @@ class RestManager
 
     /**
      * Returns the event manager.
-     * @return Doctrine\Common\EventManager
+     * @return \Doctrine\Common\EventManager
      */
     public function getEventManager()
     {

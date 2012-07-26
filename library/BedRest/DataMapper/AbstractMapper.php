@@ -45,7 +45,7 @@ abstract class AbstractMapper
 
     /**
      * Returns the configuration.
-     * @return BedRest\Configuration
+     * @return \BedRest\Configuration
      */
     public function getConfiguration()
     {
@@ -63,7 +63,7 @@ abstract class AbstractMapper
 
     /**
      * Gets the entity manager.
-     * @return Doctrine\ORM\EntityManager
+     * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
     {

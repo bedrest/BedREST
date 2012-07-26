@@ -27,13 +27,13 @@ class ResourceMetadataFactory
 {
     /**
      * Mapping metadata driver.
-     * @var BedRest\Mapping\Resource\Driver\Driver
+     * @var \BedRest\Mapping\Resource\Driver\Driver
      */
     protected $driver;
 
     /**
      * ClassMetadataFactory instance
-     * @var Doctrine\ORM\Mapping\ClassMetadataFactory
+     * @var \Doctrine\ORM\Mapping\ClassMetadataFactory
      */
     protected $classMetadataFactory;
 
@@ -45,7 +45,7 @@ class ResourceMetadataFactory
 
     /**
      * Sets the metadata driver.
-     * @param BedRest\Mapping\Resource\Driver\Driver $driver
+     * @param \BedRest\Mapping\Resource\Driver\Driver $driver
      */
     public function setMetadataDriver(Driver $driver)
     {
@@ -54,7 +54,7 @@ class ResourceMetadataFactory
 
     /**
      * Returns the metadata driver.
-     * @return BedRest\Mapping\Resource\Driver\Driver
+     * @return \BedRest\Mapping\Resource\Driver\Driver
      */
     public function getMetadataDriver()
     {
@@ -63,7 +63,7 @@ class ResourceMetadataFactory
 
     /**
      * Sets the ClassMetadataFactory instance.
-     * @param Doctrine\ORM\Mapping\ClassMetadataFactory $factory
+     * @param \Doctrine\ORM\Mapping\ClassMetadataFactory $factory
      */
     public function setClassMetadataFactory(ClassMetadataFactory $factory)
     {
@@ -72,7 +72,7 @@ class ResourceMetadataFactory
 
     /**
      * Returns the ClassMetadataFactory instance.
-     * @return Doctrine\ORM\Mapping\ClassMetadataFactory
+     * @return \Doctrine\ORM\Mapping\ClassMetadataFactory
      */
     public function getClassMetadataFactory()
     {
@@ -82,7 +82,7 @@ class ResourceMetadataFactory
     /**
      * Returns ResourceMetadata for the specified class.
      * @param string $className
-     * @return BedRest\Mapping\Resource\ResourceMetadata
+     * @return \BedRest\Mapping\Resource\ResourceMetadata
      */
     public function getMetadataFor($className)
     {

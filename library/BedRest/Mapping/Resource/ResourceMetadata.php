@@ -128,7 +128,7 @@ class ResourceMetadata
 
     /**
      * Returns the class metadata for the entity associated with this resource.
-     * @return Doctrine\ORM\Mapping\ClassMetadata
+     * @return \Doctrine\ORM\Mapping\ClassMetadata
      */
     public function getClassMetadata()
     {
