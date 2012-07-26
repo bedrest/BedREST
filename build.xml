@@ -111,6 +111,7 @@
                 <include name="*${tests.fileset}" />
             </fileset>
             <formatter type="full" outfile="${reports.phpcs.dir}/report.txt" />
+            <formatter type="checkstyle" outfile="${reports.phpcs.dir}/checkstyle.xml" />
         </phpcodesniffer>
     </target>
     
