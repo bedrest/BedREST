@@ -6,22 +6,23 @@
     <!-- Load build properties -->
     <property file="build.properties" />
     
+    <!-- Clean task -->
+    <target name="clean" depends="clean-test, clean-docs, clean-reports">
+        
+    </target>
+    
     <!-- Base build task -->
-    <target name="build" depends="generate-docs, test">
+    <target name="build" depends="clean, php-lint, generate-docs, test">
         
     </target>
     
     <!-- PHPUnit test suites -->
-    <target name="unit-clean" description="Cleans up test folders.">
-        <delete dir="${tests.reports}" />
-        <delete dir="${tests.coverage}" />
-        <delete dir="${tests.html}" />
-        <delete dir="${tests.logs}" />
+    <target name="clean-test" description="Cleans up test folders.">
+        <delete dir="${tests.docs}" />
     </target>
     
-    <target name="unit-test" 
-            description="Runs the full test suite." 
-            depends="unit-clean">
+    <target name="test" description="Runs all available tests" depends="clean-test">
+        <mkdir dir="${tests.docs}" />
         <mkdir dir="${tests.reports}" />
         <mkdir dir="${tests.coverage}" />
         <mkdir dir="${tests.html}" />
@@ -55,7 +56,24 @@
         </coverage-report>
     </target>
     
-    <target name="test" description="Runs all available tests" depends="unit-test">
+    <!-- API documentation -->
+    <target name="api-doc" description="Generates the BedREST API Documentation">
+        <mkdir dir="${apidocs.location}" />
+        
+        <phpdoc2 title="BedREST API Documentation" destdir="${apidocs.location}" template="responsive">
+            <fileset dir="${library.basedir}">
+                <include name="${library.fileset}" />
+            </fileset>
+        </phpdoc2>
+    </target>
+    
+    <!-- Cleans all documentation -->
+    <target name="clean-docs">
+        <delete dir="${apidocs.location}" />
+    </target>
+    
+    <!-- Generate all documentation -->
+    <target name="generate-docs" description="Generates all documentation" depends="clean-docs, api-doc">
         
     </target>
     
@@ -96,26 +114,14 @@
         </phpcodesniffer>
     </target>
     
-    <!-- API documentation -->
-    <target name="api-doc" description="Generates the BedREST API Documentation">
-        <mkdir dir="${apidocs.location}" />
-        
-        <phpdoc2 title="BedREST API Documentation" destdir="${apidocs.location}" template="responsive">
-            <fileset dir="${library.basedir}">
-                <include name="${library.fileset}" />
-            </fileset>
-        </phpdoc2>
-    </target>
-    
-    <!-- Cleans all documentation -->
-    <target name="clean-docs">
+    <!-- Cleans all reports -->
+    <target name="clean-reports">
         <delete dir="${phpmd.output}" />
         <delete dir="${phpcs.output}" />
-        <delete dir="${apidocs.location}" />
     </target>
     
-    <!-- Generate all documentation -->
-    <target name="generate-docs" description="Generates all documentation and reports" depends="clean-docs, php-lint, php-cs, php-md, api-doc">
+    <!-- Generates all reports -->
+    <target name="generate-reports" description="Generates all reports" depends="clean-reports, php-lint, php-cs, php-md">
         
     </target>
 </project>
