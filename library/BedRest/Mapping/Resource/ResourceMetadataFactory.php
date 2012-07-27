@@ -72,6 +72,10 @@ class ResourceMetadataFactory
      */
     public function getMetadataFor($className)
     {
+        if (!$this->isResource($className)) {
+            throw MappingException::classIsNotMappedResource($className);
+        }
+
         if (!isset($this->loadedMetadata[$className])) {
             $this->loadMetadata($className);
         }

@@ -28,5 +28,10 @@ class MappingException extends BedRestException
     {
         return new self("Class '{$className}' does not have a specified service class.");
     }
+    
+    public static function classIsNotMappedResource($className)
+    {
+        return new self("Class '{$className}' is not a mapped resource.");
+    }
 }
 

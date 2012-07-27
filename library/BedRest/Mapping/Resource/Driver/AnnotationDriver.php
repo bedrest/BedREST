@@ -43,10 +43,7 @@ class AnnotationDriver implements Driver
     }
 
     /**
-     * Loads resource metadata from PHP docblock annotations.
-     * @param string $className
-     * @param ResourceMetadata $resourceMetadata
-     * @throws BedRest\Mapping\MappingException
+     * {@inheritDoc}
      */
     public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata)
     {
@@ -80,6 +77,20 @@ class AnnotationDriver implements Driver
                 throw MappingException::serviceClassNotProvided($className);
             }
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function isResource($className)
+    {
+        $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'BedRest\Mapping\Resource\Annotations\Resource');
+        
+        if ($annotation) {
+            return true;
+        }
+        
+        return false;
     }
 }
 
