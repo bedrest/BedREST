@@ -96,6 +96,8 @@
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
+            
+            <formatter type="xml" outfile="${reports.phpmd.dir}/report.xml" />
             <formatter type="html" outfile="${reports.phpmd.dir}/report.html" />
         </phpmd>
     </target>
