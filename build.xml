@@ -7,12 +7,20 @@
     <property file="build.properties" />
     
     <!-- Clean task -->
-    <target name="clean" depends="clean-test, clean-docs, clean-reports">
+    <target name="clean" depends="clean-build, clean-test, clean-docs, clean-reports">
         
     </target>
     
     <!-- Base build task -->
-    <target name="build" depends="clean, php-lint, generate-docs, test">
+    <target name="clean-build">
+        <delete dir="${build.dir}" />
+    </target>
+    
+    <target name="prepare-build">
+        <mkdir dir="${build.dir}" />
+    </target>
+    
+    <target name="build" depends="clean-build, prepare-build, php-lint, generate-docs, test">
         
     </target>
     
@@ -27,7 +35,7 @@
         <mkdir dir="${reports.phpunit.report}" />
         <mkdir dir="${reports.phpunit.coverage}" />
         
-        <coverage-setup database="${reports.phpunit.logs}/coverage.xml">
+        <coverage-setup database="${reports.phpunit.logs}coverage.xml">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
@@ -47,11 +55,11 @@
             </batchtest>
         </phpunit>
         
-        <phpunitreport infile="${reports.phpunit.logs}/testsuites.xml" 
+        <phpunitreport infile="${reports.phpunit.logs}testsuites.xml" 
                        format="frames" 
                        todir="${reports.phpunit.report}" />
         
-        <coverage-report outfile="${reports.phpunit.logs}/coverage.xml">
+        <coverage-report outfile="${reports.phpunit.logs}coverage.xml">
             <report todir="${reports.phpunit.coverage}" usesorttable="true" />
         </coverage-report>
     </target>
@@ -69,7 +77,7 @@
     
     <!-- Cleans all documentation -->
     <target name="clean-docs">
-        <delete dir="${docs.api.dir}" />
+        <delete dir="${docs.dir}" />
     </target>
     
     <!-- Generate all documentation -->
@@ -81,7 +89,7 @@
     <target name="php-lint" description="Run PHP Lint">
         <mkdir dir="${reports.phplint.dir}" />
         
-        <phplint haltonfailure="false" tofile="${reports.phplint.dir}/report.log">
+        <phplint haltonfailure="false" tofile="${reports.phplint.dir}phplint.log">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
@@ -97,8 +105,8 @@
                 <include name="${library.fileset}" />
             </fileset>
             
-            <formatter type="xml" outfile="${reports.phpmd.dir}/report.xml" />
-            <formatter type="html" outfile="${reports.phpmd.dir}/report.html" />
+            <formatter type="xml" outfile="${reports.phpmd.dir}phpmd-report.xml" />
+            <formatter type="html" outfile="${reports.phpmd.dir}phpmd-report.html" />
         </phpmd>
     </target>
 
@@ -107,23 +115,23 @@
         <mkdir dir="${reports.phpcs.dir}" />
         
         <phpcodesniffer standard="PSR2" format="full"
-                        docGenerator="HTML" docFile="${reports.phpcs.dir}/doc.html">
+                        docGenerator="HTML" docFile="${reports.phpcs.dir}phpcs-doc.html">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
+            
             <fileset dir="${tests.dir}">
                 <include name="*${tests.fileset}" />
             </fileset>
-            <formatter type="full" outfile="${reports.phpcs.dir}/report.txt" />
-            <formatter type="checkstyle" outfile="${reports.phpcs.dir}/checkstyle.xml" />
+            
+            <formatter type="full" outfile="${reports.phpcs.dir}phpcs-report.txt" />
+            <formatter type="checkstyle" outfile="${reports.phpcs.dir}phpcs-checkstyle.xml" />
         </phpcodesniffer>
     </target>
     
     <!-- Cleans all reports -->
     <target name="clean-reports">
-        <delete dir="${reports.phplint.dir}" />
-        <delete dir="${reports.phpmd.dir}" />
-        <delete dir="${reports.phpcs.dir}" />
+        <delete dir="${reports.dir}" />
     </target>
     
     <!-- Generates all reports -->
