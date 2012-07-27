@@ -2,9 +2,10 @@
 
 namespace BedRest\Tests\Mapping\Resource;
 
-use BedRest\Tests\BaseTestCase;
+use BedRest\Configuration;
 use BedRest\Mapping\Resource\ResourceMetadataFactory;
 use BedRest\Mapping\Resource\Driver\AnnotationDriver;
+use BedRest\Tests\BaseTestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
@@ -24,10 +25,12 @@ class ResourceMetadataFactoryTest extends BaseTestCase
     {
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
+        
+        $configuration = new Configuration();
+        $configuration->setEntityManager(self::getEntityManager());
+        $configuration->setResourceMetadataDriverImpl($driver);
 
-        $this->factory = new ResourceMetadataFactory();
-        $this->factory->setClassMetadataFactory(self::getEntityManager()->getMetadataFactory());
-        $this->factory->setMetadataDriver($driver);
+        $this->factory = new ResourceMetadataFactory($configuration);
     }
 
     public function testGetMetadata()

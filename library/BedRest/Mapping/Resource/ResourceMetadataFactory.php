@@ -15,7 +15,10 @@
 
 namespace BedRest\Mapping\Resource;
 
+use BedRest\Configuration;
 use BedRest\Mapping\Resource\Driver\Driver;
+use BedRest\Mapping\MappingException;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 
 /**
@@ -25,6 +28,12 @@ use Doctrine\ORM\Mapping\ClassMetadataFactory;
  */
 class ResourceMetadataFactory
 {
+    /**
+     * Configuration object.
+     * @var \BedRest\Configuration
+     */
+    protected $configuration;
+
     /**
      * Mapping metadata driver.
      * @var \BedRest\Mapping\Resource\Driver\Driver
@@ -44,39 +53,16 @@ class ResourceMetadataFactory
     protected $loadedMetadata = array();
 
     /**
-     * Sets the metadata driver.
-     * @param \BedRest\Mapping\Resource\Driver\Driver $driver
+     * Constructor.
+     * Initialises the factory with the set configuration.
+     * @param \BedRest\Configuration $configuration
      */
-    public function setMetadataDriver(Driver $driver)
+    public function __construct(Configuration $configuration)
     {
-        $this->driver = $driver;
-    }
+        $this->configuration = $configuration;
 
-    /**
-     * Returns the metadata driver.
-     * @return \BedRest\Mapping\Resource\Driver\Driver
-     */
-    public function getMetadataDriver()
-    {
-        return $this->driver;
-    }
-
-    /**
-     * Sets the ClassMetadataFactory instance.
-     * @param \Doctrine\ORM\Mapping\ClassMetadataFactory $factory
-     */
-    public function setClassMetadataFactory(ClassMetadataFactory $factory)
-    {
-        $this->classMetadataFactory = $factory;
-    }
-
-    /**
-     * Returns the ClassMetadataFactory instance.
-     * @return \Doctrine\ORM\Mapping\ClassMetadataFactory
-     */
-    public function getClassMetadataFactory()
-    {
-        return $this->classMetadataFactory;
+        $this->driver = $configuration->getResourceMetadataDriverImpl();
+        $this->classMetadataFactory = $configuration->getEntityManager()->getMetadataFactory();
     }
 
     /**

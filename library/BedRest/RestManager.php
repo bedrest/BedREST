@@ -62,9 +62,7 @@ class RestManager
     {
         $this->configuration = $configuration;
 
-        $this->resourceMetadataFactory = new ResourceMetadataFactory();
-        $this->resourceMetadataFactory->setClassMetadataFactory($this->configuration->getEntityManager()->getMetadataFactory());
-        $this->resourceMetadataFactory->setMetadataDriver($configuration->getResourceMetadataDriverImpl());
+        $this->resourceMetadataFactory = new ResourceMetadataFactory($configuration);
     }
 
     /**
