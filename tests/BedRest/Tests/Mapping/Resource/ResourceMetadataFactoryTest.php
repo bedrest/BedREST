@@ -23,13 +23,13 @@ class ResourceMetadataFactoryTest extends BaseTestCase
 
     protected function setUp()
     {
+        $configuration = self::getConfiguration();
+
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
-        
-        $configuration = new Configuration();
-        $configuration->setEntityManager(self::getEntityManager());
-        $configuration->setResourceMetadataDriverImpl($driver);
 
+        $configuration->setResourceMetadataDriverImpl($driver);
+        
         $this->factory = new ResourceMetadataFactory($configuration);
     }
 
@@ -39,6 +39,14 @@ class ResourceMetadataFactoryTest extends BaseTestCase
 
         $this->assertEquals('employee', $meta->getName());
         $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getServiceClass());
+    }
+
+    public function testGetAllMetadata()
+    {
+        $metaCollection = $this->factory->getAllMetadata();
+
+        $this->assertInternalType('array', $metaCollection);
+        $this->assertGreaterThan(0, count($metaCollection));
     }
 }
 
