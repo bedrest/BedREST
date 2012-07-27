@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping\Resource\Annotations;
+namespace BedRest\Mapping\Resource\Annotation;
 
 use Doctrine\ORM\Mapping\Annotation;
 

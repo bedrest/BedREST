@@ -60,8 +60,8 @@ class AnnotationDriver implements Driver
         }
 
         // load headline resource information
-        if (isset($classAnnotations['BedRest\Mapping\Resource\Annotations\Resource'])) {
-            $resourceAnnotation = $classAnnotations['BedRest\Mapping\Resource\Annotations\Resource'];
+        if (isset($classAnnotations['BedRest\Mapping\Resource\Annotation\Resource'])) {
+            $resourceAnnotation = $classAnnotations['BedRest\Mapping\Resource\Annotation\Resource'];
 
             // resource name
             if (!empty($resourceAnnotation->name)) {
@@ -84,7 +84,7 @@ class AnnotationDriver implements Driver
      */
     public function isResource($className)
     {
-        $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'BedRest\Mapping\Resource\Annotations\Resource');
+        $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'BedRest\Mapping\Resource\Annotation\Resource');
         
         if ($annotation) {
             return true;

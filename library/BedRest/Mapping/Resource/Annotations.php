@@ -13,6 +13,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once __DIR__ . '/Annotations/Property.php';
-require_once __DIR__ . '/Annotations/Resource.php';
+require_once __DIR__ . '/Annotation/Property.php';
+require_once __DIR__ . '/Annotation/Resource.php';
 
