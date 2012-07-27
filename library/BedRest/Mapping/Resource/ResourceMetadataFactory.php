@@ -83,19 +83,39 @@ class ResourceMetadataFactory
         return $this->loadedMetadata[$className];
     }
 
-    protected function loadMetadata($className)
+    /**
+     * Loads the ResourceMetadata for the supplied class. Class can be provided either as a class name or as a 
+     * ClassMetadata object.
+     * @param mixed $class
+     */
+    protected function loadMetadata($class)
     {
-        $resource = new ResourceMetadata($className);
-
         // load ClassMetadata
-        $classMetadata = $this->classMetadataFactory->getMetadataFor($className);
+        if ($class instanceof ClassMetadata) {
+            $classMetadata = $class;
+            $class = $classMetadata->getName();
+        } else {
+            $classMetadata = $this->classMetadataFactory->getMetadataFor($class);
+        }
+        
+        $resource = new ResourceMetadata($class);
         $resource->setClassMetadata($classMetadata);
 
         // use the driver to load metadata
-        $this->driver->loadMetadataForClass($className, $resource);
+        $this->driver->loadMetadataForClass($class, $resource);
 
         // store the metadata
-        $this->loadedMetadata[$className] = $resource;
+        $this->loadedMetadata[$class] = $resource;
+    }
+    
+    /**
+     * Whether the specified class is a mapped resource.
+     * @param string $className
+     * @return boolean
+     */
+    public function isResource($className)
+    {
+        return $this->driver->isResource($className);
     }
 }
 
