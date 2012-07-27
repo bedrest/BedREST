@@ -26,16 +26,16 @@
     
     <!-- PHPUnit test suites -->
     <target name="clean-test" description="Cleans up test folders.">
-        <delete dir="${reports.phpunit.dir}" />
+        <delete dir="${tests.reports.dir}" />
     </target>
     
     <target name="test" description="Runs all available tests" depends="clean-test">
-        <mkdir dir="${reports.phpunit.dir}" />
-        <mkdir dir="${reports.phpunit.logs}" />
-        <mkdir dir="${reports.phpunit.report}" />
-        <mkdir dir="${reports.phpunit.coverage}" />
+        <mkdir dir="${tests.reports.dir}" />
+        <mkdir dir="${tests.reports.logs}" />
+        <mkdir dir="${tests.reports.report}" />
+        <mkdir dir="${tests.reports.coverage}" />
         
-        <coverage-setup database="${reports.phpunit.logs}coverage.xml">
+        <coverage-setup database="${tests.reports.logs}coverage.xml">
             <fileset dir="${library.basedir}">
                 <include name="${library.fileset}" />
             </fileset>
@@ -46,8 +46,8 @@
                  haltonerror="false"
                  codecoverage="true"
                  bootstrap="tests/bootstrap.php">
-            <formatter todir="${reports.phpunit.logs}" type="xml" />
-            <formatter todir="${reports.phpunit.logs}" type="clover" outfile="clover.xml" />
+            <formatter todir="${tests.reports.logs}" type="xml" />
+            <formatter todir="${tests.reports.logs}" type="clover" outfile="clover.xml" />
             <batchtest>
                 <fileset dir="${tests.dir}">
                     <include name="${tests.fileset}" />
@@ -55,12 +55,12 @@
             </batchtest>
         </phpunit>
         
-        <phpunitreport infile="${reports.phpunit.logs}testsuites.xml" 
+        <phpunitreport infile="${tests.reports.logs}testsuites.xml" 
                        format="frames" 
-                       todir="${reports.phpunit.report}" />
+                       todir="${tests.reports.report}" />
         
-        <coverage-report outfile="${reports.phpunit.logs}coverage.xml">
-            <report todir="${reports.phpunit.coverage}" usesorttable="true" />
+        <coverage-report outfile="${tests.reports.logs}coverage.xml">
+            <report todir="${tests.reports.coverage}" usesorttable="true" />
         </coverage-report>
     </target>
     
