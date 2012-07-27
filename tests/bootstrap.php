@@ -2,7 +2,7 @@
 
 // set global constants
 if (defined('BEDREST_LIB_PATH') || define('BEDREST_LIB_PATH', realpath(__DIR__ . '/../library/')));
-if (defined('BEDREST_TESTS_PATH') || define('BEDREST_TESTS_PATH', realpath(__DIR__ . '/../')));
+if (defined('BEDREST_TESTS_PATH') || define('BEDREST_TESTS_PATH', realpath(__DIR__)));
 if (defined('DOCTRINE_LIB_PATH') || define('DOCTRINE_LIB_PATH', realpath(__DIR__ . '/../vendor/doctrine/')));
 
 // initiate Doctrine class loader
