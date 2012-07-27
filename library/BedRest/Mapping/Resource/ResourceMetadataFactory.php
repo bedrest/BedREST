@@ -16,10 +16,8 @@
 namespace BedRest\Mapping\Resource;
 
 use BedRest\Configuration;
-use BedRest\Mapping\Resource\Driver\Driver;
 use BedRest\Mapping\MappingException;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\ClassMetadataFactory;
 
 /**
  * ResourceMetadataFactory
@@ -84,7 +82,28 @@ class ResourceMetadataFactory
     }
 
     /**
-     * Loads the ResourceMetadata for the supplied class. Class can be provided either as a class name or as a 
+     * Returns the entire collection of ResourceMetadata objects for all mapped resources. Entities not marked as
+     * resources are not included.
+     * @return array
+     */
+    public function getAllMetadata()
+    {
+        $classMetadataCollection = $this->classMetadataFactory->getAllMetadata();
+
+        foreach ($classMetadataCollection as $classMetadata) {
+            $className = $classMetadata->getName();
+            
+            if (!isset($this->loadedMetadata[$className]) && 
+                $this->isResource($className)) {
+                $this->loadMetadata($classMetadata);
+            }
+        }
+
+        return $this->loadedMetadata;
+    }
+
+    /**
+     * Loads the ResourceMetadata for the supplied class. Class can be provided either as a class name or as a
      * ClassMetadata object.
      * @param mixed $class
      */
@@ -97,7 +116,7 @@ class ResourceMetadataFactory
         } else {
             $classMetadata = $this->classMetadataFactory->getMetadataFor($class);
         }
-        
+
         $resource = new ResourceMetadata($class);
         $resource->setClassMetadata($classMetadata);
 
@@ -107,7 +126,7 @@ class ResourceMetadataFactory
         // store the metadata
         $this->loadedMetadata[$class] = $resource;
     }
-    
+
     /**
      * Whether the specified class is a mapped resource.
      * @param string $className
