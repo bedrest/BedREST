@@ -15,8 +15,10 @@
 
 namespace BedRest;
 
+use BedRest\EventManager;
 use BedRest\Mapping\Resource\Driver\Driver as ResourceDriver;
 use BedRest\Mapping\Service\Driver\Driver as ServiceDriver;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Configuration
@@ -32,24 +34,18 @@ class Configuration
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
-
+    
     /**
-     * Resource metadata factory.
-     * @var \BedRest\Mapping\Resource\ResourceMetadataFactory
+     * Event manager instance.
+     * @var \BedRest\EventManager
      */
-    protected $resourceMetadataFactory;
+    protected $eventManager;
     
     /**
      * Resource metadata driver.
      * @var \BedRest\Mapping\Resource\Driver\Driver
      */
     protected $resourceMetadataDriverImpl;
-
-    /**
-     * Service metadata factory.
-     * @var \BedRest\Mapping\Service\ServiceMetadataFactory
-     */
-    protected $serviceMetadataFactory;
     
     /**
      * Service metadata driver.
@@ -76,9 +72,27 @@ class Configuration
      * Sets the entity manager.
      * @param \Doctrine\ORM\EntityManager $entityManager
      */
-    public function setEntityManager(\Doctrine\ORM\EntityManager $entityManager)
+    public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+    
+    /**
+     * Returns the event manager.
+     * @return \BedRest\EventManager
+     */
+    public function getEventManager()
+    {
+        return $this->eventManager;
+    }
+    
+    /**
+     * Sets the event manager.
+     * @param \BedRest\EventManager $eventManager
+     */
+    public function setEventManager(EventManager $eventManager)
+    {
+        $this->eventManager = $eventManager;
     }
 
     /**
