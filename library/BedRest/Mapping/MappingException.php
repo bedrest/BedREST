@@ -43,5 +43,15 @@ class MappingException extends BedRestException
     {
         return new self("Class '{$className}' is not a mapped service.");
     }
+    
+    public static function pathsRequired()
+    {
+        return new self("A set of paths must be provided in order to discover classes.");
+    }
+    
+    public static function invalidPath($path)
+    {
+        return new self("The path '{$path}' is invalid.");
+    }
 }
 

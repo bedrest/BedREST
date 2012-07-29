@@ -111,11 +111,52 @@ class AnnotationDriver implements Driver
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getAllClassNames()
     {
-        // TODO: implement
+        if (!$this->paths) {
+            throw MappingException::pathsRequired();
+        }
+        
+        $classes = array();
+        $includedFiles = array();
 
-        return array();
+        foreach ($this->paths as $path) {
+            if (!is_dir($path)) {
+                throw MappingException::invalidPath($path);
+            }
+
+            $iterator = new \RegexIterator(
+                new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::LEAVES_ONLY
+                ),
+                '/^.+\.php$/i',
+                \RecursiveRegexIterator::GET_MATCH
+            );
+
+            foreach ($iterator as $file) {
+                $sourceFile = realpath($file[0]);
+
+                require_once $sourceFile;
+
+                $includedFiles[] = $sourceFile;
+            }
+        }
+
+        $declared = get_declared_classes();
+
+        foreach ($declared as $className) {
+            $rc = new \ReflectionClass($className);
+            $sourceFile = $rc->getFileName();
+            if (in_array($sourceFile, $includedFiles) && $this->isService($className)) {
+                $classes[] = $className;
+            }
+        }
+
+        return $classes;
     }
 
     /**

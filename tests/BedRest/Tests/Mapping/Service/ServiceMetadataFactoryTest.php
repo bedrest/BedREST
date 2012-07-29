@@ -16,7 +16,7 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 {
     /**
      * Class under test.
-     * @var BedRest\Mapping\Service\ServiceMetadataFactory
+     * @var \BedRest\Mapping\Service\ServiceMetadataFactory
      */
     protected $factory;
 
