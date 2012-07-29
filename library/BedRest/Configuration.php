@@ -37,12 +37,6 @@ class Configuration
     protected $entityManager;
     
     /**
-     * Event manager instance.
-     * @var \BedRest\EventManager
-     */
-    protected $eventManager;
-    
-    /**
      * Resource metadata driver.
      * @var \BedRest\Mapping\Resource\Driver\Driver
      */
@@ -59,12 +53,6 @@ class Configuration
      * @var array
      */
     protected $serviceNamespaces;
-    
-    /**
-     * Service manager instance.
-     * @var \BedRest\ServiceManager
-     */
-    protected $serviceManager;
 
     /**
      * Returns the entity manager.
@@ -82,24 +70,6 @@ class Configuration
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-    }
-    
-    /**
-     * Returns the event manager.
-     * @return \BedRest\EventManager
-     */
-    public function getEventManager()
-    {
-        return $this->eventManager;
-    }
-    
-    /**
-     * Sets the event manager.
-     * @param \BedRest\EventManager $eventManager
-     */
-    public function setEventManager(EventManager $eventManager)
-    {
-        $this->eventManager = $eventManager;
     }
 
     /**
@@ -164,24 +134,6 @@ class Configuration
     public function getServiceMetadataDriverImpl()
     {
         return $this->serviceMetadataDriverImpl;
-    }
-    
-    /**
-     * Sets the service manager instance.
-     * @param \BedRest\ServiceManager $serviceManager
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-    }
-    
-    /**
-     * Returns the service manager instance.
-     * @return \BedRest\ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
     }
 }
 
