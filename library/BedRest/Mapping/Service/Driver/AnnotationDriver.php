@@ -34,6 +34,12 @@ class AnnotationDriver implements Driver
      * @var Doctrine\Common\Annotations\Reader
      */
     protected $reader;
+    
+    /**
+     * Array of paths to search for services.
+     * @var array
+     */
+    protected $paths = array();
 
     /**
      * Constructor.
@@ -42,6 +48,33 @@ class AnnotationDriver implements Driver
     public function __construct(Reader $reader)
     {
         $this->reader = $reader;
+    }
+    
+    /**
+     * Adds a path to search for services.
+     * @param string $path
+     */
+    public function addPath($path)
+    {
+        $this->paths[] = $path;
+    }
+    
+    /**
+     * Adds a set of paths to search for services.
+     * @param array $paths
+     */
+    public function addPaths($paths)
+    {
+        $this->paths = array_merge($this->paths, $paths);
+    }
+    
+    /**
+     * Retrieves the set of paths to search for services.
+     * @return array
+     */
+    public function getPaths()
+    {
+        return $this->paths;
     }
 
     /**
