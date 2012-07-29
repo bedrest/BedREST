@@ -16,30 +16,37 @@
 namespace BedRest\Event;
 
 use BedRest\Request;
+use BedRest\Response;
 use BedRest\RestManager;
 
 /**
- * RestEvent
+ * Event
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class RestEvent
+class Event
 {
     /**
      * RestManager instance
-     * @var BedRest\RestManager 
+     * @var \BedRest\RestManager 
      */
     protected $restManager;
     
     /**
      * Request.
-     * @var BedRest\Request
+     * @var \BedRest\Request
      */
     protected $request;
     
     /**
+     * Response.
+     * @var \BedRest\Response 
+     */
+    protected $response;
+    
+    /**
      * Sets the RestManager instance that dispatched the event.
-     * @param BedRest\RestManager $restManager
+     * @param \BedRest\RestManager $restManager
      */
     public function setRestManager(RestManager $restManager)
     {
@@ -57,7 +64,7 @@ class RestEvent
     
     /**
      * Sets the Request instance.
-     * @param BedRest\Request $request
+     * @param \BedRest\Request $request
      */
     public function setRequest(Request $request)
     {
@@ -71,6 +78,24 @@ class RestEvent
     public function getRequest()
     {
         return $this->request;
+    }
+    
+    /**
+     * Sets the Response instance.
+     * @param \BedRest\Response $response
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+    }
+    
+    /**
+     * Returns the Response instance.
+     * @return \BedRest\Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }
 
