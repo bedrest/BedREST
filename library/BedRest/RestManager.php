@@ -19,7 +19,6 @@ use BedRest\Configuration;
 use BedRest\Request;
 use BedRest\Response;
 use BedRest\Mapping\Resource\ResourceMetadataFactory;
-use Doctrine\Common\EventManager;
 
 /**
  * RestManager
@@ -32,31 +31,31 @@ class RestManager
 {
     /**
      * Configuration instance.
-     * @var BedRest\Configuration
+     * @var \BedRest\Configuration
      */
     protected $configuration;
 
     /**
      * Service manager instance.
-     * @var BedRest\ServiceManagaer
+     * @var \BedRest\ServiceManagaer
      */
     protected $serviceManager;
 
     /**
      * Event manager instance.
-     * @var Doctrine\Common\EventManager
+     * @var \BedRest\EventManager
      */
     protected $eventManager;
 
     /**
      * The resource metadata factory.
-     * @var BedRest\Mapping\Resource\ResourceMetadataFactory
+     * @var \BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
 
     /**
      * Constructor.
-     * @param BedRest\Configuration $configuration
+     * @param \BedRest\Configuration $configuration
      */
     public function __construct(Configuration $configuration)
     {
@@ -95,7 +94,7 @@ class RestManager
 
     /**
      * Sets the service manager.
-     * @param BedRest\ServiceManager $serviceManager
+     * @param \BedRest\ServiceManager $serviceManager
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {
@@ -113,7 +112,7 @@ class RestManager
 
     /**
      * Sets the event manager.
-     * @param Doctrine\Common\EventManager $eventManager
+     * @param \BedRest\EventManager $eventManager
      */
     public function setEventManager(EventManager $eventManager)
     {
@@ -122,7 +121,7 @@ class RestManager
 
     /**
      * Returns the event manager.
-     * @return \Doctrine\Common\EventManager
+     * @return \BedRest\EventManager
      */
     public function getEventManager()
     {
@@ -131,7 +130,7 @@ class RestManager
 
     /**
      * Processes a REST request, returning a Response object.
-     * @param BedRest\Request $request
+     * @param \BedRest\Request $request
      */
     public function process(Request $request)
     {
