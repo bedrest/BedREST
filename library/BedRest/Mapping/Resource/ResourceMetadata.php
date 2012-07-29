@@ -100,16 +100,16 @@ class ResourceMetadata
     }
 
     /**
-     * Sets the entity class name. Must be a Doctrine entity.
-     * @param string $entityClass
+     * Sets the resource class name.
+     * @param string $className
      */
-    public function setClassName($entityClass)
+    public function setClassName($className)
     {
-        $this->className = $entityClass;
+        $this->className = $className;
     }
 
     /**
-     * Returns the Doctrine entity class name.
+     * Returns the resource class name.
      * @return string
      */
     public function getClassName()
