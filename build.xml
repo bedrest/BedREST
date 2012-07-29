@@ -129,13 +129,22 @@
         </phpcodesniffer>
     </target>
     
+    <!-- PHPLoc -->
+    <target name="phploc" description="Measure project size using PHPLOC">
+        <exec executable="phploc">
+            <arg value="--log-csv" />
+            <arg value="${reports.dir}phploc.csv" />
+            <arg path="${library.basedir}" />
+        </exec>
+    </target>
+    
     <!-- Cleans all reports -->
     <target name="clean-reports">
         <delete dir="${reports.dir}" />
     </target>
     
     <!-- Generates all reports -->
-    <target name="generate-reports" description="Generates all reports" depends="clean-reports, php-lint, php-cs, php-md">
+    <target name="generate-reports" description="Generates all reports" depends="clean-reports, php-lint, php-cs, php-md, phploc">
         
     </target>
 </project>
