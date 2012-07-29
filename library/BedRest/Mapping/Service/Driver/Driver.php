@@ -13,35 +13,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping;
+namespace BedRest\Mapping\Service\Driver;
 
-use BedRest\Exception as BedRestException;
+use BedRest\Mapping\Service\ServiceMetadata;
 
 /**
- * MappingException
- *
+ * Driver
+ * 
  * @author Geoff Adams <geoff@dianode.net>
  */
-class MappingException extends BedRestException
+interface Driver
 {
-    public static function serviceClassNotProvided($className)
-    {
-        return new self("Class '{$className}' does not have a specified service class.");
-    }
+    /**
+     * Populates the supplied ServiceMetadata object with data from the specified service class.
+     * @param string $className
+     * @param \BedRest\Mapping\Service\ServiceMetadata $serviceMetadata
+     */
+    public function loadMetadataForClass($className, ServiceMetadata $serviceMetadata);
     
-    public static function classIsNotMappedResource($className)
-    {
-        return new self("Class '{$className}' is not a mapped resource.");
-    }
+    /**
+     * Returns a list of all class names known to this driver.
+     * @return array
+     */
+    public function getAllClassNames();
     
-    public static function resourceNotFound($resourceName)
-    {
-        return new self("Resource '{$resourceName}' not found.");
-    }
-    
-    public static function classIsNotMappedService($className)
-    {
-        return new self("Class '{$className}' is not a mapped service.");
-    }
+    /**
+     * Whether the specified class is a mapped service.
+     * @param string $className
+     * @return boolean
+     */
+    public function isService($className);
 }
-

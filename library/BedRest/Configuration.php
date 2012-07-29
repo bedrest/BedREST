@@ -15,7 +15,8 @@
 
 namespace BedRest;
 
-use BedRest\Mapping\Resource\Driver\Driver;
+use BedRest\Mapping\Resource\Driver\Driver as ResourceDriver;
+use BedRest\Mapping\Service\Driver\Driver as ServiceDriver;
 
 /**
  * Configuration
@@ -28,15 +29,33 @@ class Configuration
 {
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
 
     /**
      * Resource metadata factory.
-     * @var BedRest\Mapping\Resource\ResourceMetadataFactory
+     * @var \BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
+    
+    /**
+     * Resource metadata driver.
+     * @var \BedRest\Mapping\Resource\Driver\Driver
+     */
+    protected $resourceMetadataDriverImpl;
+
+    /**
+     * Service metadata factory.
+     * @var \BedRest\Mapping\Service\ServiceMetadataFactory
+     */
+    protected $serviceMetadataFactory;
+    
+    /**
+     * Service metadata driver.
+     * @var \BedRest\Mapping\Service\Driver\Driver
+     */
+    protected $serviceMetadataDriverImpl;
 
     /**
      * Array of service namespaces, analogous to Doctrine\ORM\Configuration's entity namespace storage.
@@ -91,21 +110,39 @@ class Configuration
     }
 
     /**
-     * Sets the metadata driver implementation.
-     * @param BedRest\Mapping\Resource\Driver\Driver $driver
+     * Sets the resource metadata driver implementation.
+     * @param \BedRest\Mapping\Resource\Driver\Driver $driver
      */
-    public function setResourceMetadataDriverImpl(Driver $driver)
+    public function setResourceMetadataDriverImpl(ResourceDriver $driver)
     {
-        $this->metadataDriverImpl = $driver;
+        $this->resourceMetadataDriverImpl = $driver;
     }
 
     /**
-     * Returns the metadata driver implementation.
+     * Returns the resource metadata driver implementation.
      * @return \BedRest\Mapping\Resource\Driver\Driver
      */
     public function getResourceMetadataDriverImpl()
     {
-        return $this->metadataDriverImpl;
+        return $this->resourceMetadataDriverImpl;
+    }
+    
+    /**
+     * Sets the service metadata driver implementation.
+     * @param \BedRest\Mapping\Service\Driver\Driver $driver
+     */
+    public function setServiceMetadataDriverImpl(ServiceDriver $driver)
+    {
+        $this->serviceMetadataDriverImpl = $driver;
+    }
+    
+    /**
+     * Returns the service metadata driver implementation.
+     * @return \BedRest\Mapping\Service\Driver\Driver
+     */
+    public function getServiceMetadataDriverImpl()
+    {
+        return $this->serviceMetadataDriverImpl;
     }
 }
 

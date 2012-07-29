@@ -13,35 +13,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping;
+namespace BedRest\Mapping\Service\Annotation;
 
-use BedRest\Exception as BedRestException;
+use Doctrine\ORM\Mapping\Annotation;
 
 /**
- * MappingException
+ * Service
  *
  * @author Geoff Adams <geoff@dianode.net>
+ * 
+ * @Annotation
+ * @Target("CLASS")
  */
-class MappingException extends BedRestException
+class Service implements Annotation
 {
-    public static function serviceClassNotProvided($className)
-    {
-        return new self("Class '{$className}' does not have a specified service class.");
-    }
     
-    public static function classIsNotMappedResource($className)
-    {
-        return new self("Class '{$className}' is not a mapped resource.");
-    }
-    
-    public static function resourceNotFound($resourceName)
-    {
-        return new self("Resource '{$resourceName}' not found.");
-    }
-    
-    public static function classIsNotMappedService($className)
-    {
-        return new self("Class '{$className}' is not a mapped service.");
-    }
 }
-

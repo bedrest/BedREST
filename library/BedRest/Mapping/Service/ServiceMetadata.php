@@ -13,35 +13,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Mapping;
-
-use BedRest\Exception as BedRestException;
+namespace BedRest\Mapping\Service;
 
 /**
- * MappingException
+ * ServiceMetadata
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class MappingException extends BedRestException
+class ServiceMetadata
 {
-    public static function serviceClassNotProvided($className)
+    /**
+     * 
+     * @var string
+     */
+    protected $className;
+
+    /**
+     * Constructor.
+     * @param string $className
+     */
+    public function __construct($className)
     {
-        return new self("Class '{$className}' does not have a specified service class.");
+        $this->className = $className;
     }
-    
-    public static function classIsNotMappedResource($className)
+
+    /**
+     * Sets the service class name.
+     * @param string $className
+     */
+    public function setClassName($className)
     {
-        return new self("Class '{$className}' is not a mapped resource.");
+        $this->className = $className;
     }
-    
-    public static function resourceNotFound($resourceName)
+
+    /**
+     * Returns the service class name.
+     * @return string
+     */
+    public function getClassName()
     {
-        return new self("Resource '{$resourceName}' not found.");
-    }
-    
-    public static function classIsNotMappedService($className)
-    {
-        return new self("Class '{$className}' is not a mapped service.");
+        return $this->className;
     }
 }
-
