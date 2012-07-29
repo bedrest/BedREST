@@ -16,7 +16,7 @@ class ResourceMetadataTest extends BaseTestCase
     {
         $rm = new ResourceMetadata('Entity\Test');
 
-        $this->assertEquals('Entity\Test', $rm->getEntityClass());
+        $this->assertEquals('Entity\Test', $rm->getClassName());
     }
 
     public function testName()

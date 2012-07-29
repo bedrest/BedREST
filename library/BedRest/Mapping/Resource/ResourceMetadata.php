@@ -31,10 +31,10 @@ class ResourceMetadata
     protected $name;
 
     /**
-     * Name of the entity class for this resource.
+     * Name of the class for this resource.
      * @var string
      */
-    protected $entityClass;
+    protected $className;
 
     /**
      * Name of the service class for this resource.
@@ -56,11 +56,11 @@ class ResourceMetadata
 
     /**
      * Constructor.
-     * @param string $entityClass
+     * @param string $className
      */
-    public function __construct($entityClass)
+    public function __construct($className)
     {
-        $this->entityClass = $entityClass;
+        $this->className = $className;
     }
 
     /**
@@ -103,18 +103,18 @@ class ResourceMetadata
      * Sets the entity class name. Must be a Doctrine entity.
      * @param string $entityClass
      */
-    public function setEntityClass($entityClass)
+    public function setClassName($entityClass)
     {
-        $this->entityClass = $entityClass;
+        $this->className = $entityClass;
     }
 
     /**
      * Returns the Doctrine entity class name.
      * @return string
      */
-    public function getEntityClass()
+    public function getClassName()
     {
-        return $this->entityClass;
+        return $this->className;
     }
 
     /**
