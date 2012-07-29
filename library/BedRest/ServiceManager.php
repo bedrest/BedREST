@@ -60,6 +60,20 @@ class ServiceManager
 
         return $this->loadedServices[$serviceClass];
     }
+    
+    /**
+     * Whether a service has been loaded or not yet.
+     * @param string $serviceClass
+     * @return boolean
+     */
+    public function hasService($serviceClass)
+    {
+        if (isset($this->loadedServices[$serviceClass])) {
+            return true;
+        }
+        
+        return false;
+    }
 
     /**
      * Loads the specified service class.

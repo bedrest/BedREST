@@ -18,7 +18,10 @@ namespace BedRest;
 use BedRest\Configuration;
 use BedRest\Request;
 use BedRest\Response;
+use BedRest\Mapping\Resource\ResourceMetadata;
 use BedRest\Mapping\Resource\ResourceMetadataFactory;
+use BedRest\Mapping\Service\ServiceMetadata;
+use BedRest\Mapping\Service\ServiceMetadataFactory;
 
 /**
  * RestManager
@@ -37,7 +40,7 @@ class RestManager
 
     /**
      * Service manager instance.
-     * @var \BedRest\ServiceManagaer
+     * @var \BedRest\ServiceManager
      */
     protected $serviceManager;
 
@@ -52,6 +55,12 @@ class RestManager
      * @var \BedRest\Mapping\Resource\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
+    
+    /**
+     * The service metadata factory.
+     * @var \BedRest\Mapping\Service\ServiceMetadataFactory
+     */
+    protected $serviceMetadataFactory;
 
     /**
      * Constructor.
@@ -62,6 +71,7 @@ class RestManager
         $this->configuration = $configuration;
 
         $this->resourceMetadataFactory = new ResourceMetadataFactory($configuration);
+        $this->serviceMetadataFactory = new ServiceMetadataFactory($configuration);
     }
 
     /**
@@ -71,6 +81,42 @@ class RestManager
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+    
+    /**
+     * Sets the service manager instance.
+     * @param \BedRest\ServiceManager $serviceManager
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+    
+    /**
+     * Returns the service manager instance.
+     * @return \BedRest\ServiceManager
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
+    }
+    
+    /**
+     * Sets the event manager.
+     * @param \BedRest\EventManager $eventManager
+     */
+    public function setEventManager(EventManager $eventManager)
+    {
+        $this->eventManager = $eventManager;
+    }
+    
+    /**
+     * Returns the event manager.
+     * @return \BedRest\EventManager
+     */
+    public function getEventManager()
+    {
+        return $this->eventManager;
     }
 
     /**
@@ -82,6 +128,16 @@ class RestManager
     {
         return $this->resourceMetadataFactory->getMetadataFor($className);
     }
+    
+    /**
+     * Returns resource metadata by resource name.
+     * @param string $name
+     * @return \BedRest\Mapping\Resource\ResourceMetadata
+     */
+    public function getResourceMetadataByName($name)
+    {
+        return $this->resourceMetadataFactory->getMetadataByResourceName($name);
+    }
 
     /**
      * Returns the resource metadata factory.
@@ -91,41 +147,24 @@ class RestManager
     {
         return $this->resourceMetadataFactory;
     }
-
+    
     /**
-     * Sets the service manager.
-     * @param \BedRest\ServiceManager $serviceManager
+     * Returns service metadata for a class.
+     * @param string $className
+     * @return \BedRest\Mapping\Service\ServiceMetadata
      */
-    public function setServiceManager(ServiceManager $serviceManager)
+    public function getServiceMetadata($className)
     {
-        $this->serviceManager = $serviceManager;
+        return $this->serviceMetadataFactory->getMetadataFor($className);
     }
-
+    
     /**
-     * Returns the service manager.
-     * @return \BedRest\ServiceManager
+     * Returns the service metadata factory.
+     * @return \BedRest\Mapping\Service\ServiceMetadataFactory
      */
-    public function getServiceManager()
+    public function getServiceMetadataFactory()
     {
-        return $this->serviceManager;
-    }
-
-    /**
-     * Sets the event manager.
-     * @param \BedRest\EventManager $eventManager
-     */
-    public function setEventManager(EventManager $eventManager)
-    {
-        $this->eventManager = $eventManager;
-    }
-
-    /**
-     * Returns the event manager.
-     * @return \BedRest\EventManager
-     */
-    public function getEventManager()
-    {
-        return $this->eventManager;
+        return $this->serviceMetadataFactory;
     }
 
     /**
@@ -134,20 +173,64 @@ class RestManager
      */
     public function process(Request $request)
     {
-        $rm = $this->getResourceMetadata($request->getResource());
+        // create an empty response
+        $response = new Response();
+        
+        // get metadata
+        $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
+        $serviceMetadata = $this->getServiceMetadata($resourceMetadata->getServiceClass());
+        
+        // get the service
+        $service = $this->getService($serviceMetadata);
 
-        $sm = $this->getServiceManager();
-        $service = $sm->getService($rm->getServiceClass());
+        // create event
+        switch ($request->getMethod()) {
+            case Request::METHOD_GET:
+                $event = 'getEntity';
+                $eventClass = 'GetEntityEvent';
+                break;
+            case Request::METHOD_GET_COLLECTION:
+                $event = 'getCollection';
+                $eventClass = 'GetCollectionEvent';
+                break;
+            // TODO: implement other methods
+            default:
+                // TODO: exception, unknown request type
+                break;
+        }
+        
+        $eventClass = 'BedRest\Event\\' . $eventClass;
+        
+        $eventObject = new $eventClass();
+        $eventObject->setRestManager($this);
+        $eventObject->setRequest($request);
+        $eventObject->setResponse($response);
 
-        // determine event
-        $method = $rm->getServiceMethod($request->getMethod());
+        // dispatch event
+        $this->getEventManager()->dispatch($event, $eventObject);
 
-        // TODO: create event
-
-        // TODO: dispatch event
-        //$this->getEventManager()->dispatchEvent($eventName, $eventArgs);
-
-        return new Response();
+        return $this->response;
+    }
+    
+    /**
+     * Gets a service and binds any event listeners if this is the first time it has been requested.
+     * @param \BedRest\Mapping\Service\ServiceMetadata $serviceMetadata
+     */
+    protected function getService(ServiceMetadata $serviceMetadata)
+    {
+        $eventsLoaded = $this->serviceManager->hasService($serviceMetadata->getClassName());
+        
+        $service = $this->serviceManager->getService($serviceMetadata->getClassName());
+        
+        if (!$eventsLoaded) {
+            foreach ($serviceMetadata->getAllListeners() as $event => $observers) {
+                foreach ($observers as $observer) {
+                    $this->eventManager->addListener($event, array($service, $observer));
+                }
+            }
+        }
+        
+        return $service;
     }
 }
 
