@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM,
     BedRest\Mapping\Resource\Annotation as BedRest;
 
 /**
- * BedRest\Test\Models\Company\Employee
+ * Employee
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
@@ -68,10 +68,5 @@ class Employee
     public function __get($property)
     {
         return $this->$property;
-    }
-
-    public function getRestProperties()
-    {
-
     }
 }

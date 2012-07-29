@@ -49,6 +49,12 @@ class ResourceMetadataFactory
      * @var array
      */
     protected $loadedMetadata = array();
+    
+    /**
+     * Stores a map of resource names to class names.
+     * @var array
+     */
+    protected $resourceClassMap = array();
 
     /**
      * Constructor.
@@ -79,6 +85,22 @@ class ResourceMetadataFactory
         }
 
         return $this->loadedMetadata[$className];
+    }
+    
+    /**
+     * Returns ResourceMetadata for the specified resource.
+     * @param string $resourceName
+     * @return \BedRest\Mapping\Resource\ResourceMetadata
+     */
+    public function getMetadataByResourceName($resourceName)
+    {
+        $this->getAllMetadata();
+        
+        if (!isset($this->resourceClassMap[$resourceName])) {
+            throw MappingException::resourceNotFound($resourceName);
+        }
+        
+        return $this->loadedMetadata[$this->resourceClassMap[$resourceName]];
     }
 
     /**
@@ -125,6 +147,7 @@ class ResourceMetadataFactory
 
         // store the metadata
         $this->loadedMetadata[$class] = $resource;
+        $this->resourceClassMap[$resource->getName()] = $class;
     }
 
     /**

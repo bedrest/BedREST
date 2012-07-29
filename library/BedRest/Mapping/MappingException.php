@@ -33,5 +33,10 @@ class MappingException extends BedRestException
     {
         return new self("Class '{$className}' is not a mapped resource.");
     }
+    
+    public static function resourceNotFound($resourceName)
+    {
+        return new self("Resource '{$resourceName}' not found.");
+    }
 }
 
