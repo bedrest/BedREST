@@ -16,6 +16,7 @@
 namespace BedRest;
 
 use BedRest\EventManager;
+use BedRest\ServiceManager;
 use BedRest\Mapping\Resource\Driver\Driver as ResourceDriver;
 use BedRest\Mapping\Service\Driver\Driver as ServiceDriver;
 use Doctrine\ORM\EntityManager;
@@ -58,6 +59,12 @@ class Configuration
      * @var array
      */
     protected $serviceNamespaces;
+    
+    /**
+     * Service manager instance.
+     * @var \BedRest\ServiceManager
+     */
+    protected $serviceManager;
 
     /**
      * Returns the entity manager.
@@ -157,6 +164,24 @@ class Configuration
     public function getServiceMetadataDriverImpl()
     {
         return $this->serviceMetadataDriverImpl;
+    }
+    
+    /**
+     * Sets the service manager instance.
+     * @param \BedRest\ServiceManager $serviceManager
+     */
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
+        $this->serviceManager = $serviceManager;
+    }
+    
+    /**
+     * Returns the service manager instance.
+     * @return \BedRest\ServiceManager
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
     }
 }
 
