@@ -27,6 +27,8 @@ use Doctrine\Common\Annotations\Reader;
  */
 class AnnotationDriver implements Driver
 {
+    const ANNOTATION_LISTENER = 'BedRest\Mapping\Service\Annotation\Listener';
+
     /**
      * Annotation reader instance.
      * @var Doctrine\Common\Annotations\Reader
@@ -51,24 +53,35 @@ class AnnotationDriver implements Driver
         $reflClass = new \ReflectionClass($className);
 
         $classAnnotations = $this->reader->getClassAnnotations($reflClass);
+        $classAnnotations = $this->indexAnnotationsByType($classAnnotations);
 
-        // if we are receiving annotations indexed by number, transform it to by class name
-        if ($classAnnotations && is_numeric(key($classAnnotations))) {
-            foreach ($classAnnotations as $annotation) {
-                $classAnnotations[get_class($annotation)] = $annotation;
-            }
-        }
-
-        // load headline resource information
+        // load headline service information
         if (isset($classAnnotations['BedRest\Mapping\Service\Annotation\Service'])) {
             $serviceAnnotation = $classAnnotations['BedRest\Mapping\Service\Annotation\Service'];
         }
+
+        // process events
+        foreach ($reflClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflMethod) {
+            $methodAnnotations = $this->reader->getMethodAnnotations($reflMethod);
+            $methodAnnotations = $this->indexAnnotationsByType($methodAnnotations);
+
+            // process listeners
+            if (isset($methodAnnotations[self::ANNOTATION_LISTENER])) {
+                if (!is_array($methodAnnotations[self::ANNOTATION_LISTENER])) {
+                    $methodAnnotations[self::ANNOTATION_LISTENER] = array($methodAnnotations[self::ANNOTATION_LISTENER]);
+                }
+
+                foreach ($methodAnnotations[self::ANNOTATION_LISTENER] as $listenerAnnotation) {
+                    $serviceMetadata->addListener($listenerAnnotation->event, $reflMethod->getName());
+                }
+            }
+        }
     }
-    
+
     public function getAllClassNames()
     {
         // TODO: implement
-        
+
         return array();
     }
 
@@ -78,11 +91,33 @@ class AnnotationDriver implements Driver
     public function isService($className)
     {
         $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'BedRest\Mapping\Service\Annotation\Service');
-        
+
         if ($annotation) {
             return true;
         }
-        
+
         return false;
+    }
+
+    protected function indexAnnotationsByType($annotations)
+    {
+        $indexed = array();
+
+        // if we are receiving annotations indexed by number, transform it to by class name
+        if ($annotations && is_numeric(key($annotations))) {
+            foreach ($annotations as $annotation) {
+                $annotationType = get_class($annotation);
+
+                if (isset($indexed[$annotationType]) && !is_array($indexed[$annotationType])) {
+                    $indexed[$annotationType] = array($indexed[$annotationType], $annotation);
+                } elseif (isset($indexed[$annotationType])) {
+                    $indexed[$annotationType][] = $annotation;
+                } else {
+                    $indexed[$annotationType] = $annotation;
+                }
+            }
+        }
+
+        return $indexed;
     }
 }

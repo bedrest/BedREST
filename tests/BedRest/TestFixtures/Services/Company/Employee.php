@@ -13,5 +13,27 @@ use BedRest\Mapping\Service\Annotation as BedRest;
  */
 class Employee
 {
+    /**
+     * Event listener.
+     * @BedRest\Listener(event="eventOne")
+     * @BedRest\Listener(event="eventTwo")
+     */
+    public function listenerOne()
+    {
+    }
     
+    /**
+     * Event listener.
+     * @BedRest\Listener(event="eventTwo")
+     */
+    public function listenerTwo()
+    {
+    }
+    
+    /**
+     * Not an event listener.
+     */
+    public function get()
+    {
+    }
 }

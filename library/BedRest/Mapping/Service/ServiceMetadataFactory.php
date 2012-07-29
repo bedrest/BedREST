@@ -94,13 +94,13 @@ class ServiceMetadataFactory
      */
     protected function loadMetadata($class)
     {
-        $service = new ServiceMetadata($class);
+        $metadata = new ServiceMetadata($class);
 
         // use the driver to load metadata
-        $this->driver->loadMetadataForClass($class, $service);
+        $this->driver->loadMetadataForClass($class, $metadata);
 
         // store the metadata
-        $this->loadedMetadata[$class] = $service;
+        $this->loadedMetadata[$class] = $metadata;
     }
 
     /**

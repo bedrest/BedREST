@@ -23,10 +23,16 @@ namespace BedRest\Mapping\Service;
 class ServiceMetadata
 {
     /**
-     * 
+     * Class name of the service.
      * @var string
      */
     protected $className;
+
+    /**
+     * Event listeners for the service.
+     * @var string
+     */
+    protected $listeners;
 
     /**
      * Constructor.
@@ -53,5 +59,42 @@ class ServiceMetadata
     public function getClassName()
     {
         return $this->className;
+    }
+
+    /**
+     * Adds a listener for the specified event.
+     * @param string $event
+     * @param string $method
+     */
+    public function addListener($event, $method)
+    {
+        if (!isset($this->listeners[$event])) {
+            $this->listeners[$event] = array();
+        }
+
+        $this->listeners[$event][] = $method;
+    }
+
+    /**
+     * Returns the set of listeners for a specified event.
+     * @param string $event
+     * @return array
+     */
+    public function getListeners($event)
+    {
+        if (!isset($this->listeners[$event])) {
+            return array();
+        }
+
+        return $this->listeners[$event];
+    }
+    
+    /**
+     * Returns the set of all listeners, indexed by event.
+     * @return array
+     */
+    public function getAllListeners()
+    {
+        return $this->listeners;
     }
 }
