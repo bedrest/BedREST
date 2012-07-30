@@ -141,6 +141,7 @@ class ResourceMetadataFactory
 
         $resource = new ResourceMetadata($class);
         $resource->setClassMetadata($classMetadata);
+        $resource->setServiceClass($this->configuration->getDefaultServiceClassName());
 
         // use the driver to load metadata
         $this->driver->loadMetadataForClass($class, $resource);

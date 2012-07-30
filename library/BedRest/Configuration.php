@@ -15,8 +15,6 @@
 
 namespace BedRest;
 
-use BedRest\EventManager;
-use BedRest\ServiceManager;
 use BedRest\Mapping\Resource\Driver\Driver as ResourceDriver;
 use BedRest\Mapping\Service\Driver\Driver as ServiceDriver;
 use Doctrine\ORM\EntityManager;
@@ -52,16 +50,13 @@ class Configuration
      * Array of service namespaces, analogous to Doctrine\ORM\Configuration's entity namespace storage.
      * @var array
      */
-    protected $serviceNamespaces;
-
+    protected $serviceNamespaces = array();
+    
     /**
-     * Returns the entity manager.
-     * @return \Doctrine\ORM\EntityManager
+     * Default service class name.
+     * @var string
      */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
+    protected $defaultServiceClassName = 'BedRest\Service\SimpleEntityService';
 
     /**
      * Sets the entity manager.
@@ -73,12 +68,12 @@ class Configuration
     }
 
     /**
-     * Returns all registered service namespace mappings.
-     * @return array
+     * Returns the entity manager.
+     * @return \Doctrine\ORM\EntityManager
      */
-    public function getServiceNamespaces()
+    public function getEntityManager()
     {
-        return $this->serviceNamespaces;
+        return $this->entityManager;
     }
 
     /**
@@ -88,6 +83,15 @@ class Configuration
     public function setServiceNamespaces(array $serviceNamespaces)
     {
         $this->serviceNamespaces = $serviceNamespaces;
+    }
+
+    /**
+     * Returns all registered service namespace mappings.
+     * @return array
+     */
+    public function getServiceNamespaces()
+    {
+        return $this->serviceNamespaces;
     }
 
     /**
@@ -134,6 +138,24 @@ class Configuration
     public function getServiceMetadataDriverImpl()
     {
         return $this->serviceMetadataDriverImpl;
+    }
+    
+    /**
+     * Sets the default service class name.
+     * @param string $className
+     */
+    public function setDefaultServiceClassName($className)
+    {
+        $this->defaultServiceClassName = $className;
+    }
+    
+    /**
+     * Returns the default service class name.
+     * @return string
+     */
+    public function getDefaultServiceClassName()
+    {
+        return $this->defaultServiceClassName;
     }
 }
 

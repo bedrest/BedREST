@@ -73,8 +73,6 @@ class AnnotationDriver implements Driver
             // service class
             if (!empty($resourceAnnotation->serviceClass)) {
                 $resourceMetadata->setServiceClass($resourceAnnotation->serviceClass);
-            } else {
-                throw MappingException::serviceClassNotProvided($className);
             }
         }
     }
