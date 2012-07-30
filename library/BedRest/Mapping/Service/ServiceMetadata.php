@@ -90,6 +90,15 @@ class ServiceMetadata
     }
     
     /**
+     * Sets all listeners, discarding the current set.
+     * @param array $listeners
+     */
+    public function setAllListeners($listeners)
+    {
+        $this->listeners = $listeners;
+    }
+    
+    /**
      * Returns the set of all listeners, indexed by event.
      * @return array
      */
