@@ -77,7 +77,7 @@ class EventManager
      */
     public function dispatch($event, Event $eventObject)
     {
-        if (!is_array($this->listeners[$event])) {
+        if (!isset($this->listeners[$event])) {
             return;
         }
         

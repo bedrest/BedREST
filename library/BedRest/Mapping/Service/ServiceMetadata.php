@@ -32,7 +32,7 @@ class ServiceMetadata
      * Event listeners for the service.
      * @var string
      */
-    protected $listeners;
+    protected $listeners = array();
 
     /**
      * Constructor.
