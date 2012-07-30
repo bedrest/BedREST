@@ -37,7 +37,7 @@ class EventManager
      */
     public function addListener($event, $observer)
     {
-        if (!is_array($this->listeners[$event])) {
+        if (!isset($this->listeners[$event])) {
             $this->listeners[$event] = array();
         }
         
