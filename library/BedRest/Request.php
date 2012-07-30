@@ -245,6 +245,20 @@ class Request
         // @todo Take account of specificity with wildcard media ranges (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
         $this->mergeSort($this->accept, array($this, 'sortQualityComparator'));
     }
+    
+    /**
+     * Gets the best match format to return a response in based on a supplied list of formats.
+     */
+    public function getAcceptBestMatch(array $formats)
+    {
+        foreach ($this->accept as $accept) {
+            if (in_array($accept['media_range'], $formats)) {
+                return $accept['media_range'];
+            }
+        }
+        
+        return false;
+    }
 
     /**
      * Returns the parsed accepted content types of the request, usually determined by the 'Accept-Encoding' HTTP header.
