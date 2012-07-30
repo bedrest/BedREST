@@ -22,5 +22,28 @@ namespace BedRest\Event;
  */
 class GetEntityEvent extends Event
 {
+    /**
+     * Identifier of the resource being requested.
+     * @var mixed
+     */
+    protected $identifier;
+    
+    /**
+     * Returns the identifier of the resource being requested.
+     * @return mixed
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+    
+    /**
+     * Sets the identifier of the resource being requested.
+     * @param mixed $identifier
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
 }
 

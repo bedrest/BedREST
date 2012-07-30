@@ -18,6 +18,7 @@ namespace BedRest;
 use BedRest\Configuration;
 use BedRest\Request;
 use BedRest\Response;
+use BedRest\Event;
 use BedRest\Mapping\Resource\ResourceMetadata;
 use BedRest\Mapping\Resource\ResourceMetadataFactory;
 use BedRest\Mapping\Service\ServiceMetadata;
@@ -174,7 +175,16 @@ class RestManager
     public function process(Request $request)
     {
         // create an empty response
-        $response = new Response();
+        $response = new Response($this->configuration);
+        
+        // TODO: load the allowable formats from config
+        $bestMatch = $request->getAcceptBestMatch(array('application/json'));
+        
+        if (!$bestMatch) {
+            throw RestException::notAcceptable();
+        }
+        
+        $response->setContentType($bestMatch);
         
         // get metadata
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
@@ -186,30 +196,42 @@ class RestManager
         // create event
         switch ($request->getMethod()) {
             case Request::METHOD_GET:
-                $event = 'getEntity';
-                $eventClass = 'GetEntityEvent';
+                $this->dispatchGetEntity($request, $response);
                 break;
             case Request::METHOD_GET_COLLECTION:
-                $event = 'getCollection';
-                $eventClass = 'GetCollectionEvent';
+                $this->dispatchGetCollection($request, $response);
                 break;
             // TODO: implement other methods
             default:
                 // TODO: exception, unknown request type
                 break;
         }
-        
-        $eventClass = 'BedRest\Event\\' . $eventClass;
-        
-        $eventObject = new $eventClass();
-        $eventObject->setRestManager($this);
-        $eventObject->setRequest($request);
-        $eventObject->setResponse($response);
-
-        // dispatch event
-        $this->getEventManager()->dispatch($event, $eventObject);
 
         return $response;
+    }
+    
+    protected function dispatchGetEntity(Request $request, Response $response)
+    {
+        $event = new Event\GetEntityEvent();
+        
+        $event->setRestManager($this);
+        $event->setRequest($request);
+        $event->setResponse($response);
+        
+        $event->setIdentifier($request->getRouteComponent('identifier'));
+        
+        $this->getEventManager()->dispatch('getEntity', $event);
+    }
+    
+    protected function dispatchGetCollection($request, $response)
+    {
+        $event = new Event\GetCollectionEvent();
+        
+        $event->setRestManager($this);
+        $event->setRequest($request);
+        $event->setResponse($response);
+        
+        $this->getEventManager()->dispatch('getCollection', $event);
     }
     
     /**
