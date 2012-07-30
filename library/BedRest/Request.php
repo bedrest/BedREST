@@ -46,6 +46,12 @@ class Request
      * @var string
      */
     protected $resource = '';
+    
+    /**
+     * Components of the route, indexed by name.
+     * @var array
+     */
+    protected $routeComponents = array();
 
     const CONTENTTYPE_JSON = 'application/json';
     const CONTENTTYPE_URLENCODED = 'application/x-www-form-urlencoded';
@@ -132,6 +138,38 @@ class Request
         }
 
         $this->resource = $resource;
+    }
+    
+    /**
+     * Returns a route component.
+     * @param string $name
+     * @return array
+     */
+    public function getRouteComponent($name)
+    {
+        if (!isset($this->routeComponents[$name])) {
+            return null;
+        }
+        
+        return $this->routeComponents[$name];
+    }
+    
+    /**
+     * Returns route components indexed by name.
+     * @return array
+     */
+    public function getRouteComponents()
+    {
+        return $this->routeComponents;
+    }
+    
+    /**
+     * Replaces the set of route components with the one provided.
+     * @param array $components
+     */
+    public function setRouteComponents(array $components)
+    {
+        $this->routeComponents = $components;
     }
 
     /**
