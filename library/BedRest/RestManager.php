@@ -181,7 +181,7 @@ class RestManager
         $serviceMetadata = $this->getServiceMetadata($resourceMetadata->getServiceClass());
         
         // get the service
-        $service = $this->getService($serviceMetadata);
+        $service = $this->getService($serviceMetadata, $resourceMetadata);
 
         // create event
         switch ($request->getMethod()) {
@@ -209,18 +209,18 @@ class RestManager
         // dispatch event
         $this->getEventManager()->dispatch($event, $eventObject);
 
-        return $this->response;
+        return $response;
     }
     
     /**
      * Gets a service and binds any event listeners if this is the first time it has been requested.
      * @param \BedRest\Mapping\Service\ServiceMetadata $serviceMetadata
      */
-    protected function getService(ServiceMetadata $serviceMetadata)
+    protected function getService(ServiceMetadata $serviceMetadata, ResourceMetadata $resourceMetadata)
     {
-        $eventsLoaded = $this->serviceManager->hasService($serviceMetadata->getClassName());
+        $eventsLoaded = $this->serviceManager->hasService($serviceMetadata->getClassName(), $this, $resourceMetadata->getClassName());
         
-        $service = $this->serviceManager->getService($serviceMetadata->getClassName());
+        $service = $this->serviceManager->getService($serviceMetadata->getClassName(), $this, $resourceMetadata->getClassName());
         
         if (!$eventsLoaded) {
             foreach ($serviceMetadata->getAllListeners() as $event => $observers) {

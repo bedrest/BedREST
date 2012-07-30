@@ -16,6 +16,7 @@
 namespace BedRest;
 
 use BedRest\Configuration;
+use BedRest\RestManager;
 
 /**
  * ServiceManager
@@ -29,7 +30,7 @@ class ServiceManager
 {
     /**
      * BedRest configuration.
-     * @var BedRest\Configuration
+     * @var \BedRest\Configuration
      */
     protected $configuration;
 
@@ -50,49 +51,70 @@ class ServiceManager
 
     /**
      * Returns an instance of the specified service.
-     * @param string $serviceClass
+     * @param string $className
+     * @param \BedRest\RestManager $restManager
+     * @param string $resourceClassName
+     * @return object
      */
-    public function getService($serviceClass)
+    public function getService($className, RestManager $restManager, $resourceClassName)
     {
-        if (!isset($this->loadedServices[$serviceClass])) {
-            $this->loadService($serviceClass);
+        $hash = $this->getServiceHash($restManager, $resourceClassName);
+        
+        if (!isset($this->loadedServices[$className][$hash])) {
+            $this->loadService($className, $restManager, $resourceClassName);
         }
 
-        return $this->loadedServices[$serviceClass];
+        return $this->loadedServices[$className][$hash];
     }
-    
+
     /**
      * Whether a service has been loaded or not yet.
-     * @param string $serviceClass
+     * @param string $className
+     * @param string $resourceClassName
      * @return boolean
      */
-    public function hasService($serviceClass)
+    public function hasService($className, RestManager $restManager, $resourceClassName)
     {
-        if (isset($this->loadedServices[$serviceClass])) {
+        $hash = $this->getServiceHash($restManager, $resourceClassName);
+        
+        if (isset($this->loadedServices[$className][$hash])) {
             return true;
         }
-        
+
         return false;
     }
 
     /**
      * Loads the specified service class.
-     * @param string $serviceClass
+     * @param string $className
+     * @param \BedRest\RestManager $restManager
+     * @param string $resourceClassName
      * @throws \Exception
      */
-    protected function loadService($serviceClass)
+    protected function loadService($className, RestManager $restManager, $resourceClassName)
     {
-        if (!class_exists($serviceClass)) {
-            throw new Exception("Service '$serviceClass' not found.");
+        if (!class_exists($className)) {
+            throw new Exception("Service '$className' not found.");
         }
 
-        $service = new $serviceClass();
+        $service = new $className(
+            $restManager,
+            $restManager->getResourceMetadata($resourceClassName)
+        );
 
-        if (method_exists($service, 'setEntityManager')) {
-            $service->setEntityManager($this->configuration->getEntityManager());
-        }
-
-        $this->loadedServices[$serviceClass] = $service;
+        $hash = $this->getServiceHash($restManager, $resourceClassName);
+        $this->loadedServices[$className][$hash] = $service;
+    }
+    
+    /**
+     * Gets the hash used for indexing loaded services.
+     * @param \BedRest\RestManager $restManager
+     * @param string $resourceClassName
+     * @return string
+     */
+    protected function getServiceHash(RestManager $restManager, $resourceClassName)
+    {
+        return $hash = $resourceClassName . '#' . spl_object_hash($restManager);
     }
 }
 
