@@ -16,16 +16,16 @@
 
 namespace BedRest\DataMapper;
 
-use BedRest\Configuration,
-    Doctrine\ORM\EntityManager,
-    Doctrine\DBAL\Types\Type;
+use BedRest\Configuration;
+use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * AbstractMapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-abstract class AbstractMapper
+abstract class AbstractMapper implements DataMapper
 {
     /**
      * Configuration.
@@ -177,5 +177,12 @@ abstract class AbstractMapper
      * @return mixed
      */
     abstract public function reverse($resource);
+    
+    /**
+     * Reverse maps generic data structures into the desired format.
+     * @param mixed $data
+     * @return mixed
+     */
+    abstract public function reverseGeneric($data);
 }
 

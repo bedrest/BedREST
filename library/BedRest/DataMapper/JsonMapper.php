@@ -76,6 +76,18 @@ class JsonMapper extends AbstractMapper
      */
     public function reverse($resource)
     {
+        $data = $this->reverseToArray($resource);
+
+        return json_encode($data);
+    }
+    
+    /**
+     * Converts a resource into an array.
+     * @param mixed $resource
+     * @return array
+     */
+    protected function reverseToArray($resource)
+    {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
         $data = array();
@@ -97,8 +109,44 @@ class JsonMapper extends AbstractMapper
 
             $data[$property] = $value;
         }
-
-        return json_encode($data);
+        
+        return $data;
+    }
+    
+    /**
+     * Reverse maps generic data structures into the desired format.
+     * @param mixed $data
+     * @return mixed
+     */
+    public function reverseGeneric($data)
+    {
+        $return = $this->reverseGenericWorker($data);
+        
+        return json_encode($return);
+    }
+    
+    /**
+     * Performs the actual work of reverseGeneric().
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function reverseGenericWorker($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (is_object($value) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($value))) {
+                    $return[$key] = $this->reverseToArray($value);
+                } else {
+                    $return[$key] = $this->reverseGenericWorker($value);
+                }
+            }
+        } elseif (is_object($data) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data))) {
+            $return = $this->reverseToArray($data);
+        } else {
+            $return = $data;
+        }
+        
+        return $return;
     }
 }
 

@@ -16,55 +16,30 @@
 namespace BedRest\DataMapper;
 
 /**
- * ArrayMapper
- *
+ * DataMapper
+ * 
  * @author Geoff Adams <geoff@dianode.net>
  */
-class ArrayMapper extends AbstractMapper
+interface DataMapper
 {
     /**
-     * Maps data into an entity from an array.
-     * @param mixed $resource Entity to map the data into.
-     * @param array $data Data to be mapped.
+     * Maps data into a resource.
+     * @param object $resource Entity to map the data into.
+     * @param mixed $data Data to be mapped.
      */
-    public function map($resource, $data)
-    {
-        if (!is_array($data)) {
-            throw new DataMappingException('Supplied data is not an array');
-        }
-
-        $data = $this->castFieldData($resource, $data);
-
-        foreach ($data as $property => $value) {
-            $resource->$property = $value;
-        }
-    }
-
+    public function map($resource, $data);
+    
     /**
-     * Maps data from an entity into an array.
+     * Reverse maps data from a resource into the desired format.
      * @param mixed $resource Entity to map data from.
-     * @return array
+     * @return mixed
      */
-    public function reverse($resource)
-    {
-        $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
-
-        $return = array();
-        foreach ($classMetadata->fieldMappings as $property => $mapping) {
-            $return[$property] = $resource->$property;
-        }
-
-        return $return;
-    }
+    public function reverse($resource);
     
     /**
      * Reverse maps generic data structures into the desired format.
      * @param mixed $data
      * @return mixed
      */
-    public function reverseGeneric($data)
-    {
-        throw new DataMappingException('Not implemented yet');
-    }
+    public function reverseGeneric($data);
 }
-
