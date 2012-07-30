@@ -10,10 +10,28 @@ namespace BedRest;
 class Response
 {
     /**
+     * Configuration object.
+     * @var \BedRest\Configuration
+     */
+    protected $configuration;
+    
+    /**
+     * Body as set by the service layer.
+     * @var mixed
+     */
+    protected $body;
+    
+    /**
+     * Whether the body has been processed into the raw body string.
+     * @var boolean
+     */
+    protected $bodyProcessed = false;
+    
+    /**
      * Raw body content.
      * @var string
      */
-    protected $rawBody = '';
+    protected $rawBody;
 
     /**
      * Content type of the response.
@@ -32,14 +50,30 @@ class Response
      * @var integer
      */
     protected $code = 200;
-
-    /**
-     * Sets the raw body content.
-     * @param string $rawBody
-     */
-    public function setRawBody($rawBody)
+    
+    public function __construct(Configuration $configuration)
     {
-        $this->rawBody = $rawBody;
+        $this->configuration = $configuration;
+    }
+    
+    /**
+     * Sets the body content.
+     * @param mixed $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+        $this->bodyProcessed = false;
+        $this->rawBody = null;
+    }
+    
+    /**
+     * Returns the body content.
+     * @return mixed
+     */
+    public function getBody()
+    {
+        return $this->body;
     }
 
     /**
@@ -48,6 +82,20 @@ class Response
      */
     public function getRawBody()
     {
+        if (!$this->bodyProcessed) {
+            switch ($this->contentType) {
+                case 'application/json':
+                    $mapper = new DataMapper\JsonMapper($this->configuration);
+                    $this->rawBody = $mapper->reverseGeneric($this->body);
+                    break;
+                default:
+                    throw RestException::notAcceptable();
+                    break;
+            }
+            
+            $this->bodyProcessed = true;
+        }
+        
         return $this->rawBody;
     }
 
