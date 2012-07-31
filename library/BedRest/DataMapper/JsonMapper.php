@@ -132,6 +132,8 @@ class JsonMapper extends AbstractMapper
      */
     protected function reverseGenericWorker($data)
     {
+        $return = null;
+        
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 if (is_object($value) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($value))) {
