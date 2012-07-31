@@ -87,7 +87,7 @@ class SimpleEntityService implements Service
         $total = $this->getTotal();
         
         $data = array(
-            'items' => $collection,
+            'items' => count($collection) ? $collection : array(),
             'count' => count($collection),
             'total' => $total,
             'perPage' => $limit
