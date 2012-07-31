@@ -15,7 +15,9 @@
 
 namespace BedRest\DataMapper;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * JsonMapper
@@ -90,6 +92,14 @@ class JsonMapper extends AbstractMapper
     {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
+        $fieldData = $this->reverseFieldsToArray($resource, $classMetadata);
+        $associationData = $this->reverseAssociationsToArray($resource, $classMetadata);
+        
+        return array_merge($fieldData, $associationData);
+    }
+    
+    protected function reverseFieldsToArray($resource, ClassMetadata $classMetadata)
+    {
         $data = array();
 
         foreach ($classMetadata->fieldMappings as $property => $mapping) {
@@ -113,6 +123,35 @@ class JsonMapper extends AbstractMapper
         return $data;
     }
     
+    protected function reverseAssociationsToArray($resource, ClassMetadata $classMetadata)
+    {
+        $data = array();
+        
+        foreach ($classMetadata->associationMappings as $association => $mapping) {
+            $value = $resource->$association;
+
+            if ($value instanceof \Doctrine\ORM\Proxy\Proxy) {
+                // force load of proxied data
+                $value->__load();
+            }
+
+            if ($value instanceof Collection) {
+                $collection = array();
+                
+                foreach ($value as $item) {
+                    $collection[] = $this->reverseToArray($item);
+                }
+                
+                $data[$association] = $collection;
+            } else {
+                $data[$association] = $this->reverseToArray($resource->$association);
+            }
+        }
+
+        return $data;
+    }
+
+
     /**
      * Reverse maps generic data structures into the desired format.
      * @param mixed $data
