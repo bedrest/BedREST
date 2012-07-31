@@ -34,12 +34,6 @@ class Response
     protected $rawBody;
 
     /**
-     * Content type of the response.
-     * @var string
-     */
-    protected $contentType = '';
-
-    /**
      * HTTP headers.
      * @var array
      */
@@ -83,7 +77,7 @@ class Response
     public function getRawBody()
     {
         if (!$this->bodyProcessed) {
-            switch ($this->contentType) {
+            switch ($this->getContentType()) {
                 case 'application/json':
                     $mapper = new DataMapper\JsonMapper($this->configuration);
                     $this->rawBody = $mapper->reverseGeneric($this->body);
@@ -105,7 +99,7 @@ class Response
      */
     public function setContentType($contentType)
     {
-        $this->contentType = $contentType;
+        $this->headers['Content-Type'] = $contentType;
     }
 
     /**
@@ -114,7 +108,11 @@ class Response
      */
     public function getContentType()
     {
-        return $this->contentType;
+        if (!isset($this->headers['Content-Type'])) {
+            return null;
+        }
+        
+        return $this->headers['Content-Type'];
     }
 
     /**
