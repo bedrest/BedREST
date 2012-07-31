@@ -135,6 +135,8 @@ class JsonMapper extends AbstractMapper
         $return = null;
         
         if (is_array($data)) {
+            $return = array();
+            
             foreach ($data as $key => $value) {
                 if (is_object($value) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($value))) {
                     $return[$key] = $this->reverseToArray($value);
