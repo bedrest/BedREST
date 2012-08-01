@@ -72,33 +72,39 @@ class JsonMapper extends AbstractMapper
     }
 
     /**
-     * Maps data from an entity to a JSON string.
+     * Maps data from an entity into a JSON string.
      * @param mixed $resource Entity to map data from.
-     * @return array
+     * @return string
      */
     public function reverse($resource)
     {
-        $data = $this->reverseToArray($resource);
+        $data = $this->reverseWorker($resource);
 
         return json_encode($data);
     }
     
     /**
-     * Converts a resource into an array.
+     * Performs the actual work of reverse().
      * @param mixed $resource
      * @return array
      */
-    protected function reverseToArray($resource)
+    protected function reverseWorker($resource)
     {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
-        $fieldData = $this->reverseFieldsToArray($resource, $classMetadata);
-        $associationData = $this->reverseAssociationsToArray($resource, $classMetadata);
+        $fieldData = $this->reverseEntityFields($resource, $classMetadata);
+        $associationData = $this->reverseEntityAssociations($resource, $classMetadata);
         
         return array_merge($fieldData, $associationData);
     }
     
-    protected function reverseFieldsToArray($resource, ClassMetadata $classMetadata)
+    /**
+     * Reverse maps entity fields using the class metadata to perform any casting.
+     * @param mixed $resource
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @return array
+     */
+    protected function reverseEntityFields($resource, ClassMetadata $classMetadata)
     {
         $data = array();
 
@@ -123,28 +129,33 @@ class JsonMapper extends AbstractMapper
         return $data;
     }
     
-    protected function reverseAssociationsToArray($resource, ClassMetadata $classMetadata)
+    /**
+     * Reverse maps entity associations, using the class metadata to determine those associations.
+     * @param mixed $resource
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @return array
+     */
+    protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata)
     {
         $data = array();
         
         foreach ($classMetadata->associationMappings as $association => $mapping) {
             $value = $resource->$association;
 
+            // force proxies to load data
             if ($value instanceof \Doctrine\ORM\Proxy\Proxy) {
-                // force load of proxied data
                 $value->__load();
             }
 
             if ($value instanceof Collection) {
-                $collection = array();
+                // collections must be looped through, assume each item within is an entity
+                $data[$association] = array();
                 
                 foreach ($value as $item) {
-                    $collection[] = $this->reverseToArray($item);
+                    $data[$association][] = $this->reverseWorker($item);
                 }
-                
-                $data[$association] = $collection;
             } else {
-                $data[$association] = $this->reverseToArray($resource->$association);
+                $data[$association] = $this->reverseWorker($resource->$association);
             }
         }
 
@@ -153,43 +164,42 @@ class JsonMapper extends AbstractMapper
 
 
     /**
-     * Reverse maps generic data structures into the desired format.
-     * @param mixed $data
-     * @return mixed
+     * Reverse maps generic data structures into a JSON string.
+     * @param mixed $generic
+     * @return string
      */
-    public function reverseGeneric($data)
+    public function reverseGeneric($generic)
     {
-        $return = $this->reverseGenericWorker($data);
+        $data = $this->reverseGenericWorker($generic);
         
-        return json_encode($return);
+        return json_encode($data);
     }
     
     /**
      * Performs the actual work of reverseGeneric().
-     * @param mixed $data
+     * @param mixed $generic
      * @return mixed
      */
-    protected function reverseGenericWorker($data)
+    protected function reverseGenericWorker($generic)
     {
-        $return = null;
+        $data = null;
         
-        if (is_array($data)) {
-            $return = array();
+        if (is_array($generic)) {
+            // arrays
+            $data = array();
             
-            foreach ($data as $key => $value) {
-                if (is_object($value) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($value))) {
-                    $return[$key] = $this->reverseToArray($value);
-                } else {
-                    $return[$key] = $this->reverseGenericWorker($value);
-                }
+            foreach ($generic as $key => $value) {
+                $data[$key] = $this->reverseGenericWorker($value);
             }
-        } elseif (is_object($data) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data))) {
-            $return = $this->reverseToArray($data);
+        } elseif (is_object($generic) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($generic))) {
+            // entities
+            $data = $this->reverseWorker($generic);
         } else {
-            $return = $data;
+            // non-arrays and non-entity objects, along with native types
+            $data = $generic;
         }
         
-        return $return;
+        return $data;
     }
 }
 
