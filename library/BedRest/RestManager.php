@@ -177,14 +177,14 @@ class RestManager
         // create an empty response
         $response = new Response($this->configuration);
         
-        // TODO: load the allowable formats from config
-        $bestMatch = $request->getAcceptBestMatch(array('application/json'));
+        // establish the best content type
+        $contentType = $request->getAcceptBestMatch($this->configuration->getContentTypes());
         
-        if (!$bestMatch) {
+        if (!$contentType) {
             throw RestException::notAcceptable();
         }
         
-        $response->setContentType($bestMatch);
+        $response->setContentType($contentType);
         
         // get metadata
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());

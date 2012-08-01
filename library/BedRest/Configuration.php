@@ -57,6 +57,14 @@ class Configuration
      * @var string
      */
     protected $defaultServiceClassName = 'BedRest\Service\SimpleEntityService';
+    
+    /**
+     * Allowable content types.
+     * @var array
+     */
+    protected $contentTypes = array(
+        'application/json'
+    );
 
     /**
      * Sets the entity manager.
@@ -156,6 +164,23 @@ class Configuration
     public function getDefaultServiceClassName()
     {
         return $this->defaultServiceClassName;
+    }
+    
+    /**
+     * Sets the allowable content types for responses.
+     * @param array $contentTypes
+     */
+    public function setContentTypes(array $contentTypes)
+    {
+        $this->contentTypes = $contentTypes;
+    }
+    
+    /**
+     * Returns the allowable content types for responses.
+     */
+    public function getContentTypes()
+    {
+        return $this->contentTypes;
     }
 }
 
