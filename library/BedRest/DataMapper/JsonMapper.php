@@ -27,9 +27,9 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class JsonMapper extends AbstractMapper
 {
     /**
-     * Maps data into an entity from a raw JSON string.
-     * @param mixed $resource
-     * @param string $data
+     * Maps a JSON string into a resource or set of resources.
+     * @param mixed $resource Resource to map data into.
+     * @param string $data JSON string.
      */
     public function map($resource, $data)
     {
@@ -72,15 +72,42 @@ class JsonMapper extends AbstractMapper
     }
 
     /**
-     * Maps data from an entity into a JSON string.
-     * @param mixed $resource Entity to map data from.
+     * Reverse maps data into a JSON string.
+     * @param mixed $data Data to reverse map.
      * @return string
      */
-    public function reverse($resource)
+    public function reverse($data)
     {
-        $data = $this->reverseWorker($resource);
+        $data = $this->reverseWorker($data);
 
         return json_encode($data);
+    }
+    
+    /**
+     * Performs the actual work of reverse().
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function reverseWorker($data)
+    {
+        $return = null;
+        
+        if (is_array($data)) {
+            // arrays
+            $return = array();
+            
+            foreach ($data as $key => $value) {
+                $return[$key] = $this->reverseWorker($value);
+            }
+        } elseif (is_object($data) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data))) {
+            // entities
+            $return = $this->reverseEntity($data);
+        } else {
+            // non-arrays and non-entity objects, along with native types
+            $return = $data;
+        }
+        
+        return $return;
     }
     
     /**
@@ -88,7 +115,7 @@ class JsonMapper extends AbstractMapper
      * @param mixed $resource
      * @return array
      */
-    protected function reverseWorker($resource)
+    protected function reverseEntity($resource)
     {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
@@ -152,53 +179,13 @@ class JsonMapper extends AbstractMapper
                 $data[$association] = array();
                 
                 foreach ($value as $item) {
-                    $data[$association][] = $this->reverseWorker($item);
+                    $data[$association][] = $this->reverseEntity($item);
                 }
             } else {
-                $data[$association] = $this->reverseWorker($resource->$association);
+                $data[$association] = $this->reverseEntity($resource->$association);
             }
         }
 
-        return $data;
-    }
-
-
-    /**
-     * Reverse maps generic data structures into a JSON string.
-     * @param mixed $generic
-     * @return string
-     */
-    public function reverseGeneric($generic)
-    {
-        $data = $this->reverseGenericWorker($generic);
-        
-        return json_encode($data);
-    }
-    
-    /**
-     * Performs the actual work of reverseGeneric().
-     * @param mixed $generic
-     * @return mixed
-     */
-    protected function reverseGenericWorker($generic)
-    {
-        $data = null;
-        
-        if (is_array($generic)) {
-            // arrays
-            $data = array();
-            
-            foreach ($generic as $key => $value) {
-                $data[$key] = $this->reverseGenericWorker($value);
-            }
-        } elseif (is_object($generic) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($generic))) {
-            // entities
-            $data = $this->reverseWorker($generic);
-        } else {
-            // non-arrays and non-entity objects, along with native types
-            $data = $generic;
-        }
-        
         return $data;
     }
 }

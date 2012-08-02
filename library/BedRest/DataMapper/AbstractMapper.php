@@ -29,14 +29,14 @@ abstract class AbstractMapper implements DataMapper
 {
     /**
      * Configuration.
-     * @var BedRest\Configuration
+     * @var \BedRest\Configuration
      */
     protected $configuration;
 
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
-     * @param Configuration $configuration
+     * @param \BedRest\Configuration $configuration
      */
     public function __construct(Configuration $configuration = null)
     {
@@ -54,7 +54,7 @@ abstract class AbstractMapper implements DataMapper
 
     /**
      * Sets the configuration.
-     * @param BedRest\Configuration $em
+     * @param \BedRest\Configuration $em
      */
     public function setConfiguration(Configuration $configuration)
     {
@@ -87,7 +87,7 @@ abstract class AbstractMapper implements DataMapper
      * @param object $resource
      * @param array $data
      * @return array
-     * @throws DataMappingException
+     * @throws \BedRest\DataMappingException
      */
     public function castFieldData($resource, array $data)
     {
@@ -165,24 +165,17 @@ abstract class AbstractMapper implements DataMapper
     }
 
     /**
-     * Maps data into a resource.
-     * @param object $resource Entity to map the data into.
+     * Maps data into a resource or set of resources.
+     * @param mixed $resource Resource to map data into.
      * @param mixed $data Data to be mapped.
      */
     abstract public function map($resource, $data);
 
     /**
-     * Maps data from a resource into the desired format.
-     * @param mixed $resource Entity to map data from.
+     * Reverse maps data into the desired format.
+     * @param mixed $data Data to reverse map.
      * @return mixed
      */
-    abstract public function reverse($resource);
-    
-    /**
-     * Reverse maps generic data structures into the desired format.
-     * @param mixed $data
-     * @return mixed
-     */
-    abstract public function reverseGeneric($data);
+    abstract public function reverse($data);
 }
 

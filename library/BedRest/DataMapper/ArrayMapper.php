@@ -56,15 +56,5 @@ class ArrayMapper extends AbstractMapper
 
         return $return;
     }
-    
-    /**
-     * Reverse maps generic data structures into the desired format.
-     * @param mixed $data
-     * @return mixed
-     */
-    public function reverseGeneric($data)
-    {
-        throw new DataMappingException('Not implemented yet');
-    }
 }
 

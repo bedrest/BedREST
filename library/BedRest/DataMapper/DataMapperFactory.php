@@ -15,6 +15,7 @@
 
 namespace BedRest\DataMapper;
 
+use BedRest\Configuration;
 use BedRest\Exception as BedRestException;
 
 /**
@@ -37,10 +38,34 @@ class DataMapperFactory
     protected static $associations;
     
     /**
+     * Configuration to pass to instances.
+     * @var \BedRest\Configuration
+     */
+    protected static $configuration;
+    
+    /**
      * Protected contructor to preserve singleton status.
      */
     protected function __construct()
     {
+    }
+
+    /**
+     * Sets the configuration.
+     * @param \BedRest\Configuration $em
+     */
+    public static function setConfiguration(Configuration $configuration)
+    {
+        self::$configuration = $configuration;
+    }
+
+    /**
+     * Returns the configuration.
+     * @return \BedRest\Configuration
+     */
+    public static function getConfiguration()
+    {
+        return self::$configuration;
     }
 
     /**
@@ -64,7 +89,7 @@ class DataMapperFactory
             return null;
         }
         
-        self::$associations[$contentType];
+        return self::$associations[$contentType];
     }
     
     /**
@@ -110,7 +135,13 @@ class DataMapperFactory
     public static function getByClassName($className)
     {
         if (!isset(self::$instances[$className])) {
-            self::$instances[$className] = new $className;
+            $instance = new $className;
+            
+            if (method_exists($instance, 'setConfiguration')) {
+                $instance->setConfiguration(self::$configuration);
+            }
+            
+            self::$instances[$className] = $instance;
         }
         
         return self::$instances[$className];
