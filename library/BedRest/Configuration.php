@@ -65,6 +65,14 @@ class Configuration
     protected $contentTypes = array(
         'application/json'
     );
+    
+    /**
+     * Association of content types to the associated data mappers.
+     * @var array
+     */
+    protected $dataMappers = array(
+        'application/json' => 'BedRest\DataMapper\JsonMapper'
+    );
 
     /**
      * Sets the entity manager.
@@ -181,6 +189,47 @@ class Configuration
     public function getContentTypes()
     {
         return $this->contentTypes;
+    }
+    
+    /**
+     * Sets the association of data mappers against content types.
+     * @param array $dataMappers
+     */
+    public function setDataMappers(array $dataMappers)
+    {
+        $this->dataMappers = $dataMappers;
+    }
+    
+    /**
+     * Returns the association of data mappers against content types.
+     * @return array
+     */
+    public function getDataMappers()
+    {
+        return $this->dataMappers;
+    }
+    
+    /**
+     * Sets the class name of the data mapper for a particular content type.
+     * @param string $contentType
+     * @param string $dataMapper
+     */
+    public function setDataMapper($contentType, $dataMapper)
+    {
+        $this->dataMappers[$contentType] = $dataMapper;
+    }
+    
+    /**
+     * Returns the class name of the data mapper responsible the given content type.
+     * @return string|null
+     */
+    public function getDataMapper($contentType)
+    {
+        if (!isset($this->dataMappers[$contentType])) {
+            return null;
+        }
+        
+        return $this->dataMappers[$contentType];
     }
 }
 
