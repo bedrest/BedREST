@@ -67,11 +67,19 @@ class Configuration
     );
     
     /**
-     * Association of content types to the associated data mappers.
+     * Available data converters.
+     * @var array
+     */
+    protected $dataConverters = array(
+        'application/json' => 'BedRest\DataConverter\JsonConverter'
+    );
+
+    /**
+     * Array of data mapper class names against their aliases.
      * @var array
      */
     protected $dataMappers = array(
-        'application/json' => 'BedRest\DataMapper\JsonMapper'
+        'array' => 'BedRest\DataMapper\ArrayMapper'
     );
 
     /**
@@ -192,16 +200,58 @@ class Configuration
     }
     
     /**
-     * Sets the association of data mappers against content types.
+     * Sets the list of available data converters.
+     * @param array $dataConverters
+     */
+    public function setDataConverters(array $dataConverters)
+    {
+        $this->dataConverters = $dataConverters;
+}
+
+    /**
+     * Returns the list of available data converters.
+     * @return array
+     */
+    public function getDataConverters()
+    {
+        return $this->dataConverters;
+    }
+    
+    /**
+     * Adds a data mapper with the given content type association, overwriting any existing entry.
+     * @param string $contentType
+     * @param string $dataConverter
+     */
+    public function addDataConverter($contentType, $dataConverter)
+    {
+        $this->dataConverters[$contentType] = $dataConverter;
+    }
+    
+    /**
+     * Returns the class name of the data converter for the given content type.
+     * @param string $contentType
+     * @return string|null
+     */
+    public function getDataConverter($contentType)
+    {
+        if (!isset($this->dataConverters[$contentType])) {
+            return null;
+        }
+        
+        return $this->dataConverters[$contentType];
+    }
+    
+    /**
+     * Sets the list of available data mappers.
      * @param array $dataMappers
      */
     public function setDataMappers(array $dataMappers)
     {
         $this->dataMappers = $dataMappers;
-    }
-    
+}
+
     /**
-     * Returns the association of data mappers against content types.
+     * Returns the list of available data mappers.
      * @return array
      */
     public function getDataMappers()
@@ -210,26 +260,27 @@ class Configuration
     }
     
     /**
-     * Sets the class name of the data mapper for a particular content type.
-     * @param string $contentType
+     * Adds a data mapper with the given alias, overwriting any existing entry.
+     * @param string $alias
      * @param string $dataMapper
      */
-    public function setDataMapper($contentType, $dataMapper)
+    public function addDataMapper($alias, $dataMapper)
     {
-        $this->dataMappers[$contentType] = $dataMapper;
+        $this->dataMappers[$alias] = $dataMapper;
     }
     
     /**
-     * Returns the class name of the data mapper responsible the given content type.
+     * Returns the class name of the data mapper with the given alias.
+     * @param string $alias
      * @return string|null
      */
-    public function getDataMapper($contentType)
+    public function getDataMapper($alias)
     {
-        if (!isset($this->dataMappers[$contentType])) {
+        if (!isset($this->dataMappers[$alias])) {
             return null;
         }
         
-        return $this->dataMappers[$contentType];
+        return $this->dataMappers[$alias];
     }
 }
 

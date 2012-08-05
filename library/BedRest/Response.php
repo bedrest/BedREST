@@ -15,8 +15,6 @@
 
 namespace BedRest;
 
-use BedRest\DataMapper\DataMapperFactory;
-
 /**
  * Response
  *
@@ -92,8 +90,10 @@ class Response
     public function getRawBody()
     {
         if (!$this->bodyProcessed) {
-            $mapper = DataMapperFactory::get($this->getContentType());
-            $this->rawBody = $mapper->reverse($this->body);
+            $converterClass = $this->configuration->getDataConverter($this->getContentType());
+            $converter = new $converterClass;
+            
+            $this->rawBody = $converter->encode($this->body);
             $this->bodyProcessed = true;
         }
         
