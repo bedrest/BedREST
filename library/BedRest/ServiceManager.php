@@ -16,7 +16,10 @@
 namespace BedRest;
 
 use BedRest\Configuration;
+use BedRest\EventManager;
 use BedRest\RestManager;
+use BedRest\Mapping\Service\ServiceMetadata;
+use BedRest\Mapping\Service\ServiceMetadataFactory;
 
 /**
  * ServiceManager
@@ -39,14 +42,67 @@ class ServiceManager
      * @var array
      */
     protected $loadedServices;
+    
+    /**
+     * Service metadata factory.
+     * @var \BedRest\Mapping\Service\ServiceMetadataFactory
+     */
+    protected $serviceMetadataFactory;
 
+    /**
+     * Event manager instance.
+     * @var \BedRest\EventManager
+     */
+    protected $eventManager;
+    
     /**
      * Constructor.
      * @param BedRest\Configuration $configuration
+     * @param \BedRest\EventManager $eventManager
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Configuration $configuration, EventManager $eventManager)
     {
         $this->configuration = $configuration;
+        $this->eventManager = $eventManager;
+        
+        $this->serviceMetadataFactory = new ServiceMetadataFactory($configuration);
+    }
+
+    /**
+     * Returns the configuration object.
+     * @return \BedRest\Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+    
+    /**
+     * Returns the event manager.
+     * @return \BedRest\EventManager
+     */
+    public function getEventManager()
+    {
+        return $this->eventManager;
+    }
+    
+    /**
+     * Returns service metadata for a class.
+     * @param string $className
+     * @return \BedRest\Mapping\Service\ServiceMetadata
+     */
+    public function getServiceMetadata($className)
+    {
+        return $this->serviceMetadataFactory->getMetadataFor($className);
+    }
+    
+    /**
+     * Returns the service metadata factory.
+     * @return \BedRest\Mapping\Service\ServiceMetadataFactory
+     */
+    public function getServiceMetadataFactory()
+    {
+        return $this->serviceMetadataFactory;
     }
 
     /**
@@ -97,13 +153,33 @@ class ServiceManager
             throw new Exception("Service '$className' not found.");
         }
 
+        // instantiate the class
         $service = new $className(
             $restManager,
             $restManager->getResourceMetadata($resourceClassName)
         );
+        
+        // register events
+        $this->registerServiceEvents($service);
 
+        // store it locally for future reference
         $hash = $this->getServiceHash($restManager, $resourceClassName);
         $this->loadedServices[$className][$hash] = $service;
+    }
+    
+    /**
+     * Registers all events with the event manager for a particular service instance.
+     * @param object $service
+     */
+    protected function registerServiceEvents($service)
+    {
+        $serviceMetadata = $this->serviceMetadataFactory->getMetadataFor(get_class($service));
+        
+        foreach ($serviceMetadata->getAllListeners() as $event => $observers) {
+            foreach ($observers as $observer) {
+                $this->eventManager->addListener($event, array($service, $observer));
+            }
+        }
     }
     
     /**
