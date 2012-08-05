@@ -20,7 +20,7 @@ namespace BedRest\DataMapper;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class DataMappingException extends \RuntimeException
+class DataMappingException extends \BedRest\Exception
 {
 }
 
