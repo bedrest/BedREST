@@ -15,6 +15,10 @@
 
 namespace BedRest\DataMapper;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\ClassMetadata;
+
 /**
  * ArrayMapper
  *
@@ -23,16 +27,17 @@ namespace BedRest\DataMapper;
 class ArrayMapper extends AbstractMapper
 {
     /**
-     * Maps data into an entity from an array.
-     * @param mixed $resource Entity to map the data into.
-     * @param array $data Data to be mapped.
+     * Maps an input array into a resource or set of resources.
+     * @param mixed $resource Resource to map data into.
+     * @param array $data Array of data.
      */
     public function map($resource, $data)
     {
         if (!is_array($data)) {
-            throw new DataMappingException('Supplied data is not an array');
+            throw new DataMappingException('Supplied data is not an array.');
         }
 
+        // cast data
         $data = $this->castFieldData($resource, $data);
 
         foreach ($data as $property => $value) {
@@ -41,20 +46,110 @@ class ArrayMapper extends AbstractMapper
     }
 
     /**
-     * Maps data from an entity into an array.
-     * @param mixed $resource Entity to map data from.
+     * Reverse maps data into an array.
+     * @param mixed $data Data to reverse map.
+     * @return string
+     */
+    public function reverse($data)
+    {
+        $return = null;
+        
+        if (is_array($data)) {
+            // arrays
+            $return = array();
+            
+            foreach ($data as $key => $value) {
+                $return[$key] = $this->reverse($value);
+            }
+        } elseif (is_object($data) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data))) {
+            // entities
+            $return = $this->reverseEntity($data);
+        } else {
+            // non-arrays and non-entity objects, along with native types
+            $return = $data;
+        }
+        return $return;
+    }
+    
+    /**
+     * Reverse maps an entity instance.
+     * @param mixed $resource
      * @return array
      */
-    public function reverse($resource)
+    protected function reverseEntity($resource)
     {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
-        $return = array();
+        $fieldData = $this->reverseEntityFields($resource, $classMetadata);
+        $associationData = $this->reverseEntityAssociations($resource, $classMetadata);
+        
+        return array_merge($fieldData, $associationData);
+    }
+    
+    /**
+     * Reverse maps entity fields using the class metadata to perform any casting.
+     * @param mixed $resource
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @return array
+     */
+    protected function reverseEntityFields($resource, ClassMetadata $classMetadata)
+    {
+        $data = array();
+
         foreach ($classMetadata->fieldMappings as $property => $mapping) {
-            $return[$property] = $resource->$property;
+            switch ($mapping['type']) {
+                /**
+                case Type::DATE:
+                case Type::DATETIME:
+                case Type::DATETIMETZ:
+                case Type::TIME:
+                    if ($resource->$property instanceof \DateTime) {
+                        $value = $resource->$property->format(\DateTime::ISO8601);
+                    }
+                    break;
+                    */
+                default:
+                    $value = $resource->$property;
+                    break;
+            }
+
+            $data[$property] = $value;
+        }
+        
+        return $data;
+    }
+    
+    /**
+     * Reverse maps entity associations, using the class metadata to determine those associations.
+     * @param mixed $resource
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @return array
+     */
+    protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata)
+    {
+        $data = array();
+        
+        foreach ($classMetadata->associationMappings as $association => $mapping) {
+            $value = $resource->$association;
+
+            // force proxies to load data
+            if ($value instanceof \Doctrine\ORM\Proxy\Proxy) {
+                $value->__load();
+            }
+
+            if ($value instanceof Collection) {
+                // collections must be looped through, assume each item within is an entity
+                $data[$association] = array();
+                
+                foreach ($value as $item) {
+                    $data[$association][] = $this->reverseEntity($item);
+                }
+            } else {
+                $data[$association] = $this->reverseEntity($resource->$association);
+            }
         }
 
-        return $return;
+        return $data;
     }
 }
 

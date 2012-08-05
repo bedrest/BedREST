@@ -94,9 +94,11 @@ class ArrayMapperTest extends BaseTestCase
         $data = $this->getTestData();
 
         $mapper->map($resource, $data);
-
-        foreach ($mapper->reverse($resource) as $property => $value) {
-            $this->assertEquals($value, $data[$property]);
+        
+        $reversed = $mapper->reverse($resource);
+        
+        foreach ($reversed as $property => $value) {
+            $this->assertEquals($data[$property], $value);
         }
     }
 
