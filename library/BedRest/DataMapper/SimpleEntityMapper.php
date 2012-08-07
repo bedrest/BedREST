@@ -20,11 +20,11 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
- * ArrayMapper
+ * SimpleEntityMapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class ArrayMapper extends AbstractMapper
+class SimpleEntityMapper extends AbstractMapper
 {
     /**
      * Maps an input array into a resource or set of resources.

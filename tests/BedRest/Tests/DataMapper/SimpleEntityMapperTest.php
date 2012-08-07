@@ -2,18 +2,18 @@
 
 namespace BedRest\Tests\DataMapper;
 
-use BedRest\DataMapper\AbstractMapper,
-    BedRest\DataMapper\ArrayMapper,
-    BedRest\Tests\BaseTestCase;
+use BedRest\DataMapper\AbstractMapper;
+use BedRest\DataMapper\SimpleEntityMapper;
+use BedRest\Tests\BaseTestCase;
 
 /**
- * BedRest\Tests\DataMapper\ArrayMapperTest
+ * SimpleEntityMapperTest
  *
- * Tests BedRest\DataMapper\ArrayMapper.
+ * Tests BedRest\DataMapper\SimpleEntityMapper.
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class ArrayMapperTest extends BaseTestCase
+class SimpleEntityMapperTest extends BaseTestCase
 {
     protected function getTestData()
     {
@@ -46,7 +46,7 @@ class ArrayMapperTest extends BaseTestCase
      */
     public function testClassContract()
     {
-        $mapper = new ArrayMapper();
+        $mapper = new SimpleEntityMapper();
 
         $this->assertTrue($mapper instanceof AbstractMapper);
     }
@@ -58,7 +58,7 @@ class ArrayMapperTest extends BaseTestCase
     {
         $this->setExpectedException('BedRest\DataMapper\DataMappingException');
 
-        $mapper = new ArrayMapper();
+        $mapper = new SimpleEntityMapper();
 
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
@@ -71,7 +71,7 @@ class ArrayMapperTest extends BaseTestCase
      */
     public function testBasicFieldMapping()
     {
-        $mapper = new ArrayMapper(self::getConfiguration());
+        $mapper = new SimpleEntityMapper(self::getConfiguration());
 
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
@@ -88,7 +88,7 @@ class ArrayMapperTest extends BaseTestCase
      */
     public function testBasicFieldReverse()
     {
-        $mapper = new ArrayMapper(self::getConfiguration());
+        $mapper = new SimpleEntityMapper(self::getConfiguration());
 
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
@@ -109,7 +109,7 @@ class ArrayMapperTest extends BaseTestCase
      */
     public function testBasicFieldMappingWithNonExistentFields()
     {
-        $mapper = new ArrayMapper(self::getConfiguration());
+        $mapper = new SimpleEntityMapper(self::getConfiguration());
 
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
 
@@ -131,7 +131,7 @@ class ArrayMapperTest extends BaseTestCase
      */
     public function testBasicFieldMappingWithCasting()
     {
-        $mapper = new ArrayMapper(self::getConfiguration());
+        $mapper = new SimpleEntityMapper(self::getConfiguration());
 
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
 
