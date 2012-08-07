@@ -15,16 +15,41 @@
 
 namespace BedRest\DataMapper;
 
+use BedRest\DataMapper\DataMapper;
+use BedRest\DataMapper\DataMappingException;
+
 /**
- * DataMappingException
+ * DataMapperFactory
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class DataMappingException extends \BedRest\Exception
+class DataMapperFactory
 {
-    public static function dataMapperNotFound($className)
+    /**
+     * Stores instances of loaded data mappers.
+     * @var array
+     */
+    protected $loadedDataMappers;
+    
+    /**
+     * Returns an instance of the specified data mapper.
+     * @param string $className
+     */
+    public function getDataMapper($className)
     {
-        return new self("The data mapper '{$className}' does not exist or could not be found.");
+        if (!isset($this->loadedDataMappers[$className])) {
+            if (!class_exists($className)) {
+                throw DataMappingException::dataMapperNotFound($className);
+            }
+            
+            $this->loadDataMapper($className);
+        }
+    }
+    
+    protected function loadDataMapper($className)
+    {
+        $dataMapper = new $className();
+        
+        $this->loadedDataMappers[$className] = $dataMapper;
     }
 }
-
