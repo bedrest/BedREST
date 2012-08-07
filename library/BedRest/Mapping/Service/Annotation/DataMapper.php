@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,14 +19,18 @@ namespace BedRest\Mapping\Service\Annotation;
 use Doctrine\ORM\Mapping\Annotation;
 
 /**
- * Service
+ * DataMapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  * 
  * @Annotation
  * @Target("CLASS")
  */
-class Service implements Annotation
+class DataMapper implements Annotation
 {
+    /**
+     * Class name of the data mapper for a service.
+     * @var string
+     */
+    public $class;
 }
-

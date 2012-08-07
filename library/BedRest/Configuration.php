@@ -59,6 +59,12 @@ class Configuration
     protected $defaultServiceClassName = 'BedRest\Service\SimpleEntityService';
     
     /**
+     * Default data mapper.
+     * @var string
+     */
+    protected $defaultDataMapper = 'BedRest\DataMapper\SimpleEntityMapper';
+    
+    /**
      * Allowable content types.
      * @var array
      */
@@ -180,6 +186,24 @@ class Configuration
     public function getDefaultServiceClassName()
     {
         return $this->defaultServiceClassName;
+    }
+    
+    /**
+     * Sets the default data mapper.
+     * @param string $dataMapper
+     */
+    public function setDefaultDataMapper($dataMapper)
+    {
+        $this->defaultDataMapper = $dataMapper;
+    }
+    
+    /**
+     * Returns the default data mapper.
+     * @return string
+     */
+    public function getDefaultDataMapper()
+    {
+        return $this->defaultDataMapper;
     }
     
     /**

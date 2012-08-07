@@ -92,6 +92,15 @@ class AnnotationDriver implements Driver
         if (isset($classAnnotations['BedRest\Mapping\Service\Annotation\Service'])) {
             $serviceAnnotation = $classAnnotations['BedRest\Mapping\Service\Annotation\Service'];
         }
+        
+        if (isset($classAnnotations['BedRest\Mapping\Service\Annotation\DataMapper'])) {
+            $dataMapperAnnotation = $classAnnotations['BedRest\Mapping\Service\Annotation\DataMapper'];
+            
+            // set data mapper if defined
+            if (!empty($dataMapperAnnotation->class)) {
+                $serviceMetadata->setDataMapper($dataMapperAnnotation->class);
+            }
+        }
 
         // process events
         foreach ($reflClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflMethod) {

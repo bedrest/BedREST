@@ -104,6 +104,7 @@ class ServiceMetadataFactory
         foreach ($parentClasses as $parentClass) {
             // create an empty metadata class
             $class = new ServiceMetadata($class);
+            $class->setDataMapper($this->configuration->getDefaultDataMapper());
             
             // copy all data from the immediate parent, if present
             if ($parent) {
