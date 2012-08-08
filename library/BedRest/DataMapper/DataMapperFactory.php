@@ -15,6 +15,8 @@
 
 namespace BedRest\DataMapper;
 
+use BedRest\Configuration;
+use BedRest\ServiceManager;
 use BedRest\DataMapper\DataMapper;
 use BedRest\DataMapper\DataMappingException;
 
@@ -32,6 +34,29 @@ class DataMapperFactory
     protected $loadedDataMappers;
     
     /**
+     * Configuration object to pass to instances.
+     * @var \BedRest\Configuration
+     */
+    protected $configuration;
+    
+    /**
+     * Service manager object to pass to instances.
+     * @var \BedRest\ServiceManager
+     */
+    protected $serviceManager;
+    
+    /**
+     * Constructor.
+     * @param \BedRest\Configuration $configuration
+     * @param \BedRest\ServiceManager $serviceManager
+     */
+    public function __construct(Configuration $configuration, ServiceManager $serviceManager)
+    {
+        $this->configuration = $configuration;
+        $this->serviceManager = $serviceManager;
+    }
+    
+    /**
      * Returns an instance of the specified data mapper.
      * @param string $className
      */
@@ -44,11 +69,17 @@ class DataMapperFactory
             
             $this->loadDataMapper($className);
         }
+        
+        return $this->loadedDataMappers[$className];
     }
     
+    /**
+     * Loads an instance of a data mapper.
+     * @param string $className
+     */
     protected function loadDataMapper($className)
     {
-        $dataMapper = new $className();
+        $dataMapper = new $className($this->configuration, $this->serviceManager);
         
         $this->loadedDataMappers[$className] = $dataMapper;
     }

@@ -17,6 +17,7 @@
 namespace BedRest\DataMapper;
 
 use BedRest\Configuration;
+use BedRest\ServiceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Types\Type;
 
@@ -32,40 +33,38 @@ abstract class AbstractMapper implements DataMapper
      * @var \BedRest\Configuration
      */
     protected $configuration;
+    
+    /**
+     * Service manager.
+     * @var \BedRest\ServiceManager
+     */
+    protected $serviceManager;
 
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
      * @param \BedRest\Configuration $configuration
      */
-    public function __construct(Configuration $configuration = null)
+    public function __construct(Configuration $configuration = null, ServiceManager $serviceManager)
     {
         $this->configuration = $configuration;
+        $this->serviceManager = $serviceManager;
     }
 
     /**
      * Returns the configuration.
      * @return \BedRest\Configuration
      */
-    public function getConfiguration()
+    protected function getConfiguration()
     {
         return $this->configuration;
-    }
-
-    /**
-     * Sets the configuration.
-     * @param \BedRest\Configuration $em
-     */
-    public function setConfiguration(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
     }
 
     /**
      * Gets the entity manager.
      * @return \Doctrine\ORM\EntityManager
      */
-    public function getEntityManager()
+    protected function getEntityManager()
     {
         if (!$this->configuration instanceof Configuration) {
             throw new DataMappingException('Configuration not provided');
@@ -89,7 +88,7 @@ abstract class AbstractMapper implements DataMapper
      * @return array
      * @throws \BedRest\DataMappingException
      */
-    public function castFieldData($resource, array $data)
+    protected function castFieldData($resource, array $data)
     {
         // get the class meta data for the entity
         $em = $this->getEntityManager();
