@@ -2,9 +2,11 @@
 
 namespace BedRest\Tests\DataMapper;
 
-use BedRest\DataMapper\AbstractMapper;
+use BedRest\DataMapper\DataMapper;
 use BedRest\DataMapper\SimpleEntityMapper;
+use BedRest\ServiceManager;
 use BedRest\Tests\BaseTestCase;
+use BedRest\EventManager;
 
 /**
  * SimpleEntityMapperTest
@@ -40,30 +42,21 @@ class SimpleEntityMapperTest extends BaseTestCase
             'active' => '1'
         );
     }
+    
+    /**
+     * Bootstrapping set up phase for each test.
+     */
+    protected function setUp()
+    {
+        $this->mapper = new SimpleEntityMapper(self::getConfiguration(), new ServiceManager(self::getConfiguration(), new EventManager()));
+    }
 
     /**
      * Test the class fulfills all contracts demanded of it.
      */
     public function testClassContract()
     {
-        $mapper = new SimpleEntityMapper();
-
-        $this->assertTrue($mapper instanceof AbstractMapper);
-    }
-
-    /**
-     * Test that instantiation without an entity manager will fail.
-     */
-    public function testInsantiationWithoutEntityManagerThrowsException()
-    {
-        $this->setExpectedException('BedRest\DataMapper\DataMappingException');
-
-        $mapper = new SimpleEntityMapper();
-
-        $resource = new \BedRest\TestFixtures\Models\Company\Employee();
-        $data = $this->getTestData();
-
-        $mapper->map($resource, $data);
+        $this->assertTrue($this->mapper instanceof DataMapper);
     }
 
     /**
@@ -71,12 +64,10 @@ class SimpleEntityMapperTest extends BaseTestCase
      */
     public function testBasicFieldMapping()
     {
-        $mapper = new SimpleEntityMapper(self::getConfiguration());
-
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
 
-        $mapper->map($resource, $data);
+        $this->mapper->map($resource, $data);
 
         foreach ($data as $property => $value) {
             $this->assertEquals($value, $resource->{$property});
@@ -88,14 +79,12 @@ class SimpleEntityMapperTest extends BaseTestCase
      */
     public function testBasicFieldReverse()
     {
-        $mapper = new SimpleEntityMapper(self::getConfiguration());
-
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
         $data = $this->getTestData();
 
-        $mapper->map($resource, $data);
+        $this->mapper->map($resource, $data);
         
-        $reversed = $mapper->reverse($resource);
+        $reversed = $this->mapper->reverse($resource);
         
         foreach ($reversed as $property => $value) {
             $this->assertEquals($data[$property], $value);
@@ -109,8 +98,6 @@ class SimpleEntityMapperTest extends BaseTestCase
      */
     public function testBasicFieldMappingWithNonExistentFields()
     {
-        $mapper = new SimpleEntityMapper(self::getConfiguration());
-
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
 
         $data = $this->getTestData();
@@ -118,7 +105,7 @@ class SimpleEntityMapperTest extends BaseTestCase
             'dummyField' => 'dummyValue'
         );
 
-        $mapper->map($resource, array_merge($data, $nonExistentFields));
+        $this->mapper->map($resource, array_merge($data, $nonExistentFields));
 
         foreach ($data as $property => $value) {
             $this->assertEquals($value, $resource->{$property});
@@ -131,14 +118,12 @@ class SimpleEntityMapperTest extends BaseTestCase
      */
     public function testBasicFieldMappingWithCasting()
     {
-        $mapper = new SimpleEntityMapper(self::getConfiguration());
-
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
 
         $data = $this->getTestData();
         $uncastData = $this->getUncastTestData();
 
-        $mapper->map($resource, $uncastData);
+        $this->mapper->map($resource, $uncastData);
 
         foreach ($data as $property => $value) {
             $this->assertEquals(gettype($value), gettype($resource->{$property}));
