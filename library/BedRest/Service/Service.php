@@ -21,7 +21,7 @@ use BedRest\Mapping\Service\ServiceMetadata;
 
 /**
  * Service
- * 
+ *
  * @author Geoff Adams <geoff@dianode.net>
  */
 interface Service

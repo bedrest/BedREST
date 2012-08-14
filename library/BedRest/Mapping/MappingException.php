@@ -28,27 +28,27 @@ class MappingException extends BedRestException
     {
         return new self("Class '{$className}' does not have a specified service class.");
     }
-    
+
     public static function classIsNotMappedResource($className)
     {
         return new self("Class '{$className}' is not a mapped resource.");
     }
-    
+
     public static function resourceNotFound($resourceName)
     {
         return new self("Resource '{$resourceName}' not found.");
     }
-    
+
     public static function classIsNotMappedService($className)
     {
         return new self("Class '{$className}' is not a mapped service.");
     }
-    
+
     public static function pathsRequired()
     {
         return new self("A set of paths must be provided in order to discover classes.");
     }
-    
+
     public static function invalidPath($path)
     {
         return new self("The path '{$path}' is invalid.");

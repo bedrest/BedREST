@@ -42,7 +42,7 @@ class ServiceManager
      * @var array
      */
     protected $loadedServices;
-    
+
     /**
      * Service metadata factory.
      * @var \BedRest\Mapping\Service\ServiceMetadataFactory
@@ -54,7 +54,7 @@ class ServiceManager
      * @var \BedRest\EventManager
      */
     protected $eventManager;
-    
+
     /**
      * Constructor.
      * @param BedRest\Configuration $configuration
@@ -64,7 +64,7 @@ class ServiceManager
     {
         $this->configuration = $configuration;
         $this->eventManager = $eventManager;
-        
+
         $this->serviceMetadataFactory = new ServiceMetadataFactory($configuration);
     }
 
@@ -76,7 +76,7 @@ class ServiceManager
     {
         return $this->configuration;
     }
-    
+
     /**
      * Returns the event manager.
      * @return \BedRest\EventManager
@@ -85,7 +85,7 @@ class ServiceManager
     {
         return $this->eventManager;
     }
-    
+
     /**
      * Returns service metadata for a class.
      * @param string $className
@@ -95,7 +95,7 @@ class ServiceManager
     {
         return $this->serviceMetadataFactory->getMetadataFor($className);
     }
-    
+
     /**
      * Returns the service metadata factory.
      * @return \BedRest\Mapping\Service\ServiceMetadataFactory
@@ -115,7 +115,7 @@ class ServiceManager
     public function getService($className, RestManager $restManager, $resourceClassName)
     {
         $hash = $this->getServiceHash($restManager, $resourceClassName);
-        
+
         if (!isset($this->loadedServices[$className][$hash])) {
             $this->loadService($className, $restManager, $resourceClassName);
         }
@@ -132,7 +132,7 @@ class ServiceManager
     public function hasService($className, RestManager $restManager, $resourceClassName)
     {
         $hash = $this->getServiceHash($restManager, $resourceClassName);
-        
+
         if (isset($this->loadedServices[$className][$hash])) {
             return true;
         }
@@ -158,7 +158,7 @@ class ServiceManager
             $restManager,
             $restManager->getResourceMetadata($resourceClassName)
         );
-        
+
         // register events
         $this->registerServiceEvents($service);
 
@@ -166,7 +166,7 @@ class ServiceManager
         $hash = $this->getServiceHash($restManager, $resourceClassName);
         $this->loadedServices[$className][$hash] = $service;
     }
-    
+
     /**
      * Registers all events with the event manager for a particular service instance.
      * @param object $service
@@ -174,14 +174,14 @@ class ServiceManager
     protected function registerServiceEvents($service)
     {
         $serviceMetadata = $this->serviceMetadataFactory->getMetadataFor(get_class($service));
-        
+
         foreach ($serviceMetadata->getAllListeners() as $event => $observers) {
             foreach ($observers as $observer) {
                 $this->eventManager->addListener($event, array($service, $observer));
             }
         }
     }
-    
+
     /**
      * Gets the hash used for indexing loaded services.
      * @param \BedRest\RestManager $restManager

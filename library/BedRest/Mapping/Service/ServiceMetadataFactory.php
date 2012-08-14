@@ -96,28 +96,28 @@ class ServiceMetadataFactory
     {
         // first run, we have no parent
         $parent = null;
-        
+
         $parentClasses = $this->getParentClasses($class);
         $parentClasses[] = $class;
-        
+
         // iterate through the list of mapped service parent classes
         foreach ($parentClasses as $parentClass) {
             // create an empty metadata class
             $class = new ServiceMetadata($class);
             $class->setDataMapper($this->configuration->getDefaultDataMapper());
-            
+
             // copy all data from the immediate parent, if present
             if ($parent) {
                 $class->setClassName($parent->getClassName());
                 $class->setAllListeners($parent->getAllListeners());
             }
-            
+
             // now overlay the metadata from the class itself
             if (!isset($this->loadedMetadata[$parentClass])) {
                 $this->driver->loadMetadataForClass($parentClass, $class);
                 $this->loadedMetadata[$parentClass] = $class;
             }
-            
+
             // the parent for the next iteration will be this iteration
             $parent = $class;
         }
@@ -132,7 +132,7 @@ class ServiceMetadataFactory
     {
         return $this->driver->isService($className);
     }
-    
+
     /**
      * Returns the list of parent service classes for the specified class.
      * @param string $className
@@ -141,13 +141,13 @@ class ServiceMetadataFactory
     protected function getParentClasses($className)
     {
         $parents = array();
-        
+
         foreach (array_reverse(class_parents($className)) as $class) {
             if ($this->driver->isService($class)) {
                 $parents[] = $class;
             }
         }
-        
+
         return $parents;
     }
 }

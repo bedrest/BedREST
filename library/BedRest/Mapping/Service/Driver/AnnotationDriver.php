@@ -34,7 +34,7 @@ class AnnotationDriver implements Driver
      * @var Doctrine\Common\Annotations\Reader
      */
     protected $reader;
-    
+
     /**
      * Array of paths to search for services.
      * @var array
@@ -49,7 +49,7 @@ class AnnotationDriver implements Driver
     {
         $this->reader = $reader;
     }
-    
+
     /**
      * Adds a path to search for services.
      * @param string $path
@@ -58,7 +58,7 @@ class AnnotationDriver implements Driver
     {
         $this->paths[] = $path;
     }
-    
+
     /**
      * Adds a set of paths to search for services.
      * @param array $paths
@@ -67,7 +67,7 @@ class AnnotationDriver implements Driver
     {
         $this->paths = array_merge($this->paths, $paths);
     }
-    
+
     /**
      * Retrieves the set of paths to search for services.
      * @return array
@@ -92,10 +92,10 @@ class AnnotationDriver implements Driver
         if (isset($classAnnotations['BedRest\Mapping\Service\Annotation\Service'])) {
             $serviceAnnotation = $classAnnotations['BedRest\Mapping\Service\Annotation\Service'];
         }
-        
+
         if (isset($classAnnotations['BedRest\Mapping\Service\Annotation\DataMapper'])) {
             $dataMapperAnnotation = $classAnnotations['BedRest\Mapping\Service\Annotation\DataMapper'];
-            
+
             // set data mapper if defined
             if (!empty($dataMapperAnnotation->class)) {
                 $serviceMetadata->setDataMapper($dataMapperAnnotation->class);
@@ -128,7 +128,7 @@ class AnnotationDriver implements Driver
         if (!$this->paths) {
             throw MappingException::pathsRequired();
         }
-        
+
         $classes = array();
         $includedFiles = array();
 

@@ -32,19 +32,19 @@ class DataMapperFactory
      * @var array
      */
     protected $loadedDataMappers;
-    
+
     /**
      * Configuration object to pass to instances.
      * @var \BedRest\Configuration
      */
     protected $configuration;
-    
+
     /**
      * Service manager object to pass to instances.
      * @var \BedRest\ServiceManager
      */
     protected $serviceManager;
-    
+
     /**
      * Constructor.
      * @param \BedRest\Configuration $configuration
@@ -55,7 +55,7 @@ class DataMapperFactory
         $this->configuration = $configuration;
         $this->serviceManager = $serviceManager;
     }
-    
+
     /**
      * Returns an instance of the specified data mapper.
      * @param string $className
@@ -66,13 +66,13 @@ class DataMapperFactory
             if (!class_exists($className)) {
                 throw DataMappingException::dataMapperNotFound($className);
             }
-            
+
             $this->loadDataMapper($className);
         }
-        
+
         return $this->loadedDataMappers[$className];
     }
-    
+
     /**
      * Loads an instance of a data mapper.
      * @param string $className
@@ -80,7 +80,7 @@ class DataMapperFactory
     protected function loadDataMapper($className)
     {
         $dataMapper = new $className($this->configuration, $this->serviceManager);
-        
+
         $this->loadedDataMappers[$className] = $dataMapper;
     }
 }

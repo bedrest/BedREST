@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * Listener
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @Annotation
  * @Target("METHOD")
  */

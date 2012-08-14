@@ -30,7 +30,7 @@ interface Driver
      * @param \BedRest\Mapping\Resource\ResourceMetadata $resourceMetadata
      */
     public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata);
-    
+
     /**
      * Whether the specified class is a mapped resource.
      * @param string $className

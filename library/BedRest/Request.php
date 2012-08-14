@@ -46,7 +46,7 @@ class Request
      * @var string
      */
     protected $resource = '';
-    
+
     /**
      * Components of the route, indexed by name.
      * @var array
@@ -139,7 +139,7 @@ class Request
 
         $this->resource = $resource;
     }
-    
+
     /**
      * Returns a route component.
      * @param string $name
@@ -150,10 +150,10 @@ class Request
         if (!isset($this->routeComponents[$name])) {
             return null;
         }
-        
+
         return $this->routeComponents[$name];
     }
-    
+
     /**
      * Returns route components indexed by name.
      * @return array
@@ -162,7 +162,7 @@ class Request
     {
         return $this->routeComponents;
     }
-    
+
     /**
      * Replaces the set of route components with the one provided.
      * @param array $components
@@ -245,7 +245,7 @@ class Request
         // @todo Take account of specificity with wildcard media ranges (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
         $this->mergeSort($this->accept, array($this, 'sortQualityComparator'));
     }
-    
+
     /**
      * Gets the best match format to return a response in based on a supplied list of formats.
      */
@@ -256,7 +256,7 @@ class Request
                 return $accept['media_range'];
             }
         }
-        
+
         return false;
     }
 

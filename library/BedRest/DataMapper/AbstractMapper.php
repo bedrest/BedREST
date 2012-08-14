@@ -33,7 +33,7 @@ abstract class AbstractMapper implements DataMapper
      * @var \BedRest\Configuration
      */
     protected $configuration;
-    
+
     /**
      * Service manager.
      * @var \BedRest\ServiceManager

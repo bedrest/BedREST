@@ -80,7 +80,7 @@ class RestManager
     {
         return $this->configuration;
     }
-    
+
     /**
      * Returns the service manager instance.
      * @return \BedRest\ServiceManager
@@ -89,7 +89,7 @@ class RestManager
     {
         return $this->serviceManager;
     }
-    
+
     /**
      * Returns the event manager.
      * @return \BedRest\EventManager
@@ -108,7 +108,7 @@ class RestManager
     {
         return $this->resourceMetadataFactory->getMetadataFor($className);
     }
-    
+
     /**
      * Returns resource metadata by resource name.
      * @param string $name
@@ -136,19 +136,19 @@ class RestManager
     {
         // create an empty response
         $response = new Response($this->configuration);
-        
+
         // establish the best content type
         $contentType = $request->getAcceptBestMatch($this->configuration->getContentTypes());
-        
+
         if (!$contentType) {
             throw RestException::notAcceptable();
         }
-        
+
         $response->setContentType($contentType);
-        
+
         // get metadata
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
-        
+
         // get the service
         $service = $this->serviceManager->getService($resourceMetadata->getServiceClass(), $this, $resourceMetadata->getClassName());
 
@@ -168,28 +168,28 @@ class RestManager
 
         return $response;
     }
-    
+
     protected function dispatchGetEntity(Request $request, Response $response)
     {
         $event = new Event\GetEntityEvent();
-        
+
         $event->setRestManager($this);
         $event->setRequest($request);
         $event->setResponse($response);
-        
+
         $event->setIdentifier($request->getRouteComponent('identifier'));
-        
+
         $this->getEventManager()->dispatch('getEntity', $event);
     }
-    
+
     protected function dispatchGetCollection($request, $response)
     {
         $event = new Event\GetCollectionEvent();
-        
+
         $event->setRestManager($this);
         $event->setRequest($request);
         $event->setResponse($response);
-        
+
         $this->getEventManager()->dispatch('getCollection', $event);
     }
 }

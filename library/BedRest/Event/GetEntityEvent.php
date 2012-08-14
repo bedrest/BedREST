@@ -27,7 +27,7 @@ class GetEntityEvent extends Event
      * @var mixed
      */
     protected $identifier;
-    
+
     /**
      * Returns the identifier of the resource being requested.
      * @return mixed
@@ -36,7 +36,7 @@ class GetEntityEvent extends Event
     {
         return $this->identifier;
     }
-    
+
     /**
      * Sets the identifier of the resource being requested.
      * @param mixed $identifier

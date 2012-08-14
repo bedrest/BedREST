@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * DataMapper
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @Annotation
  * @Target("CLASS")
  */

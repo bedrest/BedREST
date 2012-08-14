@@ -33,13 +33,13 @@ class Configuration
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
-    
+
     /**
      * Resource metadata driver.
      * @var \BedRest\Mapping\Resource\Driver\Driver
      */
     protected $resourceMetadataDriverImpl;
-    
+
     /**
      * Service metadata driver.
      * @var \BedRest\Mapping\Service\Driver\Driver
@@ -51,19 +51,19 @@ class Configuration
      * @var array
      */
     protected $serviceNamespaces = array();
-    
+
     /**
      * Default service class name.
      * @var string
      */
     protected $defaultServiceClassName = 'BedRest\Service\SimpleEntityService';
-    
+
     /**
      * Default data mapper.
      * @var string
      */
     protected $defaultDataMapper = 'BedRest\DataMapper\SimpleEntityMapper';
-    
+
     /**
      * Allowable content types.
      * @var array
@@ -71,7 +71,7 @@ class Configuration
     protected $contentTypes = array(
         'application/json'
     );
-    
+
     /**
      * Available data converters.
      * @var array
@@ -151,7 +151,7 @@ class Configuration
     {
         return $this->resourceMetadataDriverImpl;
     }
-    
+
     /**
      * Sets the service metadata driver implementation.
      * @param \BedRest\Mapping\Service\Driver\Driver $driver
@@ -160,7 +160,7 @@ class Configuration
     {
         $this->serviceMetadataDriverImpl = $driver;
     }
-    
+
     /**
      * Returns the service metadata driver implementation.
      * @return \BedRest\Mapping\Service\Driver\Driver
@@ -169,7 +169,7 @@ class Configuration
     {
         return $this->serviceMetadataDriverImpl;
     }
-    
+
     /**
      * Sets the default service class name.
      * @param string $className
@@ -178,7 +178,7 @@ class Configuration
     {
         $this->defaultServiceClassName = $className;
     }
-    
+
     /**
      * Returns the default service class name.
      * @return string
@@ -187,7 +187,7 @@ class Configuration
     {
         return $this->defaultServiceClassName;
     }
-    
+
     /**
      * Sets the default data mapper.
      * @param string $dataMapper
@@ -196,7 +196,7 @@ class Configuration
     {
         $this->defaultDataMapper = $dataMapper;
     }
-    
+
     /**
      * Returns the default data mapper.
      * @return string
@@ -205,7 +205,7 @@ class Configuration
     {
         return $this->defaultDataMapper;
     }
-    
+
     /**
      * Sets the allowable content types for responses.
      * @param array $contentTypes
@@ -214,7 +214,7 @@ class Configuration
     {
         $this->contentTypes = $contentTypes;
     }
-    
+
     /**
      * Returns the allowable content types for responses.
      */
@@ -222,7 +222,7 @@ class Configuration
     {
         return $this->contentTypes;
     }
-    
+
     /**
      * Sets the list of available data converters.
      * @param array $dataConverters
@@ -240,7 +240,7 @@ class Configuration
     {
         return $this->dataConverters;
     }
-    
+
     /**
      * Adds a data mapper with the given content type association, overwriting any existing entry.
      * @param string $contentType
@@ -250,7 +250,7 @@ class Configuration
     {
         $this->dataConverters[$contentType] = $dataConverter;
     }
-    
+
     /**
      * Returns the class name of the data converter for the given content type.
      * @param string $contentType
@@ -261,10 +261,10 @@ class Configuration
         if (!isset($this->dataConverters[$contentType])) {
             return null;
         }
-        
+
         return $this->dataConverters[$contentType];
     }
-    
+
     /**
      * Sets the list of available data mappers.
      * @param array $dataMappers
@@ -282,7 +282,7 @@ class Configuration
     {
         return $this->dataMappers;
     }
-    
+
     /**
      * Adds a data mapper with the given alias, overwriting any existing entry.
      * @param string $alias
@@ -292,7 +292,7 @@ class Configuration
     {
         $this->dataMappers[$alias] = $dataMapper;
     }
-    
+
     /**
      * Returns the class name of the data mapper with the given alias.
      * @param string $alias
@@ -303,7 +303,7 @@ class Configuration
         if (!isset($this->dataMappers[$alias])) {
             return null;
         }
-        
+
         return $this->dataMappers[$alias];
     }
 }

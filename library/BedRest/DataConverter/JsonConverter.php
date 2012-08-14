@@ -19,7 +19,7 @@ namespace BedRest\DataConverter;
  * JsonConverter
  *
  * Simple converter for JSON output.
- * 
+ *
  * @author Geoff Adams <geoff@dianode.net>
  */
 class JsonConverter implements DataConverter
@@ -27,7 +27,7 @@ class JsonConverter implements DataConverter
     public function decode($value)
     {
         $decoded = json_decode($value, true);
-        
+
         // check if an error occurred during decoding
         if ($error = json_last_error()) {
             switch (json_last_error()) {
@@ -50,7 +50,7 @@ class JsonConverter implements DataConverter
 
             throw new DataConversionException("Error during JSON deocding: $errorMessage");
         }
-        
+
         return $decoded;
     }
 

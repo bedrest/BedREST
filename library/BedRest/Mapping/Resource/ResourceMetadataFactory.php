@@ -49,7 +49,7 @@ class ResourceMetadataFactory
      * @var array
      */
     protected $loadedMetadata = array();
-    
+
     /**
      * Stores a map of resource names to class names.
      * @var array
@@ -86,7 +86,7 @@ class ResourceMetadataFactory
 
         return $this->loadedMetadata[$className];
     }
-    
+
     /**
      * Returns ResourceMetadata for the specified resource.
      * @param string $resourceName
@@ -95,11 +95,11 @@ class ResourceMetadataFactory
     public function getMetadataByResourceName($resourceName)
     {
         $this->getAllMetadata();
-        
+
         if (!isset($this->resourceClassMap[$resourceName])) {
             throw MappingException::resourceNotFound($resourceName);
         }
-        
+
         return $this->loadedMetadata[$this->resourceClassMap[$resourceName]];
     }
 
@@ -114,8 +114,8 @@ class ResourceMetadataFactory
 
         foreach ($classMetadataCollection as $classMetadata) {
             $className = $classMetadata->getName();
-            
-            if (!isset($this->loadedMetadata[$className]) && 
+
+            if (!isset($this->loadedMetadata[$className]) &&
                 $this->isResource($className)) {
                 $this->loadMetadata($classMetadata);
             }

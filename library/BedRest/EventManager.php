@@ -29,7 +29,7 @@ class EventManager
      * @var array
      */
     protected $listeners = array();
-    
+
     /**
      * Adds a listener.
      * @param string $event
@@ -40,10 +40,10 @@ class EventManager
         if (!isset($this->listeners[$event])) {
             $this->listeners[$event] = array();
         }
-        
+
         $this->listeners[$event][] = $observer;
     }
-    
+
     /**
      * Adds a set of listeners.
      * @param string $event
@@ -55,7 +55,7 @@ class EventManager
             $this->addListener($event, $observer);
         }
     }
-    
+
     /**
      * Retrieves all listeners for an event.
      * @param string $event
@@ -66,10 +66,10 @@ class EventManager
         if (!is_array($this->listeners[$event])) {
             return array();
         }
-        
+
         return $this->listeners[$event];
     }
-    
+
     /**
      * Dispatches an event to all listeners.
      * @param string $event
@@ -80,7 +80,7 @@ class EventManager
         if (!isset($this->listeners[$event])) {
             return;
         }
-        
+
         foreach ($this->listeners[$event] as $observer) {
             call_user_func_array($observer, array($eventObject));
         }

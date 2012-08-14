@@ -53,11 +53,11 @@ class SimpleEntityMapper extends AbstractMapper
     public function reverse($data)
     {
         $return = null;
-        
+
         if (is_array($data)) {
             // arrays
             $return = array();
-            
+
             foreach ($data as $key => $value) {
                 $return[$key] = $this->reverse($value);
             }
@@ -70,7 +70,7 @@ class SimpleEntityMapper extends AbstractMapper
         }
         return $return;
     }
-    
+
     /**
      * Reverse maps an entity instance.
      * @param mixed $resource
@@ -82,10 +82,10 @@ class SimpleEntityMapper extends AbstractMapper
 
         $fieldData = $this->reverseEntityFields($resource, $classMetadata);
         $associationData = $this->reverseEntityAssociations($resource, $classMetadata);
-        
+
         return array_merge($fieldData, $associationData);
     }
-    
+
     /**
      * Reverse maps entity fields using the class metadata to perform any casting.
      * @param mixed $resource
@@ -115,10 +115,10 @@ class SimpleEntityMapper extends AbstractMapper
 
             $data[$property] = $value;
         }
-        
+
         return $data;
     }
-    
+
     /**
      * Reverse maps entity associations, using the class metadata to determine those associations.
      * @param mixed $resource
@@ -128,7 +128,7 @@ class SimpleEntityMapper extends AbstractMapper
     protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata)
     {
         $data = array();
-        
+
         foreach ($classMetadata->associationMappings as $association => $mapping) {
             $value = $resource->$association;
 
@@ -140,7 +140,7 @@ class SimpleEntityMapper extends AbstractMapper
             if ($value instanceof Collection) {
                 // collections must be looped through, assume each item within is an entity
                 $data[$association] = array();
-                
+
                 foreach ($value as $item) {
                     $data[$association][] = $this->reverseEntity($item);
                 }

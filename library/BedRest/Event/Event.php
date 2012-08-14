@@ -28,22 +28,22 @@ class Event
 {
     /**
      * RestManager instance
-     * @var \BedRest\RestManager 
+     * @var \BedRest\RestManager
      */
     protected $restManager;
-    
+
     /**
      * Request.
      * @var \BedRest\Request
      */
     protected $request;
-    
+
     /**
      * Response.
-     * @var \BedRest\Response 
+     * @var \BedRest\Response
      */
     protected $response;
-    
+
     /**
      * Sets the RestManager instance that dispatched the event.
      * @param \BedRest\RestManager $restManager
@@ -52,7 +52,7 @@ class Event
     {
         $this->restManager = $restManager;
     }
-    
+
     /**
      * Returns the RestManager instance that dispatched the event.
      * @return \BedRest\RestManager
@@ -61,7 +61,7 @@ class Event
     {
         return $this->restManager;
     }
-    
+
     /**
      * Sets the Request instance.
      * @param \BedRest\Request $request
@@ -70,7 +70,7 @@ class Event
     {
         $this->request = $request;
     }
-    
+
     /**
      * Returns the Request instance.
      * @return \BedRest\Request
@@ -79,7 +79,7 @@ class Event
     {
         return $this->request;
     }
-    
+
     /**
      * Sets the Response instance.
      * @param \BedRest\Response $response
@@ -88,7 +88,7 @@ class Event
     {
         $this->response = $response;
     }
-    
+
     /**
      * Returns the Response instance.
      * @return \BedRest\Response

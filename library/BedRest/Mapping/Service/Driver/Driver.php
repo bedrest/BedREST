@@ -19,7 +19,7 @@ use BedRest\Mapping\Service\ServiceMetadata;
 
 /**
  * Driver
- * 
+ *
  * @author Geoff Adams <geoff@dianode.net>
  */
 interface Driver
@@ -30,13 +30,13 @@ interface Driver
      * @param \BedRest\Mapping\Service\ServiceMetadata $serviceMetadata
      */
     public function loadMetadataForClass($className, ServiceMetadata $serviceMetadata);
-    
+
     /**
      * Returns a list of all class names known to this driver.
      * @return array
      */
     public function getAllClassNames();
-    
+
     /**
      * Whether the specified class is a mapped service.
      * @param string $className

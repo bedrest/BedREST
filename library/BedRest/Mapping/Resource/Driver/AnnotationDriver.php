@@ -76,18 +76,18 @@ class AnnotationDriver implements Driver
             }
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function isResource($className)
     {
         $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'BedRest\Mapping\Resource\Annotation\Resource');
-        
+
         if ($annotation) {
             return true;
         }
-        
+
         return false;
     }
 }

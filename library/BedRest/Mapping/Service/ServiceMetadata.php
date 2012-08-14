@@ -33,7 +33,7 @@ class ServiceMetadata
      * @var string
      */
     protected $listeners = array();
-    
+
     /**
      * Class name of the data mapper.
      * @var string
@@ -94,7 +94,7 @@ class ServiceMetadata
 
         return $this->listeners[$event];
     }
-    
+
     /**
      * Sets all listeners, discarding the current set.
      * @param array $listeners
@@ -103,7 +103,7 @@ class ServiceMetadata
     {
         $this->listeners = $listeners;
     }
-    
+
     /**
      * Returns the set of all listeners, indexed by event.
      * @return array
@@ -112,7 +112,7 @@ class ServiceMetadata
     {
         return $this->listeners;
     }
-    
+
     /**
      * Sets the data mapper for this service.
      * @param string $dataMapper
@@ -121,7 +121,7 @@ class ServiceMetadata
     {
         $this->dataMapper = $dataMapper;
     }
-    
+
     /**
      * Returns the data mapper class.
      * @return string

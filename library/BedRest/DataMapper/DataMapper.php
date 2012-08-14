@@ -17,7 +17,7 @@ namespace BedRest\DataMapper;
 
 /**
  * DataMapper
- * 
+ *
  * @author Geoff Adams <geoff@dianode.net>
  */
 interface DataMapper
@@ -28,7 +28,7 @@ interface DataMapper
      * @param mixed $data Data to be mapped.
      */
     public function map($resource, $data);
-    
+
     /**
      * Reverse maps data into the desired format.
      * @param mixed $data Data to reverse map.

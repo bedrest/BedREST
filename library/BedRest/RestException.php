@@ -26,7 +26,7 @@ class RestException extends Exception
     {
         return new self("Method Not Allowd", 405);
     }
-    
+
     public static function notAcceptable()
     {
         return new self("Not Acceptable", 406);

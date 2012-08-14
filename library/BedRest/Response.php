@@ -27,19 +27,19 @@ class Response
      * @var \BedRest\Configuration
      */
     protected $configuration;
-    
+
     /**
      * Body as set by the service layer.
      * @var mixed
      */
     protected $body;
-    
+
     /**
      * Whether the body has been processed into the raw body string.
      * @var boolean
      */
     protected $bodyProcessed = false;
-    
+
     /**
      * Raw body content.
      * @var string
@@ -57,12 +57,12 @@ class Response
      * @var integer
      */
     protected $code = 200;
-    
+
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
-    
+
     /**
      * Sets the body content.
      * @param mixed $body
@@ -73,7 +73,7 @@ class Response
         $this->bodyProcessed = false;
         $this->rawBody = null;
     }
-    
+
     /**
      * Returns the body content.
      * @return mixed
@@ -92,11 +92,11 @@ class Response
         if (!$this->bodyProcessed) {
             $converterClass = $this->configuration->getDataConverter($this->getContentType());
             $converter = new $converterClass;
-            
+
             $this->rawBody = $converter->encode($this->body);
             $this->bodyProcessed = true;
         }
-        
+
         return $this->rawBody;
     }
 
@@ -118,7 +118,7 @@ class Response
         if (!isset($this->headers['Content-Type'])) {
             return null;
         }
-        
+
         return $this->headers['Content-Type'];
     }
 

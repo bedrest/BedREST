@@ -24,7 +24,7 @@ use BedRest\Mapping\Service\Annotation as BedRest;
  * SimpleEntityService
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @BedRest\Service
  */
 class SimpleEntityService implements Service
@@ -34,25 +34,25 @@ class SimpleEntityService implements Service
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
-    
+
     /**
      * RestManager instance.
      * @var \BedRest\RestManager
      */
     protected $restManager;
-    
+
     /**
      * Resource metadata.
      * @var \BedRest\Mapping\Resource\ResourceMetadata
      */
     protected $resourceMetadata;
-    
+
     /**
      * Resource class name
      * @var string
      */
     protected $resourceClassName;
-    
+
     /**
      * Constructor.
      * @param \BedRest\RestManager $rm
@@ -62,58 +62,58 @@ class SimpleEntityService implements Service
     {
         $this->restManager = $rm;
         $this->entityManager = $rm->getConfiguration()->getEntityManager();
-        
+
         $this->resourceMetadata = $resourceMetadata;
         $this->resourceClassName = $resourceMetadata->getClassName();
     }
-    
+
     /**
      * Retrieves a collection of resource entities.
      * @param \BedRest\Event\GetCollectionEvent $event
-     * 
+     *
      * @BedRest\Listener(event="getCollection")
      */
     public function index(Event\GetCollectionEvent $event)
     {
         $offset = 0;
         $limit = 10;
-        
+
         $query = $this->entityManager->createQuery("SELECT r FROM {$this->resourceClassName} r");
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
-        
+
         $collection = $query->execute();
-        
+
         $total = $this->getTotal();
-        
+
         $data = array(
             'items' => count($collection) ? $collection : array(),
             'count' => count($collection),
             'total' => $total,
             'perPage' => $limit
         );
-        
+
         $event->getResponse()->setBody($data);
     }
-    
+
     public function getTotal()
     {
         $query = $this->entityManager->createQuery("SELECT COUNT(r) FROM {$this->resourceClassName} r");
         $result = $query->execute(array(), \Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
-        
+
         return (int) $result;
     }
-    
+
     /**
      * Retrieves a single resource entity.
      * @param \BedRest\Event\GetEntityEvent $event
-     * 
+     *
      * @BedRest\Listener(event="getEntity")
      */
     public function get(Event\GetEntityEvent $event)
     {
         $entity = $this->entityManager->find($this->resourceClassName, $event->getIdentifier());
-        
+
         $event->getResponse()->setBody($entity);
     }
 }
