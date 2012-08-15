@@ -7,29 +7,38 @@
     <property file="build.properties" />
     
     <!-- Clean task -->
-    <target name="clean" depends="clean-build, clean-test, clean-docs, clean-reports">
+    <target name="clean" depends="build-clean, test-clean, docs-clean, reports-clean">
         
     </target>
     
     <!-- Base build task -->
-    <target name="clean-build">
+    <target name="build-clean">
         <delete dir="${build.dir}" />
     </target>
     
-    <target name="prepare-build">
+    <target name="build-prepare">
         <mkdir dir="${build.dir}" />
     </target>
     
-    <target name="build" depends="clean-build, prepare-build, php-lint, generate-docs, test">
+    <target name="build" depends="build-clean, build-prepare, docs">
+        
+    </target>
+    
+    <!-- Continuous integration task -->
+    <target name="ci-clean" depends="reports-clean, test-clean">
+        
+    </target>
+    
+    <target name="ci" depends="ci-clean, php-lint, test, reports">
         
     </target>
     
     <!-- PHPUnit test suites -->
-    <target name="clean-test" description="Cleans up test folders.">
+    <target name="test-clean" description="Cleans up test folders.">
         <delete dir="${tests.reports.dir}" />
     </target>
     
-    <target name="test" description="Runs all available tests" depends="clean-test">
+    <target name="test" description="Runs all available tests" depends="test-clean">
         <mkdir dir="${tests.reports.dir}" />
         <mkdir dir="${tests.reports.logs}" />
         <mkdir dir="${tests.reports.report}" />
@@ -76,12 +85,12 @@
     </target>
     
     <!-- Cleans all documentation -->
-    <target name="clean-docs">
+    <target name="docs-clean">
         <delete dir="${docs.dir}" />
     </target>
     
     <!-- Generate all documentation -->
-    <target name="generate-docs" description="Generates all documentation" depends="clean-docs, api-doc">
+    <target name="docs" description="Generates all documentation" depends="docs-clean, api-doc">
         
     </target>
     
@@ -139,12 +148,12 @@
     </target>
     
     <!-- Cleans all reports -->
-    <target name="clean-reports">
+    <target name="reports-clean">
         <delete dir="${reports.dir}" />
     </target>
     
     <!-- Generates all reports -->
-    <target name="generate-reports" description="Generates all reports" depends="clean-reports, php-lint, php-cs, php-md, phploc">
+    <target name="reports" description="Generates all reports" depends="reports-clean, php-lint, php-cs, php-md, phploc">
         
     </target>
 </project>
