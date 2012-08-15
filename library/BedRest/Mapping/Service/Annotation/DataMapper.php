@@ -34,3 +34,4 @@ class DataMapper implements Annotation
      */
     public $class;
 }
+

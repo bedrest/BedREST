@@ -204,3 +204,4 @@ class AnnotationDriver implements Driver
         return $indexed;
     }
 }
+

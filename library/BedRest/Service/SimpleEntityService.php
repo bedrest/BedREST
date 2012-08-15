@@ -117,3 +117,4 @@ class SimpleEntityService implements Service
         $event->getResponse()->setBody($entity);
     }
 }
+

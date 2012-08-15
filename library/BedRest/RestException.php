@@ -32,3 +32,4 @@ class RestException extends Exception
         return new self("Not Acceptable", 406);
     }
 }
+

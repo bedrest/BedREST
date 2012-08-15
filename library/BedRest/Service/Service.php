@@ -34,3 +34,4 @@ interface Service
      */
     public function __construct(RestManager $rm, ResourceMetadata $resourceMetadata);
 }
+

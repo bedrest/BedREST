@@ -230,7 +230,7 @@ class Configuration
     public function setDataConverters(array $dataConverters)
     {
         $this->dataConverters = $dataConverters;
-}
+    }
 
     /**
      * Returns the list of available data converters.
@@ -272,7 +272,7 @@ class Configuration
     public function setDataMappers(array $dataMappers)
     {
         $this->dataMappers = $dataMappers;
-}
+    }
 
     /**
      * Returns the list of available data mappers.

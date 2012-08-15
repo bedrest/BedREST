@@ -33,3 +33,4 @@ class Listener implements Annotation
      */
     public $event;
 }
+

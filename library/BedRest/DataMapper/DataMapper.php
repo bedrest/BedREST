@@ -36,3 +36,4 @@ interface DataMapper
      */
     public function reverse($data);
 }
+

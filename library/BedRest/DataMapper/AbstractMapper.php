@@ -45,7 +45,7 @@ abstract class AbstractMapper implements DataMapper
      * Initialises the data mapper with the supplied options.
      * @param \BedRest\Configuration $configuration
      */
-    public function __construct(Configuration $configuration = null, ServiceManager $serviceManager)
+    public function __construct(Configuration $configuration = null, ServiceManager $serviceManager = null)
     {
         $this->configuration = $configuration;
         $this->serviceManager = $serviceManager;
