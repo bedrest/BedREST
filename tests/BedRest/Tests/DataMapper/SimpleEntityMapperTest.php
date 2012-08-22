@@ -6,7 +6,6 @@ use BedRest\DataMapper\DataMapper;
 use BedRest\DataMapper\SimpleEntityMapper;
 use BedRest\ServiceManager;
 use BedRest\Tests\BaseTestCase;
-use BedRest\EventManager;
 
 /**
  * SimpleEntityMapperTest
@@ -48,7 +47,7 @@ class SimpleEntityMapperTest extends BaseTestCase
      */
     protected function setUp()
     {
-        $this->mapper = new SimpleEntityMapper(self::getConfiguration(), new ServiceManager(self::getConfiguration(), new EventManager()));
+        $this->mapper = new SimpleEntityMapper(self::getConfiguration(), new ServiceManager(self::getConfiguration()));
     }
 
     /**

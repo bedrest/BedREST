@@ -19,10 +19,9 @@ use BedRest\Configuration;
 use BedRest\Request;
 use BedRest\Response;
 use BedRest\Event;
-use BedRest\EventManager;
 use BedRest\ServiceManager;
-use BedRest\Mapping\Resource\ResourceMetadata;
 use BedRest\Mapping\Resource\ResourceMetadataFactory;
+use Dianode\Events\EventManager;
 
 /**
  * RestManager
@@ -47,7 +46,7 @@ class RestManager
 
     /**
      * Event manager instance.
-     * @var \BedRest\EventManager
+     * @var \Dianode\Events\EventManager
      */
     protected $eventManager;
 
@@ -60,7 +59,7 @@ class RestManager
     /**
      * Constructor.
      * @param \BedRest\Configuration $configuration
-     * @param \BedRest\EventManager $eventManager
+     * @param \Dianode\Events\EventManager $eventManager
      * @param \BedRest\ServiceManager $serviceManager
      */
     public function __construct(Configuration $configuration, EventManager $eventManager, ServiceManager $serviceManager)
@@ -92,7 +91,7 @@ class RestManager
 
     /**
      * Returns the event manager.
-     * @return \BedRest\EventManager
+     * @return \Dianode\Events\EventManager
      */
     public function getEventManager()
     {
@@ -146,12 +145,6 @@ class RestManager
 
         $response->setContentType($contentType);
 
-        // get metadata
-        $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
-
-        // get the service
-        $service = $this->serviceManager->getService($resourceMetadata->getServiceClass(), $this, $resourceMetadata->getClassName());
-
         // create event
         switch ($request->getMethod()) {
             case Request::METHOD_GET:
@@ -176,8 +169,6 @@ class RestManager
         $event->setRestManager($this);
         $event->setRequest($request);
         $event->setResponse($response);
-
-        $event->setIdentifier($request->getRouteComponent('identifier'));
 
         $this->getEventManager()->dispatch('getEntity', $event);
     }

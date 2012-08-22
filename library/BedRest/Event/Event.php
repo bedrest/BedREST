@@ -18,13 +18,14 @@ namespace BedRest\Event;
 use BedRest\Request;
 use BedRest\Response;
 use BedRest\RestManager;
+use Dianode\Events\Event as EventBase;
 
 /**
  * Event
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class Event
+class Event extends EventBase
 {
     /**
      * RestManager instance

@@ -16,7 +16,6 @@
 namespace BedRest;
 
 use BedRest\Configuration;
-use BedRest\EventManager;
 use BedRest\RestManager;
 use BedRest\Mapping\Service\ServiceMetadata;
 use BedRest\Mapping\Service\ServiceMetadataFactory;
@@ -50,20 +49,12 @@ class ServiceManager
     protected $serviceMetadataFactory;
 
     /**
-     * Event manager instance.
-     * @var \BedRest\EventManager
-     */
-    protected $eventManager;
-
-    /**
      * Constructor.
      * @param BedRest\Configuration $configuration
-     * @param \BedRest\EventManager $eventManager
      */
-    public function __construct(Configuration $configuration, EventManager $eventManager)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
-        $this->eventManager = $eventManager;
 
         $this->serviceMetadataFactory = new ServiceMetadataFactory($configuration);
     }
@@ -75,15 +66,6 @@ class ServiceManager
     public function getConfiguration()
     {
         return $this->configuration;
-    }
-
-    /**
-     * Returns the event manager.
-     * @return \BedRest\EventManager
-     */
-    public function getEventManager()
-    {
-        return $this->eventManager;
     }
 
     /**
@@ -117,6 +99,10 @@ class ServiceManager
         $hash = $this->getServiceHash($restManager, $resourceClassName);
 
         if (!isset($this->loadedServices[$className][$hash])) {
+            if (!$this->serviceMetadataFactory->isService($className)) {
+                throw new \BedRest\Exception("The class '{$className}' is not a mapped service.");
+            }
+
             $this->loadService($className, $restManager, $resourceClassName);
         }
 
@@ -159,27 +145,12 @@ class ServiceManager
             $restManager->getResourceMetadata($resourceClassName)
         );
 
-        // register events
-        $this->registerServiceEvents($service);
+        // get service metadata
+        $serviceMetadata = $this->serviceMetadataFactory->getMetadataFor(get_class($service));
 
         // store it locally for future reference
         $hash = $this->getServiceHash($restManager, $resourceClassName);
         $this->loadedServices[$className][$hash] = $service;
-    }
-
-    /**
-     * Registers all events with the event manager for a particular service instance.
-     * @param object $service
-     */
-    protected function registerServiceEvents($service)
-    {
-        $serviceMetadata = $this->serviceMetadataFactory->getMetadataFor(get_class($service));
-
-        foreach ($serviceMetadata->getAllListeners() as $event => $observers) {
-            foreach ($observers as $observer) {
-                $this->eventManager->addListener($event, array($service, $observer));
-            }
-        }
     }
 
     /**
