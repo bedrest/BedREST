@@ -2,7 +2,7 @@
 
 namespace BedRest\Tests;
 
-use BedRest\Request;
+use BedRest\Rest\Request;
 
 /**
  * RequestTest
@@ -13,7 +13,7 @@ class RequestTest extends BaseTestCase
 {
     /**
      * Request object in test.
-     * @var BedRest\Request
+     * @var BedRest\Rest\Request
      */
     protected $request;
 

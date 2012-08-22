@@ -2,12 +2,12 @@
 
 namespace BedRest\Tests;
 
-use BedRest\Configuration;
+use BedRest\Rest\Configuration;
 
 /**
  * ConfigurationTest
  *
- * Tests BedRest\Configuration
+ * Tests BedRest\Rest\Configuration
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

@@ -4,7 +4,7 @@ namespace BedRest\Tests\DataMapper;
 
 use BedRest\DataMapper\DataMapper;
 use BedRest\DataMapper\SimpleEntityMapper;
-use BedRest\ServiceManager;
+use BedRest\Service\ServiceManager;
 use BedRest\Tests\BaseTestCase;
 
 /**

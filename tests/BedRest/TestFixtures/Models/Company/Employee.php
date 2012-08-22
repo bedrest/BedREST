@@ -3,7 +3,7 @@
 namespace BedRest\TestFixtures\Models\Company;
 
 use Doctrine\ORM\Mapping as ORM,
-    BedRest\Mapping\Resource\Annotation as BedRest;
+    BedRest\Resource\Mapping\Annotation as BedRest;
 
 /**
  * Employee

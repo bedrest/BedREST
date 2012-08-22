@@ -16,8 +16,8 @@
 
 namespace BedRest\DataMapper;
 
-use BedRest\Configuration;
-use BedRest\ServiceManager;
+use BedRest\Rest\Configuration;
+use BedRest\Service\ServiceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Types\Type;
 
@@ -30,20 +30,20 @@ abstract class AbstractMapper implements DataMapper
 {
     /**
      * Configuration.
-     * @var \BedRest\Configuration
+     * @var \BedRest\Rest\Configuration
      */
     protected $configuration;
 
     /**
      * Service manager.
-     * @var \BedRest\ServiceManager
+     * @var \BedRest\Service\ServiceManager
      */
     protected $serviceManager;
 
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
-     * @param \BedRest\Configuration $configuration
+     * @param \BedRest\Rest\Configuration $configuration
      */
     public function __construct(Configuration $configuration = null, ServiceManager $serviceManager = null)
     {
@@ -53,7 +53,7 @@ abstract class AbstractMapper implements DataMapper
 
     /**
      * Returns the configuration.
-     * @return \BedRest\Configuration
+     * @return \BedRest\Rest\Configuration
      */
     protected function getConfiguration()
     {
@@ -67,13 +67,13 @@ abstract class AbstractMapper implements DataMapper
     protected function getEntityManager()
     {
         if (!$this->configuration instanceof Configuration) {
-            throw new DataMappingException('Configuration not provided');
+            throw new Exception('Configuration not provided');
         }
 
         $em = $this->configuration->getEntityManager();
 
         if (!$em instanceof EntityManager) {
-            throw new DataMappingException('EntityManager not provided');
+            throw new Exception('EntityManager not provided');
         }
 
         return $em;
@@ -86,7 +86,7 @@ abstract class AbstractMapper implements DataMapper
      * @param object $resource
      * @param array $data
      * @return array
-     * @throws \BedRest\DataMappingException
+     * @throws \BedRest\Exception
      */
     protected function castFieldData($resource, array $data)
     {
@@ -124,7 +124,7 @@ abstract class AbstractMapper implements DataMapper
                         // do nothing
                     } elseif (is_array($value)) {
                         if (!isset($value['date'])) {
-                            throw new DataMappingException('Cannot cast an array to a date/time field, unless it follows DateTime array format');
+                            throw new Exception('Cannot cast an array to a date/time field, unless it follows DateTime array format');
                         }
 
                         $value = new \DateTime($value['date'] . (isset($value['timezone']) ? ' ' . $value['timezone'] : ''));
@@ -146,13 +146,13 @@ abstract class AbstractMapper implements DataMapper
                     $value = (array) $value;
                     break;
                 case Type::OBJECT:
-                    throw new DataMappingException('"object" type mapping is not currently supported');
+                    throw new Exception('"object" type mapping is not currently supported');
                     break;
                 case TYPE::BLOB:
-                    throw new DataMappingException('"blob" type mapping is not currently supported');
+                    throw new Exception('"blob" type mapping is not currently supported');
                     break;
                 default:
-                    throw new DataMappingException("Unknown type \"{$fieldMapping['type']}\"");
+                    throw new Exception("Unknown type \"{$fieldMapping['type']}\"");
                     break;
             }
 

@@ -17,7 +17,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Configuration used for tests.
-     * @var BedRest\Configuration
+     * @var BedRest\Rest\Configuration
      */
     protected static $config;
 
@@ -77,12 +77,12 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Returns a configuration object for use in tests.
-     * @return BedRest\Configuration
+     * @return BedRest\Rest\Configuration
      */
     public static function getConfiguration()
     {
         if (!self::$config) {
-            $config = new \BedRest\Configuration();
+            $config = new \BedRest\Rest\Configuration();
             $config->setEntityManager(self::getEntityManager());
 
             self::$config = $config;

@@ -2,7 +2,7 @@
 
 namespace BedRest\TestFixtures\Services\Company;
 
-use BedRest\Mapping\Service\Annotation as BedRest;
+use BedRest\Service\Mapping\Annotation as BedRest;
 
 /**
  * Employee

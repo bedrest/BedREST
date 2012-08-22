@@ -14,7 +14,7 @@ class JsonConverterTest extends BaseTestCase
 {
     public function testInvalidJsonThrowsException()
     {
-        $this->setExpectedException('BedRest\DataConverter\DataConversionException');
+        $this->setExpectedException('BedRest\DataConverter\Exception');
 
         $mapper = new JsonConverter();
 

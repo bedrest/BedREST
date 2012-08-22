@@ -15,10 +15,9 @@
 
 namespace BedRest\Service;
 
-use BedRest\RestManager;
-use BedRest\Event;
-use BedRest\Mapping\Resource\ResourceMetadata;
-use BedRest\Mapping\Service\Annotation as BedRest;
+use BedRest\Rest\RestManager;
+use BedRest\Service\Mapping\ResourceMetadata;
+use BedRest\Service\Mapping\Annotation as BedRest;
 
 /**
  * SimpleEntityService
@@ -27,7 +26,7 @@ use BedRest\Mapping\Service\Annotation as BedRest;
  *
  * @BedRest\Service
  */
-class SimpleEntityService implements Service
+class SimpleEntityService
 {
     /**
      * EntityManager instance.
@@ -37,13 +36,13 @@ class SimpleEntityService implements Service
 
     /**
      * RestManager instance.
-     * @var \BedRest\RestManager
+     * @var \BedRest\Rest\RestManager
      */
     protected $restManager;
 
     /**
      * Resource metadata.
-     * @var \BedRest\Mapping\Resource\ResourceMetadata
+     * @var \BedRest\Resource\Mapping\ResourceMetadata
      */
     protected $resourceMetadata;
 
@@ -55,8 +54,8 @@ class SimpleEntityService implements Service
 
     /**
      * Constructor.
-     * @param \BedRest\RestManager $rm
-     * @param \BedRest\Mapping\Resource\ResourceMetadata $resourceMetadata
+     * @param \BedRest\Rest\RestManager $rm
+     * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      */
     public function __construct(RestManager $rm, ResourceMetadata $resourceMetadata)
     {
@@ -69,11 +68,8 @@ class SimpleEntityService implements Service
 
     /**
      * Retrieves a collection of resource entities.
-     * @param \BedRest\Event\GetCollectionEvent $event
-     *
-     * @BedRest\Listener(event="getCollection")
      */
-    public function index(Event\GetCollectionEvent $event)
+    public function index()
     {
         $offset = 0;
         $limit = 10;
@@ -93,7 +89,7 @@ class SimpleEntityService implements Service
             'perPage' => $limit
         );
 
-        $event->getResponse()->setBody($data);
+        return $data;
     }
 
     public function getTotal()
@@ -106,15 +102,12 @@ class SimpleEntityService implements Service
 
     /**
      * Retrieves a single resource entity.
-     * @param \BedRest\Event\GetEntityEvent $event
-     *
-     * @BedRest\Listener(event="getEntity")
      */
-    public function get(Event\GetEntityEvent $event)
+    public function get()
     {
         $entity = $this->entityManager->find($this->resourceClassName, $event->getIdentifier());
 
-        $event->getResponse()->setBody($entity);
+        return $entity;
     }
 }
 

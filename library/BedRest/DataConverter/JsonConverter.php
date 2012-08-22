@@ -48,7 +48,7 @@ class JsonConverter implements DataConverter
                 break;
             }
 
-            throw new DataConversionException("Error during JSON deocding: $errorMessage");
+            throw new Exception("Error during JSON deocding: $errorMessage");
         }
 
         return $decoded;

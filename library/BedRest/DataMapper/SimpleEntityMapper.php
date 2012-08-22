@@ -34,7 +34,7 @@ class SimpleEntityMapper extends AbstractMapper
     public function map($resource, $data)
     {
         if (!is_array($data)) {
-            throw new DataMappingException('Supplied data is not an array.');
+            throw new Exception('Supplied data is not an array.');
         }
 
         // cast data
