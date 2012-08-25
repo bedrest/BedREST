@@ -15,5 +15,8 @@
     },
     "require-dev": {
         "phing/phing": ">=2.4.12"
+    },
+    "autoload": {
+        "psr-0": { "BedRest": "library/" }
     }
 }
