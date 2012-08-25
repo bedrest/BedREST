@@ -18,7 +18,7 @@ namespace BedRest\Event;
 use BedRest\Rest\Request;
 use BedRest\Rest\Response;
 use BedRest\Rest\RestManager;
-use Dianode\Events\Event as EventBase;
+use BedRest\Events\Event as EventBase;
 
 /**
  * Event

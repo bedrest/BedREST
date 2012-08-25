@@ -21,7 +21,7 @@ use BedRest\Rest\Response;
 use BedRest\Service\Event;
 use BedRest\Service\ServiceManager;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
-use Dianode\Events\EventManager;
+use BedRest\Events\EventManager;
 
 /**
  * RestManager
@@ -46,7 +46,7 @@ class RestManager
 
     /**
      * Event manager instance.
-     * @var \Dianode\Events\EventManager
+     * @var \BedRest\Events\EventManager
      */
     protected $eventManager;
 
@@ -59,7 +59,7 @@ class RestManager
     /**
      * Constructor.
      * @param \BedRest\Rest\Configuration $configuration
-     * @param \Dianode\Events\EventManager $eventManager
+     * @param \BedRest\Events\EventManager $eventManager
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
     public function __construct(Configuration $configuration, EventManager $eventManager, ServiceManager $serviceManager)
@@ -91,7 +91,7 @@ class RestManager
 
     /**
      * Returns the event manager.
-     * @return \Dianode\Events\EventManager
+     * @return \BedRest\Events\EventManager
      */
     public function getEventManager()
     {
