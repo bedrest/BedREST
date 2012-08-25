@@ -140,7 +140,7 @@ class RestManager
         $contentType = $request->getAcceptBestMatch($this->configuration->getContentTypes());
 
         if (!$contentType) {
-            throw RestException::notAcceptable();
+            throw Exception::notAcceptable();
         }
 
         $response->setContentType($contentType);
