@@ -253,7 +253,7 @@ class Configuration
 
     /**
      * Returns the class name of the data converter for the given content type.
-     * @param string $contentType
+     * @param  string      $contentType
      * @return string|null
      */
     public function getContentConverter($contentType)
@@ -295,7 +295,7 @@ class Configuration
 
     /**
      * Returns the class name of the data mapper with the given alias.
-     * @param string $alias
+     * @param  string      $alias
      * @return string|null
      */
     public function getDataMapper($alias)
@@ -307,4 +307,3 @@ class Configuration
         return $this->dataMappers[$alias];
     }
 }
-

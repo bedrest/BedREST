@@ -26,4 +26,3 @@ interface Converter
 
     public function decode($value);
 }
-

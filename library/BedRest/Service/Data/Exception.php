@@ -27,4 +27,3 @@ class Exception extends \Exception
         return new self("The data mapper '{$className}' does not exist or could not be found.");
     }
 }
-

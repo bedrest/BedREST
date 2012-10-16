@@ -54,7 +54,7 @@ class SimpleEntityService
 
     /**
      * Constructor.
-     * @param \BedRest\Rest\RestManager $rm
+     * @param \BedRest\Rest\RestManager                  $rm
      * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      */
     public function __construct(RestManager $rm, ResourceMetadata $resourceMetadata)
@@ -110,4 +110,3 @@ class SimpleEntityService
         return $entity;
     }
 }
-

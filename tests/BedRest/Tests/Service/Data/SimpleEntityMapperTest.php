@@ -41,7 +41,7 @@ class SimpleEntityMapperTest extends BaseTestCase
             'active' => '1'
         );
     }
-    
+
     /**
      * Bootstrapping set up phase for each test.
      */
@@ -82,9 +82,9 @@ class SimpleEntityMapperTest extends BaseTestCase
         $data = $this->getTestData();
 
         $this->mapper->map($resource, $data);
-        
+
         $reversed = $this->mapper->reverse($resource);
-        
+
         foreach ($reversed as $property => $value) {
             $this->assertEquals($data[$property], $value);
         }
@@ -130,4 +130,3 @@ class SimpleEntityMapperTest extends BaseTestCase
         }
     }
 }
-

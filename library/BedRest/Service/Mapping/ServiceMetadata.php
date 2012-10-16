@@ -83,7 +83,7 @@ class ServiceMetadata
 
     /**
      * Returns the set of listeners for a specified event.
-     * @param string $event
+     * @param  string $event
      * @return array
      */
     public function getListeners($event)
@@ -131,4 +131,3 @@ class ServiceMetadata
         return $this->dataMapper;
     }
 }
-

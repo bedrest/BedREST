@@ -81,7 +81,10 @@ class AnnotationDriver implements Driver
      */
     public function isResource($className)
     {
-        $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'BedRest\Resource\Mapping\Annotation\Resource');
+        $annotation = $this->reader->getClassAnnotation(
+            new \ReflectionClass($className),
+            'BedRest\Resource\Mapping\Annotation\Resource'
+        );
 
         if ($annotation) {
             return true;
@@ -90,4 +93,3 @@ class AnnotationDriver implements Driver
         return false;
     }
 }
-

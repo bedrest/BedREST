@@ -23,4 +23,3 @@ namespace BedRest\Content\Converter;
 class Exception extends \Exception
 {
 }
-

@@ -14,18 +14,18 @@ use Doctrine\Common\Annotations\AnnotationReader;
 class AnnotationDriverTest extends BaseTestCase
 {
     protected $driver;
-    
+
     protected function setUp()
     {
         $reader = new AnnotationReader();
         $this->driver = new AnnotationDriver($reader);
     }
-    
+
     public function testInterface()
     {
         $this->assertInstanceOf('BedRest\Resource\Mapping\Driver\Driver', $this->driver);
     }
-    
+
     public function testIsResource()
     {
         $this->assertTrue($this->driver->isResource('BedRest\TestFixtures\Models\Company\Employee'));

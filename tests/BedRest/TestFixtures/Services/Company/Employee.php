@@ -8,7 +8,7 @@ use BedRest\Service\Mapping\Annotation as BedRest;
  * Employee
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @BedRest\Service
  */
 class Employee
@@ -21,7 +21,7 @@ class Employee
     public function listenerOne()
     {
     }
-    
+
     /**
      * Event listener.
      * @BedRest\Listener(event="eventTwo")
@@ -29,7 +29,7 @@ class Employee
     public function listenerTwo()
     {
     }
-    
+
     /**
      * Not an event listener.
      */

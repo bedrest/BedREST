@@ -31,4 +31,3 @@ class ConfigurationTest extends BaseTestCase
         $this->assertEquals($em, $config->getEntityManager());
     }
 }
-

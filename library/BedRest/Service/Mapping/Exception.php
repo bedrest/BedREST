@@ -52,4 +52,3 @@ class Exception extends \Exception
         return new self("The path '{$path}' is invalid.");
     }
 }
-

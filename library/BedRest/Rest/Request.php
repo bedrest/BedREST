@@ -142,7 +142,7 @@ class Request
 
     /**
      * Returns a route component.
-     * @param string $name
+     * @param  string $name
      * @return array
      */
     public function getRouteComponent($name)
@@ -242,7 +242,8 @@ class Request
             $this->accept[] = $entry;
         }
 
-        // @todo Take account of specificity with wildcard media ranges (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
+        // @todo Take account of specificity with wildcard media ranges
+        // (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
         $this->mergeSort($this->accept, array($this, 'sortQualityComparator'));
     }
 
@@ -261,7 +262,8 @@ class Request
     }
 
     /**
-     * Returns the parsed accepted content types of the request, usually determined by the 'Accept-Encoding' HTTP header.
+     * Returns the parsed accepted content types of the request, usually determined by the 'Accept-Encoding'
+     * HTTP header.
      * @return array
      */
     public function getAcceptEncoding()
@@ -322,7 +324,7 @@ class Request
 
     /**
      * Returns the request payload.
-     * @param boolean $autoDecode
+     * @param  boolean $autoDecode
      * @return mixed
      */
     public function getPayload($autoDecode = true)
@@ -351,8 +353,8 @@ class Request
 
     /**
      * Comparator function for sorting a list of arrays by their 'q' factor.
-     * @param array $e1
-     * @param array $e2
+     * @param  array   $e1
+     * @param  array   $e2
      * @return integer
      */
     protected function sortQualityComparator($e1, $e2)
@@ -370,10 +372,14 @@ class Request
     }
 
     /**
-     * Sorts the parsed accept header using a merge sort algorithm, in order to maintain order as presented in the header.
+     * Sorts the parsed accept header using a merge sort algorithm, in order to maintain order as presented in the
+     * header.
+     *
      * All of this code has been taken from http://www.php.net/manual/en/function.usort.php#38827, some changes made
      * are purely for readability and code style.
-     * @param array $array
+     * @param  array  $array
+     * @param  string $comparator
+     * @return null
      */
     protected function mergeSort(array &$array, $comparator = 'strcmp')
     {
@@ -394,6 +400,7 @@ class Request
         // optimisation, if the end of $array1 is less than the start of $array2, append and return
         if (call_user_func($comparator, end($array1), $array2[0]) < 1) {
             $array = array_merge($array1, $array2);
+
             return;
         }
 
@@ -419,4 +426,3 @@ class Request
         }
     }
 }
-

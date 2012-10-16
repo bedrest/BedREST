@@ -47,7 +47,7 @@ class DataMapperFactory
 
     /**
      * Constructor.
-     * @param \BedRest\Rest\Configuration $configuration
+     * @param \BedRest\Rest\Configuration     $configuration
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
     public function __construct(Configuration $configuration, ServiceManager $serviceManager)

@@ -35,4 +35,3 @@ class ResourceMetadataTest extends BaseTestCase
         $this->assertEquals('Services\Test', $rm->getServiceClass());
     }
 }
-

@@ -83,8 +83,8 @@ abstract class AbstractMapper implements DataMapper
      * Takes an input array of data and a resource, then proceeds to process each
      * property of the resource by finding data and casting it to the appropriate
      * format.
-     * @param object $resource
-     * @param array $data
+     * @param  object             $resource
+     * @param  array              $data
      * @return array
      * @throws \BedRest\Exception
      */
@@ -124,10 +124,17 @@ abstract class AbstractMapper implements DataMapper
                         // do nothing
                     } elseif (is_array($value)) {
                         if (!isset($value['date'])) {
-                            throw new Exception('Cannot cast an array to a date/time field, unless it follows DateTime array format');
+                            throw new Exception(
+                                'Cannot cast an array to a date/time field, unless it follows DateTime array format'
+                            );
                         }
 
-                        $value = new \DateTime($value['date'] . (isset($value['timezone']) ? ' ' . $value['timezone'] : ''));
+                        $dateString = $value['date'];
+                        if (isset($value['timezone'])) {
+                            $dateString .= ' ' . $value['timezone'];
+                        }
+
+                        $value = new \DateTime($dateString);
                     } elseif (is_string($value)) {
                         $value = new \DateTime($value);
                     } elseif (is_integer($value)) {
@@ -166,15 +173,14 @@ abstract class AbstractMapper implements DataMapper
     /**
      * Maps data into a resource or set of resources.
      * @param mixed $resource Resource to map data into.
-     * @param mixed $data Data to be mapped.
+     * @param mixed $data     Data to be mapped.
      */
     abstract public function map($resource, $data);
 
     /**
      * Reverse maps data into the desired format.
-     * @param mixed $data Data to reverse map.
+     * @param  mixed $data Data to reverse map.
      * @return mixed
      */
     abstract public function reverse($data);
 }
-

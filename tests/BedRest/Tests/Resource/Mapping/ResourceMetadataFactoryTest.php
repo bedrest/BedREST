@@ -29,7 +29,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
         $driver = new AnnotationDriver($reader);
 
         $configuration->setResourceMetadataDriverImpl($driver);
-        
+
         $this->factory = new ResourceMetadataFactory($configuration);
     }
 
@@ -38,32 +38,32 @@ class ResourceMetadataFactoryTest extends BaseTestCase
         $meta = $this->factory->getMetadataFor('BedRest\TestFixtures\Models\Company\Employee');
 
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
-        
+
         $this->assertEquals('employee', $meta->getName());
         $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getServiceClass());
     }
-    
+
     public function testGetMetadataInvalid()
     {
         $this->setExpectedException('BedRest\Resource\Mapping\Exception');
-        
+
         $meta = $this->factory->getMetadataFor('BedRest\TestFixtures\Models\InvalidResource');
     }
-    
+
     public function testGetMetadataByResourceName()
     {
         $meta = $this->factory->getMetadataByResourceName('employee');
-        
+
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
-        
+
         $this->assertEquals('employee', $meta->getName());
         $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getServiceClass());
     }
-    
+
     public function testGetMetadataByInvalidResourceName()
     {
         $this->setExpectedException('BedRest\Resource\Mapping\Exception');
-        
+
         $meta = $this->factory->getMetadataByResourceName('nonexistant');
     }
 
@@ -75,4 +75,3 @@ class ResourceMetadataFactoryTest extends BaseTestCase
         $this->assertGreaterThan(0, count($metaCollection));
     }
 }
-

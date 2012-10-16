@@ -34,7 +34,7 @@ class ServiceMetadataFactoryTest extends BaseTestCase
         $this->driver = new AnnotationDriver($reader);
 
         $configuration->setServiceMetadataDriverImpl($this->driver);
-        
+
         $this->factory = new ServiceMetadataFactory($configuration);
     }
 
@@ -44,11 +44,11 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
         $this->assertInstanceOf('BedRest\Service\Mapping\ServiceMetadata', $meta);
     }
-    
+
     public function testGetMetadataInvalid()
     {
         $this->setExpectedException('BedRest\Service\Mapping\Exception');
-        
+
         $meta = $this->factory->getMetadataFor('BedRest\TestFixtures\Services\InvalidService');
     }
 
@@ -61,22 +61,22 @@ class ServiceMetadataFactoryTest extends BaseTestCase
         $this->assertInternalType('array', $metaCollection);
         $this->assertGreaterThan(0, count($metaCollection));
     }
-    
+
     public function testListenersPopulated()
     {
         $meta = $this->factory->getMetadataFor('BedRest\TestFixtures\Services\Company\Employee');
-        
+
         $eventOne = $meta->getListeners('eventOne');
         $this->assertInternalType('array', $eventOne);
         $this->assertCount(1, $eventOne);
         $this->assertContains('listenerOne', $eventOne);
-        
+
         $eventTwo = $meta->getListeners('eventTwo');
         $this->assertInternalType('array', $eventTwo);
         $this->assertCount(2, $eventTwo);
         $this->assertContains('listenerOne', $eventTwo);
         $this->assertContains('listenerTwo', $eventTwo);
-        
+
         $eventThree = $meta->getListeners('eventThree');
         $this->assertInternalType('array', $eventThree);
         $this->assertCount(0, $eventThree);

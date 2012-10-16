@@ -33,4 +33,3 @@ class Property implements Annotation
      */
     public $readOnly = false;
 }
-

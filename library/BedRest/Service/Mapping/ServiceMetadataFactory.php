@@ -57,7 +57,7 @@ class ServiceMetadataFactory
 
     /**
      * Returns ServiceMetadata for the specified class.
-     * @param string $className
+     * @param  string                                   $className
      * @return \BedRest\Service\Mapping\ServiceMetadata
      */
     public function getMetadataFor($className)
@@ -125,7 +125,7 @@ class ServiceMetadataFactory
 
     /**
      * Whether the specified class is a mapped service.
-     * @param string $className
+     * @param  string  $className
      * @return boolean
      */
     public function isService($className)
@@ -135,7 +135,7 @@ class ServiceMetadataFactory
 
     /**
      * Returns the list of parent service classes for the specified class.
-     * @param string $className
+     * @param  string $className
      * @return array
      */
     protected function getParentClasses($className)
@@ -151,4 +151,3 @@ class ServiceMetadataFactory
         return $parents;
     }
 }
-

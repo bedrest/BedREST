@@ -156,7 +156,7 @@ class Response
 
     /**
      * Returns a single HTTP header.
-     * @param string $name
+     * @param  string                  $name
      * @return string
      * @throws \BedRest\Rest\Exception
      */
@@ -171,7 +171,7 @@ class Response
 
     /**
      * Sets the HTTP response code.
-     * @param integer $code
+     * @param  integer                 $code
      * @throws \BedRest\Rest\Exception
      */
     public function setResponseCode($code)
@@ -192,4 +192,3 @@ class Response
         return $this->code;
     }
 }
-

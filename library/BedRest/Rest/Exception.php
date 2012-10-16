@@ -32,4 +32,3 @@ class Exception extends \Exception
         return new self("Not Acceptable", 406);
     }
 }
-

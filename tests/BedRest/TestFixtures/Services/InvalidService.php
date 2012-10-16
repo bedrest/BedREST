@@ -9,5 +9,5 @@ namespace BedRest\TestFixtures\Services;
  */
 class InvalidService
 {
-    
+
 }

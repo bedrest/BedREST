@@ -25,15 +25,14 @@ interface DataMapper
     /**
      * Maps data into a resource or set of resources.
      * @param mixed $resource Resource to map data into.
-     * @param mixed $data Data to be mapped.
+     * @param mixed $data     Data to be mapped.
      */
     public function map($resource, $data);
 
     /**
      * Reverse maps data into the desired format.
-     * @param mixed $data Data to reverse map.
+     * @param  mixed $data Data to reverse map.
      * @return mixed
      */
     public function reverse($data);
 }
-

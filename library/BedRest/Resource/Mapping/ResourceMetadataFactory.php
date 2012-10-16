@@ -71,7 +71,7 @@ class ResourceMetadataFactory
 
     /**
      * Returns ResourceMetadata for the specified class.
-     * @param string $className
+     * @param  string                                     $className
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
     public function getMetadataFor($className)
@@ -89,7 +89,7 @@ class ResourceMetadataFactory
 
     /**
      * Returns ResourceMetadata for the specified resource.
-     * @param string $resourceName
+     * @param  string                                     $resourceName
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
     public function getMetadataByResourceName($resourceName)
@@ -153,7 +153,7 @@ class ResourceMetadataFactory
 
     /**
      * Whether the specified class is a mapped resource.
-     * @param string $className
+     * @param  string  $className
      * @return boolean
      */
     public function isResource($className)
@@ -161,4 +161,3 @@ class ResourceMetadataFactory
         return $this->driver->isResource($className);
     }
 }
-

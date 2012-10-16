@@ -29,7 +29,7 @@ class SimpleEntityMapper extends AbstractMapper
     /**
      * Maps an input array into a resource or set of resources.
      * @param mixed $resource Resource to map data into.
-     * @param array $data Array of data.
+     * @param array $data     Array of data.
      */
     public function map($resource, $data)
     {
@@ -47,7 +47,7 @@ class SimpleEntityMapper extends AbstractMapper
 
     /**
      * Reverse maps data into an array.
-     * @param mixed $data Data to reverse map.
+     * @param  mixed  $data Data to reverse map.
      * @return string
      */
     public function reverse($data)
@@ -68,12 +68,13 @@ class SimpleEntityMapper extends AbstractMapper
             // non-arrays and non-entity objects, along with native types
             $return = $data;
         }
+
         return $return;
     }
 
     /**
      * Reverse maps an entity instance.
-     * @param mixed $resource
+     * @param  mixed $resource
      * @return array
      */
     protected function reverseEntity($resource)
@@ -88,8 +89,8 @@ class SimpleEntityMapper extends AbstractMapper
 
     /**
      * Reverse maps entity fields using the class metadata to perform any casting.
-     * @param mixed $resource
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @param  mixed                               $resource
+     * @param  \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
      * @return array
      */
     protected function reverseEntityFields($resource, ClassMetadata $classMetadata)
@@ -121,8 +122,8 @@ class SimpleEntityMapper extends AbstractMapper
 
     /**
      * Reverse maps entity associations, using the class metadata to determine those associations.
-     * @param mixed $resource
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @param  mixed                               $resource
+     * @param  \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
      * @return array
      */
     protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata)
@@ -152,4 +153,3 @@ class SimpleEntityMapper extends AbstractMapper
         return $data;
     }
 }
-

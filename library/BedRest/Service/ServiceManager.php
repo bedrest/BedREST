@@ -70,7 +70,7 @@ class ServiceManager
 
     /**
      * Returns service metadata for a class.
-     * @param string $className
+     * @param  string                                   $className
      * @return \BedRest\Service\Mapping\ServiceMetadata
      */
     public function getServiceMetadata($className)
@@ -89,9 +89,9 @@ class ServiceManager
 
     /**
      * Returns an instance of the specified service.
-     * @param string $className
-     * @param \BedRest\Rest\RestManager $restManager
-     * @param string $resourceClassName
+     * @param  string                    $className
+     * @param  \BedRest\Rest\RestManager $restManager
+     * @param  string                    $resourceClassName
      * @return object
      */
     public function getService($className, RestManager $restManager, $resourceClassName)
@@ -111,8 +111,8 @@ class ServiceManager
 
     /**
      * Whether a service has been loaded or not yet.
-     * @param string $className
-     * @param string $resourceClassName
+     * @param  string  $className
+     * @param  string  $resourceClassName
      * @return boolean
      */
     public function hasService($className, RestManager $restManager, $resourceClassName)
@@ -128,9 +128,9 @@ class ServiceManager
 
     /**
      * Loads the specified service class.
-     * @param string $className
-     * @param \BedRest\Rest\RestManager $restManager
-     * @param string $resourceClassName
+     * @param  string                    $className
+     * @param  \BedRest\Rest\RestManager $restManager
+     * @param  string                    $resourceClassName
      * @throws \Exception
      */
     protected function loadService($className, RestManager $restManager, $resourceClassName)
@@ -155,8 +155,8 @@ class ServiceManager
 
     /**
      * Gets the hash used for indexing loaded services.
-     * @param \BedRest\Rest\RestManager $restManager
-     * @param string $resourceClassName
+     * @param  \BedRest\Rest\RestManager $restManager
+     * @param  string                    $resourceClassName
      * @return string
      */
     protected function getServiceHash(RestManager $restManager, $resourceClassName)
@@ -164,4 +164,3 @@ class ServiceManager
         return $hash = $resourceClassName . '#' . spl_object_hash($restManager);
     }
 }
-

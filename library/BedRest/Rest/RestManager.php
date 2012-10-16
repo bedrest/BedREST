@@ -58,12 +58,15 @@ class RestManager
 
     /**
      * Constructor.
-     * @param \BedRest\Rest\Configuration $configuration
-     * @param \BedRest\Events\EventManager $eventManager
+     * @param \BedRest\Rest\Configuration     $configuration
+     * @param \BedRest\Events\EventManager    $eventManager
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
-    public function __construct(Configuration $configuration, EventManager $eventManager, ServiceManager $serviceManager)
-    {
+    public function __construct(
+        Configuration $configuration,
+        EventManager $eventManager,
+        ServiceManager $serviceManager
+    ) {
         $this->configuration = $configuration;
         $this->eventManager = $eventManager;
         $this->serviceManager = $serviceManager;
@@ -100,7 +103,7 @@ class RestManager
 
     /**
      * Returns resource metadata for a class.
-     * @param string $className
+     * @param  string                                     $className
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
     public function getResourceMetadata($className)
@@ -110,7 +113,7 @@ class RestManager
 
     /**
      * Returns resource metadata by resource name.
-     * @param string $name
+     * @param  string                                     $name
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
     public function getResourceMetadataByName($name)
@@ -129,7 +132,9 @@ class RestManager
 
     /**
      * Processes a REST request, returning a Response object.
-     * @param \BedRest\Rest\Request $request
+     * @param  \BedRest\Rest\Request   $request
+     * @throws \BedRest\Rest\Exception
+     * @return \BedRest\Rest\Response
      */
     public function process(Request $request)
     {
@@ -164,12 +169,9 @@ class RestManager
 
     protected function dispatchGetEntity(Request $request, Response $response)
     {
-        
     }
 
     protected function dispatchGetCollection($request, $response)
     {
-        
     }
 }
-

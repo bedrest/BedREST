@@ -26,16 +26,15 @@ interface Driver
 {
     /**
      * Populates the supplied ResourceMetadata object with data from the specified resource class.
-     * @param string $className
+     * @param string                                     $className
      * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      */
     public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata);
 
     /**
      * Whether the specified class is a mapped resource.
-     * @param string $className
+     * @param  string  $className
      * @return boolean
      */
     public function isResource($className);
 }
-

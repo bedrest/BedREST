@@ -23,34 +23,34 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Retrieves an entity manager to be used by tests requiring one.
-     * @param mixed $conn
+     * @param  mixed                                         $conn
      * @return \BedRest\TestFixtures\Mocks\EntityManagerMock
      */
     public static function getEntityManager($conn = null)
     {
         if (!self::$em) {
             $config = new \Doctrine\ORM\Configuration();
-            
+
             // entity namespaces for the test environment
             $namespaces = array(
                 'BedRest\TestFixtures\Models\Company' => TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company/'
             );
-            
+
             $config->setEntityNamespaces(array_keys($namespaces));
-            
+
             // basic Proxy config
             $config->setProxyDir(TESTS_BASEDIR . '/BedRest/TextFixtures/Proxies');
             $config->setProxyNamespace('BedRest\TextFixtures\Proxies');
-            
+
             // ArrayCache, to avoid persistent caching in test environment
             $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache());
-            
+
             // basic AnnotationDriver configuration for parsing Doctrine annotations
             $metaDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(new \Doctrine\Common\Annotations\AnnotationReader());
             $metaDriver->addPaths(array_values($namespaces));
-            
+
             $config->setMetadataDriverImpl($metaDriver);
-            
+
             // basic EventManager
             $eventManager = new \Doctrine\Common\EventManager();
 
@@ -91,4 +91,3 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         return self::$config;
     }
 }
-

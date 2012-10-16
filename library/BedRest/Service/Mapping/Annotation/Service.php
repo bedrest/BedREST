@@ -28,4 +28,3 @@ use Doctrine\ORM\Mapping\Annotation;
 class Service implements Annotation
 {
 }
-

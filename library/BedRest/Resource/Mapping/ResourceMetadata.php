@@ -135,4 +135,3 @@ class ResourceMetadata
         return $this->classMetadata;
     }
 }
-

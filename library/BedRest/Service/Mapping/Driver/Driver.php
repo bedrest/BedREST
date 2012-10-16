@@ -26,7 +26,7 @@ interface Driver
 {
     /**
      * Populates the supplied ServiceMetadata object with data from the specified service class.
-     * @param string $className
+     * @param string                                   $className
      * @param \BedRest\Service\Mapping\ServiceMetadata $serviceMetadata
      */
     public function loadMetadataForClass($className, ServiceMetadata $serviceMetadata);
@@ -39,9 +39,8 @@ interface Driver
 
     /**
      * Whether the specified class is a mapped service.
-     * @param string $className
+     * @param  string  $className
      * @return boolean
      */
     public function isService($className);
 }
-

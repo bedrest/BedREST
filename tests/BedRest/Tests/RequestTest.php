@@ -177,4 +177,3 @@ class RequestTest extends BaseTestCase
         $this->assertEquals($expected, $this->request->getAcceptEncoding());
     }
 }
-

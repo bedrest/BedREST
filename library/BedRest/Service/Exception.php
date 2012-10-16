@@ -23,4 +23,3 @@ namespace BedRest\Service;
 class Exception extends \Exception
 {
 }
-

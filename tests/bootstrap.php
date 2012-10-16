@@ -5,7 +5,6 @@ define('TESTS_BASEDIR', realpath(__DIR__));
 define('LIBRARY_PATH', realpath(TESTS_BASEDIR . '/../library'));
 define('VENDOR_PATH', realpath(TESTS_BASEDIR . '/../vendor'));
 
-
 // Ensure library/ is on include_path
 set_include_path(
     implode(
@@ -18,7 +17,6 @@ set_include_path(
     )
 );
 
-
 // Load the Composer autoloader and point it at the TCol namespace
 require_once VENDOR_PATH . '/autoload.php';
 
@@ -27,7 +25,6 @@ $loader->add('BedRest\TestFixtures', TESTS_BASEDIR);
 $loader->add('BedRest\Tests', TESTS_BASEDIR);
 $loader->add('BedRest', LIBRARY_PATH);
 $loader->register();
-
 
 // register custom annotations
 Doctrine\Common\Annotations\AnnotationRegistry::registerFile(VENDOR_PATH . '/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');

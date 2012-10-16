@@ -110,7 +110,8 @@ class AnnotationDriver implements Driver
             // process listeners
             if (isset($methodAnnotations[self::ANNOTATION_LISTENER])) {
                 if (!is_array($methodAnnotations[self::ANNOTATION_LISTENER])) {
-                    $methodAnnotations[self::ANNOTATION_LISTENER] = array($methodAnnotations[self::ANNOTATION_LISTENER]);
+                    $methodAnnotations[self::ANNOTATION_LISTENER]
+                        = array($methodAnnotations[self::ANNOTATION_LISTENER]);
                 }
 
                 foreach ($methodAnnotations[self::ANNOTATION_LISTENER] as $listenerAnnotation) {
@@ -212,4 +213,3 @@ class AnnotationDriver implements Driver
         return $indexed;
     }
 }
-

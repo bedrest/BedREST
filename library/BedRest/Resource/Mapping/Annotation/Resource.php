@@ -40,4 +40,3 @@ class Resource implements Annotation
      */
     public $name;
 }
-

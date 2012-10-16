@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Event;
+namespace BedRest\Rest\Event;
 
 use BedRest\Rest\Request;
 use BedRest\Rest\Response;
@@ -99,4 +99,3 @@ class Event extends EventBase
         return $this->response;
     }
 }
-
