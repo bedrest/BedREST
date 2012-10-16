@@ -1,24 +1,35 @@
 <?php
 
-// set global constants
-if (defined('BEDREST_LIB_PATH') || define('BEDREST_LIB_PATH', realpath(__DIR__ . '/../library/')));
-if (defined('BEDREST_TESTS_PATH') || define('BEDREST_TESTS_PATH', realpath(__DIR__)));
-if (defined('DOCTRINE_LIB_PATH') || define('DOCTRINE_LIB_PATH', realpath(__DIR__ . '/../vendor/doctrine/')));
+// Some paths
+define('TESTS_BASEDIR', realpath(__DIR__));
+define('LIBRARY_PATH', realpath(TESTS_BASEDIR . '/../library'));
+define('VENDOR_PATH', realpath(TESTS_BASEDIR . '/../vendor'));
 
-// initiate Doctrine class loader
-require_once __DIR__ . '/../vendor/autoload.php';
 
-$classLoader = new \Doctrine\Common\ClassLoader('BedRest\TestFixtures', __DIR__);
-$classLoader->register();
+// Ensure library/ is on include_path
+set_include_path(
+    implode(
+        PATH_SEPARATOR,
+        array(
+            LIBRARY_PATH,
+            VENDOR_PATH,
+            get_include_path(),
+        )
+    )
+);
 
-$classLoader = new \Doctrine\Common\ClassLoader('BedRest\Tests', __DIR__);
-$classLoader->register();
 
-$classLoader = new \Doctrine\Common\ClassLoader('BedRest', BEDREST_LIB_PATH);
-$classLoader->register();
+// Load the Composer autoloader and point it at the TCol namespace
+require_once VENDOR_PATH . '/autoload.php';
+
+$loader = ComposerAutoloaderInit::getLoader();
+$loader->add('BedRest\TestFixtures', TESTS_BASEDIR);
+$loader->add('BedRest\Tests', TESTS_BASEDIR);
+$loader->add('BedRest', LIBRARY_PATH);
+$loader->register();
+
 
 // register custom annotations
-Doctrine\Common\Annotations\AnnotationRegistry::registerFile(DOCTRINE_LIB_PATH . '/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
-Doctrine\Common\Annotations\AnnotationRegistry::registerFile(BEDREST_LIB_PATH . '/BedRest/Resource/Mapping/Annotations.php');
-Doctrine\Common\Annotations\AnnotationRegistry::registerFile(BEDREST_LIB_PATH . '/BedRest/Service/Mapping/Annotations.php');
-
+Doctrine\Common\Annotations\AnnotationRegistry::registerFile(VENDOR_PATH . '/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
+Doctrine\Common\Annotations\AnnotationRegistry::registerFile(LIBRARY_PATH . '/BedRest/Resource/Mapping/Annotations.php');
+Doctrine\Common\Annotations\AnnotationRegistry::registerFile(LIBRARY_PATH . '/BedRest/Service/Mapping/Annotations.php');

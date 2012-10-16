@@ -5,155 +5,139 @@
     
     <!-- Load build properties -->
     <property file="build.properties" />
+
+    <!-- Filesets for the project -->
+    <fileset id="library" dir="${library.dir}" />
+    <fileset id="vendor" dir="${vendor.dir}" />
+    <fileset id="testsuite" dir="${tests.dir}">
+        <include name="**/*Test.php" />
+    </fileset>
     
     <!-- Clean task -->
-    <target name="clean" depends="build-clean, test-clean, docs-clean, reports-clean">
-        
-    </target>
-    
-    <!-- Base build task -->
-    <target name="build-clean">
+    <target name="clean">
         <delete dir="${build.dir}" />
     </target>
-    
-    <target name="build-prepare">
+
+    <!-- Build task -->
+    <target name="prepare-build">
         <mkdir dir="${build.dir}" />
     </target>
-    
-    <target name="build" depends="build-clean, build-prepare, docs">
-        
-    </target>
-    
-    <!-- Continuous integration task -->
-    <target name="ci-clean" depends="reports-clean, test-clean">
-        
-    </target>
-    
-    <target name="ci" depends="ci-clean, php-lint, test, reports">
-        
+
+    <target name="build" depends="clean, prepare-build, test, build-reports, build-docs">
+        <copy todir="${build.dir}${library.dir}">
+            <fileset refid="library" />
+        </copy>
     </target>
     
     <!-- PHPUnit test suites -->
-    <target name="test-clean" description="Cleans up test folders.">
-        <delete dir="${tests.reports.dir}" />
-    </target>
-    
-    <target name="test" description="Runs all available tests" depends="test-clean">
+    <target name="test" description="Runs all available tests" depends="">
         <mkdir dir="${tests.reports.dir}" />
         <mkdir dir="${tests.reports.logs}" />
         <mkdir dir="${tests.reports.report}" />
         <mkdir dir="${tests.reports.coverage}" />
-        
+
         <coverage-setup database="${tests.reports.logs}coverage.xml">
-            <fileset dir="${library.basedir}">
-                <include name="${library.fileset}" />
-            </fileset>
+            <fileset refid="library" />
         </coverage-setup>
-        
+
         <phpunit printsummary="true"
-                 haltonfailure="false" 
+                 haltonfailure="false"
                  haltonerror="false"
                  codecoverage="true"
-                 bootstrap="tests/bootstrap.php">
+                 bootstrap="${tests.dir}bootstrap.php">
+            <batchtest>
+                <fileset refid="testsuite" />
+            </batchtest>
+
             <formatter todir="${tests.reports.logs}" type="xml" />
             <formatter todir="${tests.reports.logs}" type="clover" outfile="clover.xml" />
-            <batchtest>
-                <fileset dir="${tests.dir}">
-                    <include name="${tests.fileset}" />
-                </fileset>
-            </batchtest>
         </phpunit>
-        
-        <phpunitreport infile="${tests.reports.logs}testsuites.xml" 
-                       format="frames" 
+
+        <phpunitreport infile="${tests.reports.logs}testsuites.xml"
+                       format="frames"
                        todir="${tests.reports.report}" />
-        
+
+        <adhoc-task name="autoload">
+            <![CDATA[
+                class BedRestAutoload extends Task {
+                    protected $file;
+
+                    function setFile($file) {
+                        $this->file = $file;
+                    }
+
+                    function main() {
+                        include $this->file;
+                    }
+                }
+            ]]>
+        </adhoc-task>
+
+        <autoload file="${tests.dir}bootstrap.php" />
+
         <coverage-report outfile="${tests.reports.logs}coverage.xml">
             <report todir="${tests.reports.coverage}" usesorttable="true" />
         </coverage-report>
     </target>
-    
-    <!-- API documentation -->
+
+    <!-- Documentation -->
+    <target name="build-docs" description="Generates all documentation" depends="api-doc">
+    </target>
+
     <target name="api-doc" description="Generates the BedREST API Documentation">
         <mkdir dir="${docs.api.dir}" />
-        
+
+        <!--
         <phpdoc2 title="BedREST API Documentation" destdir="${docs.api.dir}" template="responsive">
-            <fileset dir="${library.basedir}">
-                <include name="${library.fileset}" />
-            </fileset>
+            <fileset refid="library" />
         </phpdoc2>
+        -->
     </target>
-    
-    <!-- Cleans all documentation -->
-    <target name="docs-clean">
-        <delete dir="${docs.dir}" />
+
+    <!-- Reports -->
+    <target name="build-reports" description="Generates all reports" depends="php-lint, php-cs, php-md, phploc">
     </target>
-    
-    <!-- Generate all documentation -->
-    <target name="docs" description="Generates all documentation" depends="docs-clean, api-doc">
-        
-    </target>
-    
-    <!-- PHP Lint -->
+
     <target name="php-lint" description="Run PHP Lint">
-        <mkdir dir="${reports.phplint.dir}" />
-        
-        <phplint haltonfailure="false" tofile="${reports.phplint.dir}phplint.log">
-            <fileset dir="${library.basedir}">
-                <include name="${library.fileset}" />
-            </fileset>
+        <mkdir dir="${reports.dir}" />
+
+        <phplint haltonfailure="false" tofile="${reports.dir}phplint.log">
+            <fileset refid="library" />
         </phplint>
     </target>
-    
-    <!-- PHP Mess Detector -->
+
     <target name="php-md" description="Run PHP Mess Detector">
-        <mkdir dir="${reports.phpmd.dir}" />
-        
+        <mkdir dir="${reports.dir}" />
+
         <phpmd rulesets="codesize,design,unusedcode">
-            <fileset dir="${library.basedir}">
-                <include name="${library.fileset}" />
-            </fileset>
-            
-            <formatter type="xml" outfile="${reports.phpmd.dir}phpmd-report.xml" />
-            <formatter type="html" outfile="${reports.phpmd.dir}phpmd-report.html" />
+            <fileset refid="library" />
+
+            <formatter type="xml" outfile="${reports.dir}phpmd-report.xml" />
+            <formatter type="html" outfile="${reports.dir}phpmd-report.html" />
         </phpmd>
     </target>
 
-    <!-- PHP Code Sniffer -->
     <target name="php-cs" description="Runs PHP Code Sniffer">
-        <mkdir dir="${reports.phpcs.dir}" />
-        
+        <mkdir dir="${reports.dir}" />
+
         <phpcodesniffer standard="PSR2" format="full"
-                        docGenerator="HTML" docFile="${reports.phpcs.dir}phpcs-doc.html">
-            <fileset dir="${library.basedir}">
-                <include name="${library.fileset}" />
-            </fileset>
-            
-            <fileset dir="${tests.dir}">
-                <include name="*${tests.fileset}" />
-            </fileset>
-            
-            <formatter type="full" outfile="${reports.phpcs.dir}phpcs-report.txt" />
-            <formatter type="checkstyle" outfile="${reports.phpcs.dir}phpcs-checkstyle.xml" />
+                        docGenerator="HTML" docFile="${reports.dir}phpcs-doc.html">
+            <fileset refid="library" />
+            <fileset refid="testsuite" />
+
+            <formatter type="default" usefile="false" />
+            <formatter type="full" outfile="${reports.dir}phpcs-report.txt" />
+            <formatter type="checkstyle" outfile="${reports.dir}phpcs-checkstyle.xml" />
         </phpcodesniffer>
     </target>
-    
-    <!-- PHPLoc -->
+
     <target name="phploc" description="Measure project size using PHPLOC">
+        <mkdir dir="${reports.dir}" />
+
         <exec executable="phploc">
             <arg value="--log-csv" />
             <arg value="${reports.dir}phploc.csv" />
-            <arg path="${library.basedir}" />
+            <arg path="${library.dir}" />
         </exec>
-    </target>
-    
-    <!-- Cleans all reports -->
-    <target name="reports-clean">
-        <delete dir="${reports.dir}" />
-    </target>
-    
-    <!-- Generates all reports -->
-    <target name="reports" description="Generates all reports" depends="reports-clean, php-lint, php-cs, php-md, phploc">
-        
     </target>
 </project>
