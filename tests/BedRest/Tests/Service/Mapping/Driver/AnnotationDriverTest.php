@@ -2,6 +2,7 @@
 
 namespace BedRest\Tests\Service\Mapping\Driver;
 
+use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\Driver\AnnotationDriver;
 use BedRest\Tests\BaseTestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -57,5 +58,14 @@ class AnnotationDriverTest extends BaseTestCase
 
         $this->assertContains('testpath', $paths);
         $this->assertContains('testpath2', $paths);
+    }
+
+    public function testDataMapperSet()
+    {
+        $className = 'BedRest\TestFixtures\Services\Company\Employee';
+        $metadata = new ServiceMetadata($className);
+        $this->driver->loadMetadataForClass($className, $metadata);
+
+        $this->assertEquals('BedRest\Service\Data\SimpleEntityMapper', $metadata->getDataMapper());
     }
 }

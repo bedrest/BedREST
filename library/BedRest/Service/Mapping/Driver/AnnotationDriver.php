@@ -123,14 +123,12 @@ class AnnotationDriver implements Driver
 
     /**
      * {@inheritDoc}
+     *
+     * This has been lifted pretty much wholesale from Doctrine ORM, so credit where credit is due.
      * @see Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver
      */
     public function getAllClassNames()
     {
-        /**
-         * This has been lifted pretty much wholesale from Doctrine ORM, so credit where credit is due.
-         *
-         */
         if (!$this->paths) {
             throw Exception::pathsRequired();
         }

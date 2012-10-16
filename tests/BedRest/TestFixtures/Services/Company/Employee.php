@@ -10,6 +10,7 @@ use BedRest\Service\Mapping\Annotation as BedRest;
  * @author Geoff Adams <geoff@dianode.net>
  *
  * @BedRest\Service
+ * @BedRest\DataMapper(class="BedRest\Service\Data\SimpleEntityMapper")
  */
 class Employee
 {
