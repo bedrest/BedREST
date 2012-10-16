@@ -90,7 +90,7 @@ class Response
     public function getRawBody()
     {
         if (!$this->bodyProcessed) {
-            $converterClass = $this->configuration->getDataConverter($this->getContentType());
+            $converterClass = $this->configuration->getContentConverter($this->getContentType());
             $converter = new $converterClass;
 
             $this->rawBody = $converter->encode($this->body);
@@ -158,7 +158,7 @@ class Response
      * Returns a single HTTP header.
      * @param string $name
      * @return string
-     * @throws BedRest\Rest\Exception
+     * @throws \BedRest\Rest\Exception
      */
     public function getHeader($name)
     {
@@ -172,6 +172,7 @@ class Response
     /**
      * Sets the HTTP response code.
      * @param integer $code
+     * @throws \BedRest\Rest\Exception
      */
     public function setResponseCode($code)
     {
