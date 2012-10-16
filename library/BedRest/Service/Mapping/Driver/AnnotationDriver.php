@@ -31,7 +31,7 @@ class AnnotationDriver implements Driver
 
     /**
      * Annotation reader instance.
-     * @var Doctrine\Common\Annotations\Reader
+     * @var \Doctrine\Common\Annotations\Reader
      */
     protected $reader;
 
@@ -43,7 +43,7 @@ class AnnotationDriver implements Driver
 
     /**
      * Constructor.
-     * @param Doctrine\Common\Annotations\Reader $reader
+     * @param \Doctrine\Common\Annotations\Reader $reader
      */
     public function __construct(Reader $reader)
     {
@@ -122,9 +122,14 @@ class AnnotationDriver implements Driver
 
     /**
      * {@inheritDoc}
+     * @see Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver
      */
     public function getAllClassNames()
     {
+        /**
+         * This has been lifted pretty much wholesale from Doctrine ORM, so credit where credit is due.
+         *
+         */
         if (!$this->paths) {
             throw Exception::pathsRequired();
         }
@@ -173,7 +178,10 @@ class AnnotationDriver implements Driver
      */
     public function isService($className)
     {
-        $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), 'BedRest\Service\Mapping\Annotation\Service');
+        $annotation = $this->reader->getClassAnnotation(
+            new \ReflectionClass($className),
+            'BedRest\Service\Mapping\Annotation\Service'
+        );
 
         if ($annotation) {
             return true;
