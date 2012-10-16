@@ -13,14 +13,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\DataConverter;
+namespace BedRest\Content\Converter;
 
 /**
- * DataConverter
+ * Converter
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-interface DataConverter
+interface Converter
 {
     public function encode($value);
 

@@ -13,18 +13,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Service\DataMapper;
+namespace BedRest\Service\Data;
 
 /**
- * Exception
+ * DataMapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class Exception extends \Exception
+interface DataMapper
 {
-    public static function dataMapperNotFound($className)
-    {
-        return new self("The data mapper '{$className}' does not exist or could not be found.");
-    }
+    /**
+     * Maps data into a resource or set of resources.
+     * @param mixed $resource Resource to map data into.
+     * @param mixed $data Data to be mapped.
+     */
+    public function map($resource, $data);
+
+    /**
+     * Reverse maps data into the desired format.
+     * @param mixed $data Data to reverse map.
+     * @return mixed
+     */
+    public function reverse($data);
 }
 

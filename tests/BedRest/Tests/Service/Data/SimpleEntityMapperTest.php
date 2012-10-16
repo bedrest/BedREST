@@ -1,9 +1,9 @@
 <?php
 
-namespace BedRest\Tests\DataMapper;
+namespace BedRest\Tests\Service\Data;
 
-use BedRest\DataMapper\DataMapper;
-use BedRest\DataMapper\SimpleEntityMapper;
+use BedRest\Service\Data\DataMapper;
+use BedRest\Service\Data\SimpleEntityMapper;
 use BedRest\Service\ServiceManager;
 use BedRest\Tests\BaseTestCase;
 

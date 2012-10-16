@@ -1,8 +1,8 @@
 <?php
 
-namespace BedRest\Tests\DataConverter;
+namespace BedRest\Tests\Content\Converter;
 
-use BedRest\DataConverter\JsonConverter;
+use BedRest\Content\Converter\JsonConverter;
 use BedRest\Tests\BaseTestCase;
 
 /**
@@ -14,7 +14,7 @@ class JsonConverterTest extends BaseTestCase
 {
     public function testInvalidJsonThrowsException()
     {
-        $this->setExpectedException('BedRest\DataConverter\Exception');
+        $this->setExpectedException('BedRest\Content\Converter\Exception');
 
         $mapper = new JsonConverter();
 

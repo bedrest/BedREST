@@ -13,27 +13,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\DataMapper;
+namespace BedRest\Content\Converter;
 
 /**
- * DataMapper
+ * Exception
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-interface DataMapper
+class Exception extends \Exception
 {
-    /**
-     * Maps data into a resource or set of resources.
-     * @param mixed $resource Resource to map data into.
-     * @param mixed $data Data to be mapped.
-     */
-    public function map($resource, $data);
-
-    /**
-     * Reverse maps data into the desired format.
-     * @param mixed $data Data to reverse map.
-     * @return mixed
-     */
-    public function reverse($data);
 }
 

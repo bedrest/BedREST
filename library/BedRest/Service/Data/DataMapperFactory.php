@@ -13,12 +13,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\DataMapper;
+namespace BedRest\Service\Data;
 
 use BedRest\Rest\Configuration;
 use BedRest\Service\ServiceManager;
-use BedRest\DataMapper\DataMapper;
-use BedRest\DataMapper\Exception;
+use BedRest\Service\Data\DataMapper;
+use BedRest\Service\Data\Exception;
 
 /**
  * DataMapperFactory

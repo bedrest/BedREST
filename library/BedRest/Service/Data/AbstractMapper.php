@@ -14,7 +14,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\DataMapper;
+namespace BedRest\Service\Data;
 
 use BedRest\Rest\Configuration;
 use BedRest\Service\ServiceManager;

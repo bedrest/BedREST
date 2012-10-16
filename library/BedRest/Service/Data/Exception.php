@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\DataConverter;
+namespace BedRest\Service\Data;
 
 /**
  * Exception
@@ -22,5 +22,9 @@ namespace BedRest\DataConverter;
  */
 class Exception extends \Exception
 {
+    public static function dataMapperNotFound($className)
+    {
+        return new self("The data mapper '{$className}' does not exist or could not be found.");
+    }
 }
 

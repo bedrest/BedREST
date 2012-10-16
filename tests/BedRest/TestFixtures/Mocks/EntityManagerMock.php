@@ -16,7 +16,7 @@ class EntityManagerMock extends \Doctrine\ORM\EntityManager
     {
         if (is_null($config)) {
             $config = new \Doctrine\ORM\Configuration();
-            $config->setProxyDir(BEDREST_TESTS_PATH . 'BedRest/TextFixtures/Proxies');
+            $config->setProxyDir(TESTS_BASEDIR . 'BedRest/TextFixtures/Proxies');
             $config->setProxyNamespace('BedRest\TextFixtures\Proxies');
             $config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache());
 

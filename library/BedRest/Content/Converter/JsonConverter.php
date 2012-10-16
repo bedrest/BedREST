@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\DataConverter;
+namespace BedRest\Content\Converter;
 
 /**
  * JsonConverter
@@ -22,7 +22,7 @@ namespace BedRest\DataConverter;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class JsonConverter implements DataConverter
+class JsonConverter implements Converter
 {
     public function decode($value)
     {

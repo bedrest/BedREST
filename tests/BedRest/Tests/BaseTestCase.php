@@ -33,13 +33,13 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
             
             // entity namespaces for the test environment
             $namespaces = array(
-                'BedRest\TestFixtures\Models\Company' => BEDREST_TESTS_PATH . '/BedRest/TestFixtures/Models/Company/'
+                'BedRest\TestFixtures\Models\Company' => TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company/'
             );
             
             $config->setEntityNamespaces(array_keys($namespaces));
             
             // basic Proxy config
-            $config->setProxyDir(BEDREST_TESTS_PATH . '/BedRest/TextFixtures/Proxies');
+            $config->setProxyDir(TESTS_BASEDIR . '/BedRest/TextFixtures/Proxies');
             $config->setProxyNamespace('BedRest\TextFixtures\Proxies');
             
             // ArrayCache, to avoid persistent caching in test environment

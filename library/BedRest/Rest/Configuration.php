@@ -76,8 +76,8 @@ class Configuration
      * Available data converters.
      * @var array
      */
-    protected $dataConverters = array(
-        'application/json' => 'BedRest\DataConverter\JsonConverter'
+    protected $contentConverters = array(
+        'application/json' => 'BedRest\Content\Converter\JsonConverter'
     );
 
     /**
@@ -225,30 +225,30 @@ class Configuration
 
     /**
      * Sets the list of available data converters.
-     * @param array $dataConverters
+     * @param array $contentConverters
      */
-    public function setDataConverters(array $dataConverters)
+    public function setContentConverters(array $contentConverters)
     {
-        $this->dataConverters = $dataConverters;
+        $this->contentConverters = $contentConverters;
     }
 
     /**
      * Returns the list of available data converters.
      * @return array
      */
-    public function getDataConverters()
+    public function getContentConverters()
     {
-        return $this->dataConverters;
+        return $this->contentConverters;
     }
 
     /**
      * Adds a data mapper with the given content type association, overwriting any existing entry.
      * @param string $contentType
-     * @param string $dataConverter
+     * @param string $contentConverter
      */
-    public function addDataConverter($contentType, $dataConverter)
+    public function addContentConverter($contentType, $contentConverter)
     {
-        $this->dataConverters[$contentType] = $dataConverter;
+        $this->contentConverters[$contentType] = $contentConverter;
     }
 
     /**
@@ -256,13 +256,13 @@ class Configuration
      * @param string $contentType
      * @return string|null
      */
-    public function getDataConverter($contentType)
+    public function getContentConverter($contentType)
     {
-        if (!isset($this->dataConverters[$contentType])) {
+        if (!isset($this->contentConverters[$contentType])) {
             return null;
         }
 
-        return $this->dataConverters[$contentType];
+        return $this->contentConverters[$contentType];
     }
 
     /**
