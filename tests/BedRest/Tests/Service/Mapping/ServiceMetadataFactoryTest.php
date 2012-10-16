@@ -15,6 +15,12 @@ use Doctrine\Common\Annotations\AnnotationReader;
 class ServiceMetadataFactoryTest extends BaseTestCase
 {
     /**
+     * Driver for the factory.
+     * @var \BedRest\Service\Mapping\Driver\AnnotationDriver
+     */
+    protected $driver;
+
+    /**
      * Class under test.
      * @var \BedRest\Service\Mapping\ServiceMetadataFactory
      */
@@ -25,9 +31,9 @@ class ServiceMetadataFactoryTest extends BaseTestCase
         $configuration = self::getConfiguration();
 
         $reader = new AnnotationReader();
-        $driver = new AnnotationDriver($reader);
+        $this->driver = new AnnotationDriver($reader);
 
-        $configuration->setServiceMetadataDriverImpl($driver);
+        $configuration->setServiceMetadataDriverImpl($this->driver);
         
         $this->factory = new ServiceMetadataFactory($configuration);
     }
@@ -48,6 +54,8 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
     public function testGetAllMetadata()
     {
+        $this->driver->addPath(TESTS_BASEDIR . '/BedRest/TestFixtures/Services/Company');
+
         $metaCollection = $this->factory->getAllMetadata();
 
         $this->assertInternalType('array', $metaCollection);
