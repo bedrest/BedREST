@@ -3,18 +3,18 @@
 namespace BedRest\Tests\Service\Data;
 
 use BedRest\Service\Data\DataMapper;
-use BedRest\Service\Data\SimpleEntityMapper;
+use BedRest\Service\Data\SimpleDoctrineMapper;
 use BedRest\Service\ServiceManager;
 use BedRest\Tests\BaseTestCase;
 
 /**
- * SimpleEntityMapperTest
+ * SimpleDoctrineMapperTest
  *
- * Tests BedRest\DataMapper\SimpleEntityMapper.
+ * Tests BedRest\DataMapper\SimpleDoctrineMapper.
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class SimpleEntityMapperTest extends BaseTestCase
+class SimpleDoctrineMapperTest extends BaseTestCase
 {
     protected function getTestData()
     {
@@ -47,7 +47,7 @@ class SimpleEntityMapperTest extends BaseTestCase
      */
     protected function setUp()
     {
-        $this->mapper = new SimpleEntityMapper(self::getConfiguration(), new ServiceManager(self::getConfiguration()));
+        $this->mapper = new SimpleDoctrineMapper(self::getConfiguration(), new ServiceManager(self::getConfiguration()));
     }
 
     /**

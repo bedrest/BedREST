@@ -24,12 +24,13 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class SimpleEntityMapper extends AbstractMapper
+class SimpleDoctrineMapper extends AbstractMapper
 {
     /**
      * Maps an input array into a resource or set of resources.
-     * @param mixed $resource Resource to map data into.
-     * @param array $data     Array of data.
+     * @param  mixed                           $resource Resource to map data into.
+     * @param  array                           $data     Array of data.
+     * @throws \BedRest\Service\Data\Exception
      */
     public function map($resource, $data)
     {
