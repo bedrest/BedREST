@@ -249,6 +249,7 @@ class Request
 
     /**
      * Gets the best match format to return a response in based on a supplied list of formats.
+     * @return string|boolean
      */
     public function getAcceptBestMatch(array $formats)
     {
@@ -274,7 +275,7 @@ class Request
     /**
      * Sets the accepted content types of the request. If the provided value is null, it is automatically detected
      * from the environment. The provided value is parsed into an array and ordered by weighting of each format.
-     * @param array $accept
+     * @param array $acceptEncoding
      */
     public function setAcceptEncoding($acceptEncoding = null)
     {
@@ -325,6 +326,7 @@ class Request
     /**
      * Returns the request payload.
      * @param  boolean $autoDecode
+     * @throws \RuntimeException
      * @return mixed
      */
     public function getPayload($autoDecode = true)

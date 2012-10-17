@@ -13,7 +13,7 @@ class RequestTest extends BaseTestCase
 {
     /**
      * Request object in test.
-     * @var BedRest\Rest\Request
+     * @var \BedRest\Rest\Request
      */
     protected $request;
 
@@ -95,6 +95,33 @@ class RequestTest extends BaseTestCase
         );
 
         $this->assertEquals($expected, $this->request->getAccept());
+    }
+
+    public function testAcceptBestMatch()
+    {
+        $this->request->setAccept('application/json;q=1, text/xml;q=0.5');
+
+        $bestMatch = $this->request->getAcceptBestMatch(
+            array(
+                'application/json',
+                'text/xml'
+            )
+        );
+
+        $this->assertEquals('application/json', $bestMatch);
+    }
+
+    public function testAcceptBestMatchNoMatch()
+    {
+        $this->request->setAccept('application/json');
+
+        $bestMatch = $this->request->getAcceptBestMatch(
+            array(
+                'text/xml'
+            )
+        );
+
+        $this->assertFalse($bestMatch);
     }
 
     public function testMultipleAcceptQualityOrdering()
