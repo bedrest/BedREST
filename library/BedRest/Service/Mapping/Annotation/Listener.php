@@ -15,8 +15,6 @@
 
 namespace BedRest\Service\Mapping\Annotation;
 
-use Doctrine\ORM\Mapping\Annotation;
-
 /**
  * Listener
  *
@@ -25,7 +23,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * @Annotation
  * @Target("METHOD")
  */
-class Listener implements Annotation
+class Listener
 {
     /**
      * Name of the event this listens to.

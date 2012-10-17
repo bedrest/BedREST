@@ -15,8 +15,6 @@
 
 namespace BedRest\Service\Mapping\Annotation;
 
-use Doctrine\ORM\Mapping\Annotation;
-
 /**
  * Service
  *
@@ -25,6 +23,6 @@ use Doctrine\ORM\Mapping\Annotation;
  * @Annotation
  * @Target("CLASS")
  */
-class Service implements Annotation
+class Service
 {
 }

@@ -15,8 +15,6 @@
 
 namespace BedRest\Resource\Mapping\Annotation;
 
-use Doctrine\ORM\Mapping\Annotation;
-
 /**
  * Resource
  *
@@ -25,7 +23,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * @Annotation
  * @Target("CLASS")
  */
-class Resource implements Annotation
+class Resource
 {
     /**
      * Fully-qualified class name (without preceding slash) of the service used

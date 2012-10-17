@@ -16,8 +16,6 @@
 
 namespace BedRest\Service\Mapping\Annotation;
 
-use Doctrine\ORM\Mapping\Annotation;
-
 /**
  * DataMapper
  *
@@ -26,7 +24,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * @Annotation
  * @Target("CLASS")
  */
-class DataMapper implements Annotation
+class DataMapper
 {
     /**
      * Class name of the data mapper for a service.

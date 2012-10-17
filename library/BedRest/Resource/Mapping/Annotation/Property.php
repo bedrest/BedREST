@@ -15,8 +15,6 @@
 
 namespace BedRest\Resource\Mapping\Annotation;
 
-use Doctrine\ORM\Mapping\Annotation;
-
 /**
  * Property
  *
@@ -25,7 +23,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-class Property implements Annotation
+class Property
 {
     /**
      * Whether the property is read-only from a REST perspective.
