@@ -90,7 +90,7 @@ abstract class AbstractMapper implements DataMapper
      * @throws \BedRest\Service\Data\Exception
      * @return array
      */
-    protected function castFieldData($resource, array $data)
+    protected function castFields($resource, array $data)
     {
         // get the class meta data for the entity
         $em = $this->getEntityManager();
@@ -106,70 +106,91 @@ abstract class AbstractMapper implements DataMapper
                 continue;
             }
 
-            // cast the data to the correct type
-            $value = $data[$fieldName];
-
-            switch ($fieldMapping['type']) {
-                case Type::INTEGER:
-                case Type::BIGINT:
-                case Type::SMALLINT:
-                    $value = (int) $value;
-                    break;
-                case Type::BOOLEAN:
-                    $value = (bool) $value;
-                    break;
-                case Type::DATE:
-                case Type::DATETIME:
-                case Type::DATETIMETZ:
-                case Type::TIME:
-                    if ($value instanceof \DateTime) {
-                        // do nothing
-                    } elseif (is_array($value)) {
-                        if (!isset($value['date'])) {
-                            throw new Exception(
-                                'Cannot cast an array to a date/time field, unless it follows DateTime array format'
-                            );
-                        }
-
-                        $dateString = $value['date'];
-                        if (isset($value['timezone'])) {
-                            $dateString .= ' ' . $value['timezone'];
-                        }
-
-                        $value = new \DateTime($dateString);
-                    } elseif (is_string($value)) {
-                        $value = new \DateTime($value);
-                    } elseif (is_integer($value)) {
-                        $value = \DateTime::createFromFormat('U', $value);
-                    }
-                    break;
-                case Type::DECIMAL:
-                case Type::FLOAT:
-                    $value = (float) $value;
-                    break;
-                case Type::STRING:
-                case Type::TEXT:
-                    $value = (string) $value;
-                    break;
-                case Type::TARRAY:
-                    $value = (array) $value;
-                    break;
-                case Type::OBJECT:
-                    throw new Exception('"object" type mapping is not currently supported');
-                    break;
-                case TYPE::BLOB:
-                    throw new Exception('"blob" type mapping is not currently supported');
-                    break;
-                default:
-                    throw new Exception("Unknown type \"{$fieldMapping['type']}\"");
-                    break;
-            }
-
             // enter into the final cast data array
-            $castData[$fieldName] = $value;
+            $castData[$fieldName] = $this->castField($data[$fieldName], $fieldMapping);
         }
 
         return $castData;
+    }
+
+    /**
+     * @param  mixed                           $value
+     * @param  array                           $fieldMapping
+     * @throws \BedRest\Service\Data\Exception
+     * @return mixed
+     */
+    protected function castField($value, array $fieldMapping)
+    {
+        switch ($fieldMapping['type']) {
+            case Type::INTEGER:
+            case Type::BIGINT:
+            case Type::SMALLINT:
+                $value = (int) $value;
+                break;
+            case Type::BOOLEAN:
+                $value = (bool) $value;
+                break;
+            case Type::DATE:
+            case Type::DATETIME:
+            case Type::DATETIMETZ:
+            case Type::TIME:
+                $value = $this->castDateField($value);
+                break;
+            case Type::DECIMAL:
+            case Type::FLOAT:
+                $value = (float) $value;
+                break;
+            case Type::STRING:
+            case Type::TEXT:
+                $value = (string) $value;
+                break;
+            case Type::TARRAY:
+                $value = (array) $value;
+                break;
+            case Type::OBJECT:
+                throw new Exception('"object" type mapping is not currently supported');
+                break;
+            case TYPE::BLOB:
+                throw new Exception('"blob" type mapping is not currently supported');
+                break;
+            default:
+                throw new Exception("Unknown type \"{$fieldMapping['type']}\"");
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Casts Date, DateTime and Time fields, handling a variety of formats.
+     * @param  mixed                           $value
+     * @throws \BedRest\Service\Data\Exception
+     * @return \DateTime
+     */
+    protected function castDateField($value)
+    {
+        if ($value instanceof \DateTime) {
+            // do nothing
+        } elseif (is_array($value)) {
+            if (!isset($value['date'])) {
+                throw new Exception(
+                    'Missing "date" component in array.'
+                );
+            }
+
+            $dateString = $value['date'];
+            if (isset($value['timezone'])) {
+                $dateString .= ' ' . $value['timezone'];
+            }
+
+            $value = new \DateTime($dateString);
+        } elseif (is_string($value)) {
+            $value = new \DateTime($value);
+        } elseif (is_integer($value)) {
+            $value = \DateTime::createFromFormat('U', $value);
+        }
+
+        return $value;
     }
 
     /**

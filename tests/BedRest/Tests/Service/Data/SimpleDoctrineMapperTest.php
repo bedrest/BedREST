@@ -47,7 +47,10 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      */
     protected function setUp()
     {
-        $this->mapper = new SimpleDoctrineMapper(self::getConfiguration(), new ServiceManager(self::getConfiguration()));
+        $this->mapper = new SimpleDoctrineMapper(
+            self::getConfiguration(),
+            new ServiceManager(self::getConfiguration())
+        );
     }
 
     /**

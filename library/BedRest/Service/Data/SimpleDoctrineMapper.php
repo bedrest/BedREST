@@ -39,7 +39,7 @@ class SimpleDoctrineMapper extends AbstractMapper
         }
 
         // cast data
-        $data = $this->castFieldData($resource, $data);
+        $data = $this->castFields($resource, $data);
 
         foreach ($data as $property => $value) {
             $resource->$property = $value;
