@@ -24,7 +24,7 @@ class Exception extends \Exception
 {
     public static function methodNotAllowed()
     {
-        return new self("Method Not Allowd", 405);
+        return new self("Method Not Allowed", 405);
     }
 
     public static function notAcceptable()

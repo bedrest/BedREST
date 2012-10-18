@@ -43,7 +43,8 @@ abstract class AbstractMapper implements DataMapper
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
-     * @param \BedRest\Rest\Configuration $configuration
+     * @param \BedRest\Rest\Configuration     $configuration
+     * @param \BedRest\Service\ServiceManager $serviceManager
      */
     public function __construct(Configuration $configuration = null, ServiceManager $serviceManager = null)
     {
@@ -62,6 +63,7 @@ abstract class AbstractMapper implements DataMapper
 
     /**
      * Gets the entity manager.
+     * @throws \BedRest\Service\Data\Exception
      * @return \Doctrine\ORM\EntityManager
      */
     protected function getEntityManager()
@@ -83,10 +85,10 @@ abstract class AbstractMapper implements DataMapper
      * Takes an input array of data and a resource, then proceeds to process each
      * property of the resource by finding data and casting it to the appropriate
      * format.
-     * @param  object             $resource
-     * @param  array              $data
+     * @param  object                          $resource
+     * @param  array                           $data
+     * @throws \BedRest\Service\Data\Exception
      * @return array
-     * @throws \BedRest\Exception
      */
     protected function castFieldData($resource, array $data)
     {

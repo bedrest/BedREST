@@ -325,7 +325,7 @@ class Request
 
     /**
      * Returns the request payload.
-     * @param  boolean $autoDecode
+     * @param  boolean           $autoDecode
      * @throws \RuntimeException
      * @return mixed
      */
