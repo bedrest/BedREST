@@ -15,8 +15,8 @@
 
 namespace BedRest\Service;
 
+use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Rest\Configuration;
-use BedRest\Rest\RestManager;
 use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 
@@ -50,7 +50,7 @@ class ServiceManager
 
     /**
      * Constructor.
-     * @param BedRest\Rest\Configuration $configuration
+     * @param \BedRest\Rest\Configuration $configuration
      */
     public function __construct(Configuration $configuration)
     {
@@ -88,38 +88,32 @@ class ServiceManager
     }
 
     /**
-     * Returns an instance of the specified service.
-     * @param  string                    $className
-     * @param  \BedRest\Rest\RestManager $restManager
-     * @param  string                    $resourceClassName
+     * Returns an instance of the service for the specified resource.
+     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @return object
      */
-    public function getService($className, RestManager $restManager, $resourceClassName)
+    public function getService(ResourceMetadata $resourceMetadata)
     {
-        $hash = $this->getServiceHash($restManager, $resourceClassName);
+        $hash = $this->getServiceHash($resourceMetadata);
 
-        if (!isset($this->loadedServices[$className][$hash])) {
-            if (!$this->serviceMetadataFactory->isService($className)) {
-                throw new \BedRest\Service\Exception("The class '{$className}' is not a mapped service.");
-            }
-
-            $this->loadService($className, $restManager, $resourceClassName);
+        if (!$this->hasService($resourceMetadata)) {
+            $this->loadedServices[$resourceMetadata->getServiceClass()][$hash]
+                = $this->loadService($resourceMetadata);
         }
 
-        return $this->loadedServices[$className][$hash];
+        return $this->loadedServices[$resourceMetadata->getServiceClass()][$hash];
     }
 
     /**
      * Whether a service has been loaded or not yet.
-     * @param  string  $className
-     * @param  string  $resourceClassName
+     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @return boolean
      */
-    public function hasService($className, RestManager $restManager, $resourceClassName)
+    protected function hasService(ResourceMetadata $resourceMetadata)
     {
-        $hash = $this->getServiceHash($restManager, $resourceClassName);
+        $hash = $this->getServiceHash($resourceMetadata);
 
-        if (isset($this->loadedServices[$className][$hash])) {
+        if (isset($this->loadedServices[$resourceMetadata->getServiceClass()][$hash])) {
             return true;
         }
 
@@ -128,39 +122,38 @@ class ServiceManager
 
     /**
      * Loads the specified service class.
-     * @param  string                    $className
-     * @param  \BedRest\Rest\RestManager $restManager
-     * @param  string                    $resourceClassName
-     * @throws \Exception
+     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
+     * @throws \BedRest\Service\Exception
+     * @return object
      */
-    protected function loadService($className, RestManager $restManager, $resourceClassName)
+    protected function loadService(ResourceMetadata $resourceMetadata)
     {
+        $className = $resourceMetadata->getServiceClass();
+
+        // check class exists and is denoted as a service
         if (!class_exists($className)) {
             throw new Exception("Service '$className' not found.");
         }
 
+        if (!$this->serviceMetadataFactory->isService($className)) {
+            throw new Exception("The class '{$className}' is not a mapped service.");
+        }
+
         // instantiate the class
-        $service = new $className(
-            $restManager,
-            $restManager->getResourceMetadata($resourceClassName)
-        );
+        $service = new $className($resourceMetadata);
 
-        // get service metadata
-        $serviceMetadata = $this->serviceMetadataFactory->getMetadataFor(get_class($service));
-
-        // store it locally for future reference
-        $hash = $this->getServiceHash($restManager, $resourceClassName);
-        $this->loadedServices[$className][$hash] = $service;
+        return $service;
     }
 
     /**
      * Gets the hash used for indexing loaded services.
-     * @param  \BedRest\Rest\RestManager $restManager
-     * @param  string                    $resourceClassName
+     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @return string
      */
-    protected function getServiceHash(RestManager $restManager, $resourceClassName)
+    protected function getServiceHash(ResourceMetadata $resourceMetadata)
     {
-        return $hash = $resourceClassName . '#' . spl_object_hash($restManager);
+        $hash = spl_object_hash($resourceMetadata);
+
+        return $hash;
     }
 }

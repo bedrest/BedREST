@@ -150,28 +150,24 @@ class RestManager
 
         $response->setContentType($contentType);
 
-        // create event
+        // get service handler
+        // TODO: this should be pulled in from the configuration
+        $handler = new \BedRest\Service\Handler\SimpleDoctrineHandler($this);
+        $handler->setServiceManager($this->serviceManager);
+
         switch ($request->getMethod()) {
             case Request::METHOD_GET:
-                $this->dispatchGetEntity($request, $response);
+                $handler->handleGetResource($request, $response);
                 break;
             case Request::METHOD_GET_COLLECTION:
-                $this->dispatchGetCollection($request, $response);
+                $handler->handleGetCollection($request, $response);
                 break;
             // TODO: implement other methods
             default:
-                // TODO: exception, unknown request type
+                throw Exception::methodNotAllowed();
                 break;
         }
 
         return $response;
-    }
-
-    protected function dispatchGetEntity(Request $request, Response $response)
-    {
-    }
-
-    protected function dispatchGetCollection($request, $response)
-    {
     }
 }

@@ -56,13 +56,13 @@ class Configuration
      * Default service class name.
      * @var string
      */
-    protected $defaultServiceClassName = 'BedRest\Service\SimpleEntityService';
+    protected $defaultServiceClassName = 'BedRest\Service\SimpleDoctrineService';
 
     /**
      * Default data mapper.
      * @var string
      */
-    protected $defaultDataMapper = 'BedRest\DataMapper\SimpleEntityMapper';
+    protected $defaultDataMapper = 'BedRest\Service\Data\SimpleDoctrineMapper';
 
     /**
      * Allowable content types.
@@ -85,7 +85,7 @@ class Configuration
      * @var array
      */
     protected $dataMappers = array(
-        'array' => 'BedRest\DataMapper\ArrayMapper'
+        'doctrine' => 'BedRest\Service\Data\SimpleDoctrineMapper'
     );
 
     /**

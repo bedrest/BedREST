@@ -15,30 +15,24 @@
 
 namespace BedRest\Service;
 
-use BedRest\Rest\RestManager;
-use BedRest\Service\Mapping\ResourceMetadata;
+use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Service\Mapping\Annotation as BedRest;
+use Doctrine\ORM\EntityManager;
 
 /**
- * SimpleEntityService
+ * SimpleDoctrineService
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
  * @BedRest\Service
  */
-class SimpleEntityService
+class SimpleDoctrineService
 {
     /**
      * EntityManager instance.
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
-
-    /**
-     * RestManager instance.
-     * @var \BedRest\Rest\RestManager
-     */
-    protected $restManager;
 
     /**
      * Resource metadata.
@@ -54,22 +48,28 @@ class SimpleEntityService
 
     /**
      * Constructor.
-     * @param \BedRest\Rest\RestManager                  $rm
      * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      */
-    public function __construct(RestManager $rm, ResourceMetadata $resourceMetadata)
+    public function __construct(ResourceMetadata $resourceMetadata)
     {
-        $this->restManager = $rm;
-        $this->entityManager = $rm->getConfiguration()->getEntityManager();
-
         $this->resourceMetadata = $resourceMetadata;
         $this->resourceClassName = $resourceMetadata->getClassName();
     }
 
     /**
-     * Retrieves a collection of resource entities.
+     * Sets the EntityManager instance.
+     * @param \Doctrine\ORM\EntityManager $entityManager
      */
-    public function index()
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * Retrieves a collection of resource entities.
+     * @return array
+     */
+    public function getCollection()
     {
         $offset = 0;
         $limit = 10;
@@ -80,7 +80,7 @@ class SimpleEntityService
 
         $collection = $query->execute();
 
-        $total = $this->getTotal();
+        $total = $this->getCollectionSize();
 
         $data = array(
             'items' => count($collection) ? $collection : array(),
@@ -92,7 +92,11 @@ class SimpleEntityService
         return $data;
     }
 
-    public function getTotal()
+    /**
+     * Retrieves the size of a collection.
+     * @return int
+     */
+    public function getCollectionSize()
     {
         $query = $this->entityManager->createQuery("SELECT COUNT(r) FROM {$this->resourceClassName} r");
         $result = $query->execute(array(), \Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
@@ -102,10 +106,12 @@ class SimpleEntityService
 
     /**
      * Retrieves a single resource entity.
+     * @param  mixed  $identifier
+     * @return object
      */
-    public function get()
+    public function get($identifier)
     {
-        $entity = $this->entityManager->find($this->resourceClassName, $event->getIdentifier());
+        $entity = $this->entityManager->find($this->resourceClassName, $identifier);
 
         return $entity;
     }
