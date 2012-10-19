@@ -13,7 +13,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Service\Handler;
+namespace BedRest\Resource\Handler;
 
 use BedRest\Rest\Request;
 use BedRest\Rest\Response;

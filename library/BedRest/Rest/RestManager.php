@@ -152,7 +152,7 @@ class RestManager
 
         // get service handler
         // TODO: this should be pulled in from the configuration
-        $handler = new \BedRest\Service\Handler\SimpleDoctrineHandler($this);
+        $handler = new \BedRest\Resource\Handler\SimpleDoctrineHandler($this);
         $handler->setServiceManager($this->serviceManager);
 
         switch ($request->getMethod()) {

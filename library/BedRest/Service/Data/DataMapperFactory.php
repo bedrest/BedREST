@@ -59,6 +59,8 @@ class DataMapperFactory
     /**
      * Returns an instance of the specified data mapper.
      * @param string $className
+     * @throws \BedRest\Service\Data\Exception
+     * @return \BedRest\Service\Data\DataMapper
      */
     public function getDataMapper($className)
     {
