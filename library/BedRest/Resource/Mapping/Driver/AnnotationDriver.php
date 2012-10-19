@@ -28,13 +28,13 @@ class AnnotationDriver implements Driver
 {
     /**
      * Annotation reader instance.
-     * @var Doctrine\Common\Annotations\Reader
+     * @var \Doctrine\Common\Annotations\Reader
      */
     protected $reader;
 
     /**
      * Constructor.
-     * @param Doctrine\Common\Annotations\Reader $reader
+     * @param \Doctrine\Common\Annotations\Reader $reader
      */
     public function __construct(Reader $reader)
     {
@@ -68,10 +68,20 @@ class AnnotationDriver implements Driver
             } else {
                 $resourceMetadata->setName(substr($className, strrpos($className, '\\') + 1));
             }
+        }
 
-            // service class
-            if (!empty($resourceAnnotation->serviceClass)) {
-                $resourceMetadata->setServiceClass($resourceAnnotation->serviceClass);
+        // load handler information
+        if (isset($classAnnotations['BedRest\Resource\Mapping\Annotation\Handler'])) {
+            $handlerAnnotation = $classAnnotations['BedRest\Resource\Mapping\Annotation\Handler'];
+
+            // handler
+            if (!empty($handlerAnnotation->handler)) {
+                $resourceMetadata->setHandler($handlerAnnotation->handler);
+            }
+
+            // service
+            if (!empty($handlerAnnotation->service)) {
+                $resourceMetadata->setService($handlerAnnotation->service);
             }
         }
     }

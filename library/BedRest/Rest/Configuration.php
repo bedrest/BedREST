@@ -56,7 +56,7 @@ class Configuration
      * Default service class name.
      * @var string
      */
-    protected $defaultServiceClassName = 'BedRest\Service\SimpleDoctrineService';
+    protected $defaultService = 'BedRest\Service\SimpleDoctrineService';
 
     /**
      * Default data mapper.
@@ -174,18 +174,18 @@ class Configuration
      * Sets the default service class name.
      * @param string $className
      */
-    public function setDefaultServiceClassName($className)
+    public function setDefaultService($className)
     {
-        $this->defaultServiceClassName = $className;
+        $this->defaultService = $className;
     }
 
     /**
      * Returns the default service class name.
      * @return string
      */
-    public function getDefaultServiceClassName()
+    public function getDefaultService()
     {
-        return $this->defaultServiceClassName;
+        return $this->defaultService;
     }
 
     /**

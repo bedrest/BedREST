@@ -26,13 +26,6 @@ namespace BedRest\Resource\Mapping\Annotation;
 class Resource
 {
     /**
-     * Fully-qualified class name (without preceding slash) of the service used
-     * for interacting with entities of this type.
-     * @var string
-     */
-    public $serviceClass;
-
-    /**
      * Resource name, used for routing, amongst other things.
      * @var string
      */

@@ -37,10 +37,16 @@ class ResourceMetadata
     protected $className;
 
     /**
-     * Name of the service class for this resource.
+     * Class name of the handler for this resource.
      * @var string
      */
-    protected $serviceClass;
+    protected $handler;
+
+    /**
+     * Class name of the service for this resource.
+     * @var string
+     */
+    protected $service;
 
     /**
      * Identifier fields for the resource.
@@ -50,7 +56,7 @@ class ResourceMetadata
 
     /**
      * Class metadata for the entity.
-     * @var Doctrine\ORM\Mapping\ClassMetadata
+     * @var \Doctrine\ORM\Mapping\ClassMetadata
      */
     protected $classMetadata;
 
@@ -82,21 +88,39 @@ class ResourceMetadata
     }
 
     /**
-     * Sets the class name of the service for this resource.
-     * @param string $serviceClass
+     * Sets the handler for this resource.
+     * @param string $handler
      */
-    public function setServiceClass($serviceClass)
+    public function setHandler($handler)
     {
-        $this->serviceClass = $serviceClass;
+        $this->handler = $handler;
     }
 
     /**
-     * Returns the class name of the service for this resource.
+     * Returns the handler for this resource.
      * @return string
      */
-    public function getServiceClass()
+    public function getHandler()
     {
-        return $this->serviceClass;
+        return $this->handler;
+    }
+
+    /**
+     * Sets the service for this resource.
+     * @param string $service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * Returns the service for this resource.
+     * @return string
+     */
+    public function getService()
+    {
+        return $this->service;
     }
 
     /**
@@ -119,7 +143,7 @@ class ResourceMetadata
 
     /**
      * Sets the class metadata object for the entity associated with this resource.
-     * @param Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
      */
     public function setClassMetadata(ClassMetadata $classMetadata)
     {

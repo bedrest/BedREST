@@ -97,11 +97,11 @@ class ServiceManager
         $hash = $this->getServiceHash($resourceMetadata);
 
         if (!$this->hasService($resourceMetadata)) {
-            $this->loadedServices[$resourceMetadata->getServiceClass()][$hash]
+            $this->loadedServices[$resourceMetadata->getService()][$hash]
                 = $this->loadService($resourceMetadata);
         }
 
-        return $this->loadedServices[$resourceMetadata->getServiceClass()][$hash];
+        return $this->loadedServices[$resourceMetadata->getService()][$hash];
     }
 
     /**
@@ -113,7 +113,7 @@ class ServiceManager
     {
         $hash = $this->getServiceHash($resourceMetadata);
 
-        if (isset($this->loadedServices[$resourceMetadata->getServiceClass()][$hash])) {
+        if (isset($this->loadedServices[$resourceMetadata->getService()][$hash])) {
             return true;
         }
 
@@ -128,7 +128,7 @@ class ServiceManager
      */
     protected function loadService(ResourceMetadata $resourceMetadata)
     {
-        $className = $resourceMetadata->getServiceClass();
+        $className = $resourceMetadata->getService();
 
         // check class exists and is denoted as a service
         if (!class_exists($className)) {

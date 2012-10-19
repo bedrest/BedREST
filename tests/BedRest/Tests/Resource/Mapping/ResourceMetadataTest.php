@@ -30,8 +30,8 @@ class ResourceMetadataTest extends BaseTestCase
     public function testServiceClass()
     {
         $rm = new ResourceMetadata('Entity\Test');
-        $rm->setServiceClass('Services\Test');
+        $rm->setService('Services\Test');
 
-        $this->assertEquals('Services\Test', $rm->getServiceClass());
+        $this->assertEquals('Services\Test', $rm->getService());
     }
 }

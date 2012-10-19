@@ -17,7 +17,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
 {
     /**
      * Class under test.
-     * @var BedRest\Resource\Mapping\ResourceMetadataFactory
+     * @var \BedRest\Resource\Mapping\ResourceMetadataFactory
      */
     protected $factory;
 
@@ -40,7 +40,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
 
         $this->assertEquals('employee', $meta->getName());
-        $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getServiceClass());
+        $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getService());
     }
 
     public function testGetMetadataInvalid()
@@ -57,7 +57,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
 
         $this->assertEquals('employee', $meta->getName());
-        $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getServiceClass());
+        $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getService());
     }
 
     public function testGetMetadataByInvalidResourceName()
