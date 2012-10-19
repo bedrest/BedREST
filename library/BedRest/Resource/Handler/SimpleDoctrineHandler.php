@@ -16,6 +16,7 @@
 namespace BedRest\Resource\Handler;
 
 use BedRest\Rest\Request;
+use BedRest\Rest\ResourceNotFoundException;
 use BedRest\Rest\Response;
 use BedRest\Rest\RestManager;
 use BedRest\Service\ServiceManager;
@@ -95,6 +96,11 @@ class SimpleDoctrineHandler implements Handler
 
         $identifier = $request->getRouteComponent('identifier');
         $data = $service->get($identifier);
+
+        // TODO: strengthen this check
+        if ($data === null) {
+            throw new ResourceNotFoundException;
+        }
 
         $response->setBody($dataMapper->reverse($data));
     }
