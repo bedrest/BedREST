@@ -2,8 +2,8 @@
 
 namespace BedRest\TestFixtures\Models\Company;
 
-use Doctrine\ORM\Mapping as ORM,
-    BedRest\Resource\Mapping\Annotation as BedRest;
+use Doctrine\ORM\Mapping as ORM;
+use BedRest\Resource\Mapping\Annotation as BedRest;
 
 /**
  * Employee
@@ -13,7 +13,10 @@ use Doctrine\ORM\Mapping as ORM,
  * @ORM\Entity
  * @ORM\Table(name="employee")
  * @BedRest\Resource(name="employee")
- * @BedRest\Handler(service="BedRest\TestFixtures\Services\Company\Employee")
+ * @BedRest\Handler(
+ *      handler="BedRest\TestFixtures\ResourceHandlers\DefaultHandler",
+ *      service="BedRest\TestFixtures\Services\Company\Employee"
+ * )
  */
 class Employee
 {

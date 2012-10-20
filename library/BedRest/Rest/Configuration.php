@@ -53,6 +53,12 @@ class Configuration
     protected $serviceNamespaces = array();
 
     /**
+     * Default resource handler class name.
+     * @var string
+     */
+    protected $defaultResourceHandler = 'BedRest\Resource\Handler\SimpleDoctrineHandler';
+
+    /**
      * Default service class name.
      * @var string
      */
@@ -168,6 +174,24 @@ class Configuration
     public function getServiceMetadataDriverImpl()
     {
         return $this->serviceMetadataDriverImpl;
+    }
+
+    /**
+     * Sets the default resource handler class name.
+     * @param string $resourceHandler
+     */
+    public function setDefaultResourceHandler($resourceHandler)
+    {
+        $this->defaultResourceHandler = $resourceHandler;
+    }
+
+    /**
+     * Returns the default resource handler class name.
+     * @return string
+     */
+    public function getDefaultResourceHandler()
+    {
+        return $this->defaultResourceHandler;
     }
 
     /**

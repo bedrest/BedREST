@@ -40,6 +40,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
 
         $this->assertEquals('employee', $meta->getName());
+        $this->assertEquals('BedRest\TestFixtures\ResourceHandlers\DefaultHandler', $meta->getHandler());
         $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getService());
     }
 
@@ -57,6 +58,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
 
         $this->assertEquals('employee', $meta->getName());
+        $this->assertEquals('BedRest\TestFixtures\ResourceHandlers\DefaultHandler', $meta->getHandler());
         $this->assertEquals('BedRest\TestFixtures\Services\Company\Employee', $meta->getService());
     }
 
@@ -73,5 +75,17 @@ class ResourceMetadataFactoryTest extends BaseTestCase
 
         $this->assertInternalType('array', $metaCollection);
         $this->assertGreaterThan(0, count($metaCollection));
+    }
+
+    public function testGetMetadataWithDefaultValues()
+    {
+        $config = self::getConfiguration();
+        $meta = $this->factory->getMetadataByResourceName('asset');
+
+        $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
+
+        $this->assertEquals('asset', $meta->getName());
+        $this->assertEquals($config->getDefaultResourceHandler(), $meta->getHandler());
+        $this->assertEquals($config->getDefaultService(), $meta->getService());
     }
 }

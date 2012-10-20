@@ -11,13 +11,13 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * Entity manager used for tests.
-     * @var BedRest\TestFixtures\Mocks\EntityManagerMock
+     * @var \BedRest\TestFixtures\Mocks\EntityManagerMock
      */
     protected static $em;
 
     /**
      * Configuration used for tests.
-     * @var BedRest\Rest\Configuration
+     * @var \BedRest\Rest\Configuration
      */
     protected static $config;
 
@@ -77,7 +77,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Returns a configuration object for use in tests.
-     * @return BedRest\Rest\Configuration
+     * @return \BedRest\Rest\Configuration
      */
     public static function getConfiguration()
     {
