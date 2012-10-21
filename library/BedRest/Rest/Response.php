@@ -156,7 +156,7 @@ class Response
 
     /**
      * Returns a single HTTP header.
-     * @param  string                  $name
+     * @param  string $name
      * @return string
      */
     public function getHeader($name)

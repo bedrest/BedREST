@@ -12,26 +12,28 @@ use BedRest\Resource\Mapping\ResourceMetadata;
  */
 class ResourceMetadataTest extends BaseTestCase
 {
-    public function testEntityClass()
+    public function testClassName()
     {
-        $rm = new ResourceMetadata('Entity\Test');
+        $meta = new ResourceMetadata('Resource\Test');
+        $this->assertEquals('Resource\Test', $meta->getClassName());
 
-        $this->assertEquals('Entity\Test', $rm->getClassName());
+        $meta->setClassName('Resource\TestTwo');
+        $this->assertEquals('Resource\TestTwo', $meta->getClassName());
     }
 
     public function testName()
     {
-        $rm = new ResourceMetadata('Entity\Test');
-        $rm->setName('Test');
+        $meta = new ResourceMetadata('Resource\Test');
 
-        $this->assertEquals('Test', $rm->getName());
+        $meta->setName('Test');
+        $this->assertEquals('Test', $meta->getName());
     }
 
     public function testServiceClass()
     {
-        $rm = new ResourceMetadata('Entity\Test');
-        $rm->setService('Services\Test');
+        $meta = new ResourceMetadata('Resource\Test');
 
-        $this->assertEquals('Services\Test', $rm->getService());
+        $meta->setService('Services\Test');
+        $this->assertEquals('Services\Test', $meta->getService());
     }
 }

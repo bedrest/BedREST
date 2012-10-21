@@ -80,5 +80,16 @@ class ServiceMetadataFactoryTest extends BaseTestCase
         $eventThree = $meta->getListeners('eventThree');
         $this->assertInternalType('array', $eventThree);
         $this->assertCount(0, $eventThree);
+
+        $allListeners = array(
+            'eventOne' => array(
+                'listenerOne'
+            ),
+            'eventTwo' => array(
+                'listenerOne',
+                'listenerTwo'
+            )
+        );
+        $this->assertEquals($allListeners, $meta->getAllListeners());
     }
 }

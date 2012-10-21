@@ -65,12 +65,6 @@ class Configuration
     protected $defaultService = 'BedRest\Service\SimpleDoctrineService';
 
     /**
-     * Default data mapper.
-     * @var string
-     */
-    protected $defaultDataMapper = 'BedRest\Service\Data\SimpleDoctrineMapper';
-
-    /**
      * Allowable content types with associated converters.
      * @var array
      */
@@ -84,14 +78,6 @@ class Configuration
      */
     protected $contentConverters = array(
         'application/json' => 'BedRest\Content\Converter\JsonConverter'
-    );
-
-    /**
-     * Array of data mapper class names against their aliases.
-     * @var array
-     */
-    protected $dataMappers = array(
-        'doctrine' => 'BedRest\Service\Data\SimpleDoctrineMapper'
     );
 
     /**
@@ -155,12 +141,13 @@ class Configuration
 
     /**
      * Normalises a namespace by appending the trailing slash.
-     * @param string $namespace
+     * @param  string $namespace
      * @return string
      */
     protected function normaliseNamespace($namespace)
     {
         $namespace = rtrim($namespace, '\\');
+
         return $namespace . '\\';
     }
 
@@ -237,24 +224,6 @@ class Configuration
     }
 
     /**
-     * Sets the default data mapper.
-     * @param string $dataMapper
-     */
-    public function setDefaultDataMapper($dataMapper)
-    {
-        $this->defaultDataMapper = $dataMapper;
-    }
-
-    /**
-     * Returns the default data mapper.
-     * @return string
-     */
-    public function getDefaultDataMapper()
-    {
-        return $this->defaultDataMapper;
-    }
-
-    /**
      * Sets the mapping between content types and content converters.
      * @param array $contentConverters
      */
@@ -302,47 +271,5 @@ class Configuration
     public function getContentTypes()
     {
         return $this->contentTypes;
-    }
-
-    /**
-     * Sets the list of available data mappers.
-     * @param array $dataMappers
-     */
-    public function setDataMappers(array $dataMappers)
-    {
-        $this->dataMappers = $dataMappers;
-    }
-
-    /**
-     * Returns the list of available data mappers.
-     * @return array
-     */
-    public function getDataMappers()
-    {
-        return $this->dataMappers;
-    }
-
-    /**
-     * Adds a data mapper with the given alias, overwriting any existing entry.
-     * @param string $alias
-     * @param string $dataMapper
-     */
-    public function addDataMapper($alias, $dataMapper)
-    {
-        $this->dataMappers[$alias] = $dataMapper;
-    }
-
-    /**
-     * Returns the class name of the data mapper with the given alias.
-     * @param  string      $alias
-     * @return string|null
-     */
-    public function getDataMapper($alias)
-    {
-        if (!isset($this->dataMappers[$alias])) {
-            return null;
-        }
-
-        return $this->dataMappers[$alias];
     }
 }

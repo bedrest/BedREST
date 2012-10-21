@@ -35,12 +35,6 @@ class ServiceMetadata
     protected $listeners = array();
 
     /**
-     * Class name of the data mapper.
-     * @var string
-     */
-    protected $dataMapper;
-
-    /**
      * Constructor.
      * @param string $className
      */
@@ -111,23 +105,5 @@ class ServiceMetadata
     public function getAllListeners()
     {
         return $this->listeners;
-    }
-
-    /**
-     * Sets the data mapper for this service.
-     * @param string $dataMapper
-     */
-    public function setDataMapper($dataMapper)
-    {
-        $this->dataMapper = $dataMapper;
-    }
-
-    /**
-     * Returns the data mapper class.
-     * @return string
-     */
-    public function getDataMapper()
-    {
-        return $this->dataMapper;
     }
 }
