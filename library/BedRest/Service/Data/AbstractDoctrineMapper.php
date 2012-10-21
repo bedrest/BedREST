@@ -22,11 +22,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Types\Type;
 
 /**
- * AbstractMapper
+ * AbstractDoctrineMapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-abstract class AbstractMapper implements DataMapper
+abstract class AbstractDoctrineMapper implements DataMapper
 {
     /**
      * Configuration.
@@ -50,15 +50,6 @@ abstract class AbstractMapper implements DataMapper
     {
         $this->configuration = $configuration;
         $this->serviceManager = $serviceManager;
-    }
-
-    /**
-     * Returns the configuration.
-     * @return \BedRest\Rest\Configuration
-     */
-    protected function getConfiguration()
-    {
-        return $this->configuration;
     }
 
     /**

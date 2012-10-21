@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class SimpleDoctrineMapper extends AbstractMapper
+class SimpleDoctrineMapper extends AbstractDoctrineMapper
 {
     /**
      * Maps an input array into a resource or set of resources.
