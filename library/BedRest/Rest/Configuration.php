@@ -75,6 +75,14 @@ class Configuration
      * @var array
      */
     protected $contentTypes = array(
+        'application/json'
+    );
+
+    /**
+     * Mapping of content type to converter class name.
+     * @var array
+     */
+    protected $contentConverters = array(
         'application/json' => 'BedRest\Content\Converter\JsonConverter'
     );
 
@@ -223,22 +231,44 @@ class Configuration
     }
 
     /**
-     * Sets the allowable content types for responses, along with their associated converters.
+     * Sets the mapping between content types and content converters.
+     * @param array $contentConverters
+     */
+    public function setContentConverters(array $contentConverters)
+    {
+        $this->contentConverters = $contentConverters;
+    }
+
+    /**
+     * Returns the content type mappings.
+     * @return array
+     */
+    public function getContentConverters()
+    {
+        return $this->contentConverters;
+    }
+
+    /**
+     * Returns the content converter for the supplied content type, if available.
+     * @param  string         $contentType
+     * @return string|boolean
+     */
+    public function getContentConverter($contentType)
+    {
+        if (!isset($this->contentConverters[$contentType])) {
+            return null;
+        }
+
+        return $this->contentConverters[$contentType];
+    }
+
+    /**
+     * Sets the allowed content types for responses.
      * @param array $contentTypes
      */
     public function setContentTypes(array $contentTypes)
     {
         $this->contentTypes = $contentTypes;
-    }
-
-    /**
-     * Adds a single allowable content type for responses with its associated converter.
-     * @param $contentType
-     * @param $converter
-     */
-    public function addContentType($contentType, $converter)
-    {
-        $this->contentTypes[$contentType] = $converter;
     }
 
     /**
@@ -248,20 +278,6 @@ class Configuration
     public function getContentTypes()
     {
         return $this->contentTypes;
-    }
-
-    /**
-     * Returns the content converter for the supplied content type, if available.
-     * @param string $contentType
-     * @return string|boolean
-     */
-    public function getContentConverter($contentType)
-    {
-        if (!isset($this->contentTypes[$contentType])) {
-            return null;
-        }
-
-        return $this->contentTypes[$contentType];
     }
 
     /**
