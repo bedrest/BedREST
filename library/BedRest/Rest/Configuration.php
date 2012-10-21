@@ -71,18 +71,10 @@ class Configuration
     protected $defaultDataMapper = 'BedRest\Service\Data\SimpleDoctrineMapper';
 
     /**
-     * Allowable content types.
+     * Allowable content types with associated converters.
      * @var array
      */
     protected $contentTypes = array(
-        'application/json'
-    );
-
-    /**
-     * Available data converters.
-     * @var array
-     */
-    protected $contentConverters = array(
         'application/json' => 'BedRest\Content\Converter\JsonConverter'
     );
 
@@ -231,7 +223,7 @@ class Configuration
     }
 
     /**
-     * Sets the allowable content types for responses.
+     * Sets the allowable content types for responses, along with their associated converters.
      * @param array $contentTypes
      */
     public function setContentTypes(array $contentTypes)
@@ -240,7 +232,18 @@ class Configuration
     }
 
     /**
+     * Adds a single allowable content type for responses with its associated converter.
+     * @param $contentType
+     * @param $converter
+     */
+    public function addContentType($contentType, $converter)
+    {
+        $this->contentTypes[$contentType] = $converter;
+    }
+
+    /**
      * Returns the allowable content types for responses.
+     * @return array
      */
     public function getContentTypes()
     {
@@ -248,45 +251,17 @@ class Configuration
     }
 
     /**
-     * Sets the list of available data converters.
-     * @param array $contentConverters
-     */
-    public function setContentConverters(array $contentConverters)
-    {
-        $this->contentConverters = $contentConverters;
-    }
-
-    /**
-     * Returns the list of available data converters.
-     * @return array
-     */
-    public function getContentConverters()
-    {
-        return $this->contentConverters;
-    }
-
-    /**
-     * Adds a data mapper with the given content type association, overwriting any existing entry.
+     * Returns the content converter for the supplied content type, if available.
      * @param string $contentType
-     * @param string $contentConverter
-     */
-    public function addContentConverter($contentType, $contentConverter)
-    {
-        $this->contentConverters[$contentType] = $contentConverter;
-    }
-
-    /**
-     * Returns the class name of the data converter for the given content type.
-     * @param  string      $contentType
-     * @return string|null
+     * @return string|boolean
      */
     public function getContentConverter($contentType)
     {
-        if (!isset($this->contentConverters[$contentType])) {
+        if (!isset($this->contentTypes[$contentType])) {
             return null;
         }
 
-        return $this->contentConverters[$contentType];
+        return $this->contentTypes[$contentType];
     }
 
     /**

@@ -79,7 +79,7 @@ class Request
      * Raw payload of the request.
      * @var mixed
      */
-    protected $payload = false;
+    protected $payload = null;
 
     /**
      * Constructor.
@@ -131,12 +131,8 @@ class Request
      * Sets the resource referenced by the request.
      * @param string $resource
      */
-    public function setResource($resource = null)
+    public function setResource($resource)
     {
-        if ($resource === null) {
-            // TODO: detect resource? is this even possible at this stage of the request?
-        }
-
         $this->resource = $resource;
     }
 
@@ -249,6 +245,7 @@ class Request
 
     /**
      * Gets the best match format to return a response in based on a supplied list of formats.
+     * @param  array          $formats
      * @return string|boolean
      */
     public function getAcceptBestMatch(array $formats)
@@ -318,20 +315,21 @@ class Request
      * Set the request payload.
      * @param mixed $payload
      */
-    public function setPayload($payload)
+    public function setRawPayload($payload)
     {
         $this->payload = $payload;
     }
 
     /**
-     * Returns the request payload.
-     * @param  boolean           $autoDecode
+     * Returns the request payload, decoded according to the Content-Type specified in the request.
+     * @TODO allow registration of an arbitrary set of content converters to be used in here.
+     * @param  boolean           $decode
      * @throws \RuntimeException
      * @return mixed
      */
-    public function getPayload($autoDecode = true)
+    public function getPayload($decode = true)
     {
-        if (!$autoDecode || $this->payload == false) {
+        if (!$decode) {
             return $this->payload;
         }
 
@@ -346,7 +344,7 @@ class Request
                 $data = simplexml_load_string($this->payload);
                 break;
             default:
-                throw new \RuntimeException("The content type '{$this->contentType}' cannot be decoded");
+                throw new \RuntimeException("The Content-Type '{$this->contentType}' is unsupported.");
                 break;
         }
 

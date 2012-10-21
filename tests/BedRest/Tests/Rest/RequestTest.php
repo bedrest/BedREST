@@ -1,7 +1,8 @@
 <?php
 
-namespace BedRest\Tests;
+namespace BedRest\Tests\Rest;
 
+use BedRest\Tests\BaseTestCase;
 use BedRest\Rest\Request;
 
 /**
@@ -17,16 +18,35 @@ class RequestTest extends BaseTestCase
      */
     protected $request;
 
+    /**
+     * Stores the default server environment.
+     * @var array
+     */
+    protected $defaultServerEnvironment;
+
+    /**
+     * Server environment variables for auto-detection tests.
+     * @var array
+     */
+    protected $serverEnvironment = array(
+        'REQUEST_METHOD' => 'POST',
+        'HTTP_CONTENT_TYPE' => 'application/json',
+        'HTTP_ACCEPT' => 'application/json',
+        'HTTP_ACCEPT_ENCODING' => 'gzip'
+    );
+
     public function setUp()
     {
-        $_SERVER = array(
-            'REQUEST_METHOD' => 'POST',
-            'HTTP_CONTENT_TYPE' => 'application/json',
-            'HTTP_ACCEPT' => 'application/json',
-            'HTTP_ACCEPT_ENCODING' => 'gzip'
-        );
+        $this->defaultServerEnvironment = $_SERVER;
+        $_SERVER = $this->serverEnvironment;
 
         $this->request = new Request();
+    }
+
+    public function tearDown()
+    {
+        $_SERVER = $this->defaultServerEnvironment;
+        unset($this->defaultServerEnvironment);
     }
 
     public function testMethodDetected()
@@ -202,5 +222,48 @@ class RequestTest extends BaseTestCase
         );
 
         $this->assertEquals($expected, $this->request->getAcceptEncoding());
+    }
+
+    public function testRawPayload()
+    {
+        $rawPayload = '{fieldOne:"valueOne",fieldTwo:"valueTwo}';
+
+        $this->request->setRawPayload($rawPayload);
+
+        $this->assertEquals($rawPayload, $this->request->getPayload(false));
+    }
+
+    public function testPayloadDecoded()
+    {
+        $rawPayload = '{"fieldOne":"valueOne","fieldTwo":"valueTwo"}';
+
+        $decodedPayload = new \stdClass();
+        $decodedPayload->fieldOne = 'valueOne';
+        $decodedPayload->fieldTwo = 'valueTwo';
+
+        $this->request->setRawPayload($rawPayload);
+
+        $this->assertEquals($decodedPayload, $this->request->getPayload());
+    }
+
+    public function testResource()
+    {
+        $this->request->setResource('test-resource');
+
+        $this->assertEquals('test-resource', $this->request->getResource());
+    }
+
+    public function testRouteComponents()
+    {
+        $components = array(
+            'one' => 'valueOne',
+            'two' => 'valueTwo'
+        );
+
+        $this->request->setRouteComponents($components);
+
+        $this->assertEquals($components, $this->request->getRouteComponents());
+        $this->assertEquals('valueOne', $this->request->getRouteComponent('one'));
+        $this->assertEquals('valueTwo', $this->request->getRouteComponent('two'));
     }
 }
