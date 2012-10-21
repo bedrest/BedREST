@@ -118,7 +118,21 @@ class Configuration
      */
     public function setServiceNamespaces(array $serviceNamespaces)
     {
-        $this->serviceNamespaces = $serviceNamespaces;
+        foreach ($serviceNamespaces as $alias => $namespace) {
+            $this->addServiceNamespace($alias, $namespace);
+        }
+    }
+
+    /**
+     * Adds a single service namespace mapping.
+     * @param string $alias
+     * @param string $namespace
+     */
+    public function addServiceNamespace($alias, $namespace)
+    {
+        $namespace = $this->normaliseNamespace($namespace);
+
+        $this->serviceNamespaces[$alias] = $namespace;
     }
 
     /**
@@ -130,14 +144,24 @@ class Configuration
         return $this->serviceNamespaces;
     }
 
-    /**
-     * Adds a single service namespace mapping.
-     * @param string $alias
-     * @param string $namespace
-     */
-    public function addServiceNamespace($alias, $namespace)
+    public function getServiceNamespace($alias)
     {
-        $this->serviceNamespaces[$alias] = $namespace;
+        if (!isset($this->serviceNamespaces[$alias])) {
+            return null;
+        }
+
+        return $this->serviceNamespaces[$alias];
+    }
+
+    /**
+     * Normalises a namespace by appending the trailing slash.
+     * @param string $namespace
+     * @return string
+     */
+    protected function normaliseNamespace($namespace)
+    {
+        $namespace = rtrim($namespace, '\\');
+        return $namespace . '\\';
     }
 
     /**

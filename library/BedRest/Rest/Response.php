@@ -158,12 +158,11 @@ class Response
      * Returns a single HTTP header.
      * @param  string                  $name
      * @return string
-     * @throws \BedRest\Rest\Exception
      */
     public function getHeader($name)
     {
         if (!isset($this->headers[$name])) {
-            throw new \BedRest\Rest\Exception("HTTP header with name '$name' does not exist.");
+            return null;
         }
 
         return $this->headers[$name];

@@ -62,4 +62,46 @@ class ConfigurationTest extends BaseTestCase
 
         $this->assertNull($config->getContentConverter('text/plain'));
     }
+
+    public function testServiceNamespaces()
+    {
+        $config = new Configuration();
+        $namespaces = array(
+            'setOne' => 'Services\SetOne\\',
+            'setTwo' => 'Services\SetTwo'
+        );
+        $normalisedNamespaces = array(
+            'setOne' => 'Services\SetOne\\',
+            'setTwo' => 'Services\SetTwo\\'
+        );
+
+        $config->setServiceNamespaces($namespaces);
+
+        $this->assertEquals($normalisedNamespaces, $config->getServiceNamespaces());
+
+        $this->assertEquals('Services\SetOne\\', $config->getServiceNamespace('setOne'));
+        $this->assertEquals('Services\SetTwo\\', $config->getServiceNamespace('setTwo'));
+
+        $this->assertNull($config->getServiceNamespace('setThree'));
+
+        $config->addServiceNamespace('setThree', 'Services\SetThree\\');
+
+        $this->assertEquals('Services\SetThree\\', $config->getServiceNamespace('setThree'));
+    }
+
+    public function testDefaultResourceHandler()
+    {
+        $config = new Configuration();
+        $config->setDefaultResourceHandler('ResourceHandlers\DefaultHandler');
+
+        $this->assertEquals('ResourceHandlers\DefaultHandler', $config->getDefaultResourceHandler());
+    }
+
+    public function testDefaultService()
+    {
+        $config = new Configuration();
+        $config->setDefaultService('Services\DefaultService');
+
+        $this->assertEquals('Services\DefaultService', $config->getDefaultService());
+    }
 }
