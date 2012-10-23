@@ -35,7 +35,7 @@ class RequestTest extends BaseTestCase
         'HTTP_ACCEPT_ENCODING' => 'gzip'
     );
 
-    public function setUp()
+    protected function setUp()
     {
         $this->defaultServerEnvironment = $_SERVER;
         $_SERVER = $this->serverEnvironment;
@@ -43,7 +43,7 @@ class RequestTest extends BaseTestCase
         $this->request = new Request();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $_SERVER = $this->defaultServerEnvironment;
         unset($this->defaultServerEnvironment);

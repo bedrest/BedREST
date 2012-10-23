@@ -72,6 +72,7 @@ class ResourceMetadataFactory
     /**
      * Returns ResourceMetadata for the specified class.
      * @param  string                                     $className
+     * @throws \BedRest\Resource\Mapping\Exception
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
     public function getMetadataFor($className)
@@ -90,6 +91,7 @@ class ResourceMetadataFactory
     /**
      * Returns ResourceMetadata for the specified resource.
      * @param  string                                     $resourceName
+     * @throws \BedRest\Resource\Mapping\Exception
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
     public function getMetadataByResourceName($resourceName)

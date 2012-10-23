@@ -30,7 +30,7 @@ class JsonConverter implements Converter
 
         // check if an error occurred during decoding
         if ($error = json_last_error()) {
-            switch (json_last_error()) {
+            switch ($error) {
                 case JSON_ERROR_DEPTH:
                     $errorMessage = 'Maximum stack depth exceeded';
                     break;

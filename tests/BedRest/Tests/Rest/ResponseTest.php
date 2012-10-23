@@ -18,7 +18,7 @@ class ResponseTest extends BaseTestCase
      */
     protected $response;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->response = new Response(self::getConfiguration());
     }
