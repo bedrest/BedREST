@@ -3,7 +3,9 @@
 namespace BedRest\Tests\Rest;
 
 use BedRest\Rest\RestManager;
+use BedRest\Resource\Mapping\Driver\AnnotationDriver;
 use BedRest\Tests\BaseTestCase;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * RestManagerTest
@@ -21,6 +23,11 @@ class RestManagerTest extends BaseTestCase
     protected function setUp()
     {
         $config = self::getConfiguration();
+
+        $reader = new AnnotationReader();
+        $driver = new AnnotationDriver($reader);
+
+        $config->setResourceMetadataDriverImpl($driver);
 
         $this->restManager = new RestManager($config);
     }
