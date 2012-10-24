@@ -18,10 +18,8 @@ namespace BedRest\Rest;
 use BedRest\Rest\Configuration;
 use BedRest\Rest\Request;
 use BedRest\Rest\Response;
-use BedRest\Service\Event;
 use BedRest\Service\ServiceManager;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
-use BedRest\Events\EventManager;
 
 /**
  * RestManager
@@ -39,18 +37,6 @@ class RestManager
     protected $configuration;
 
     /**
-     * Service manager instance.
-     * @var \BedRest\Service\ServiceManager
-     */
-    protected $serviceManager;
-
-    /**
-     * Event manager instance.
-     * @var \BedRest\Events\EventManager
-     */
-    protected $eventManager;
-
-    /**
      * The resource metadata factory.
      * @var \BedRest\Resource\Mapping\ResourceMetadataFactory
      */
@@ -58,18 +44,14 @@ class RestManager
 
     /**
      * Constructor.
-     * @param \BedRest\Rest\Configuration     $configuration
-     * @param \BedRest\Events\EventManager    $eventManager
-     * @param \BedRest\Service\ServiceManager $serviceManager
+     * @param  \BedRest\Rest\Configuration     $configuration
+     * @param  \BedRest\Service\ServiceManager $serviceManager
+     * @return \BedRest\Rest\RestManager
      */
     public function __construct(
-        Configuration $configuration,
-        EventManager $eventManager,
-        ServiceManager $serviceManager
+        Configuration $configuration
     ) {
         $this->configuration = $configuration;
-        $this->eventManager = $eventManager;
-        $this->serviceManager = $serviceManager;
 
         $this->resourceMetadataFactory = new ResourceMetadataFactory($configuration);
     }
@@ -81,24 +63,6 @@ class RestManager
     public function getConfiguration()
     {
         return $this->configuration;
-    }
-
-    /**
-     * Returns the service manager instance.
-     * @return \BedRest\Service\ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
-    }
-
-    /**
-     * Returns the event manager.
-     * @return \BedRest\Events\EventManager
-     */
-    public function getEventManager()
-    {
-        return $this->eventManager;
     }
 
     /**
@@ -153,8 +117,8 @@ class RestManager
         // get service handler
         // TODO: this should be pulled in from the configuration
         $handler = new \BedRest\Resource\Handler\SimpleDoctrineHandler($this);
-        $handler->setServiceManager($this->serviceManager);
 
+        // TODO: implement other methods
         switch ($request->getMethod()) {
             case Request::METHOD_GET:
                 $handler->handleGetResource($request, $response);
