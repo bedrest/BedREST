@@ -30,7 +30,7 @@ class RequestTest extends BaseTestCase
      */
     protected $serverEnvironment = array(
         'REQUEST_METHOD' => 'POST',
-        'HTTP_CONTENT_TYPE' => 'application/json',
+        'CONTENT_TYPE' => 'application/json',
         'HTTP_ACCEPT' => 'application/json',
         'HTTP_ACCEPT_ENCODING' => 'gzip'
     );
@@ -63,7 +63,7 @@ class RequestTest extends BaseTestCase
 
     public function testContentTypeDetected()
     {
-        $this->assertEquals($_SERVER['HTTP_CONTENT_TYPE'], $this->request->getContentType());
+        $this->assertEquals($_SERVER['CONTENT_TYPE'], $this->request->getContentType());
     }
 
     public function testSetContentType()

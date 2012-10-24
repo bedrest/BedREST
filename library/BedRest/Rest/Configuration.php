@@ -130,6 +130,11 @@ class Configuration
         return $this->serviceNamespaces;
     }
 
+    /**
+     * Returns the service namespace associated with an alias, if defined.
+     * @param $alias
+     * @return string|null
+     */
     public function getServiceNamespace($alias)
     {
         if (!isset($this->serviceNamespaces[$alias])) {

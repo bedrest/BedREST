@@ -185,7 +185,7 @@ class Request
     public function setContentType($contentType = null)
     {
         if ($contentType === null) {
-            $contentType = isset($_SERVER['HTTP_CONTENT_TYPE']) ? $_SERVER['HTTP_CONTENT_TYPE'] : null;
+            $contentType = isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : null;
         }
 
         $this->contentType = $contentType;

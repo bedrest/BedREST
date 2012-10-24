@@ -29,7 +29,7 @@ class Response
     protected $configuration;
 
     /**
-     * Body as set by the service layer.
+     * Body content before Content-Type encoding.
      * @var mixed
      */
     protected $body;
@@ -41,7 +41,7 @@ class Response
     protected $bodyProcessed = false;
 
     /**
-     * Raw body content.
+     * Raw body content after Content-Type encoding
      * @var string
      */
     protected $rawBody;
