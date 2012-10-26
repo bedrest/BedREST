@@ -48,15 +48,8 @@ class SimpleDoctrineHandler implements Handler
     public function __construct(RestManager $restManager)
     {
         $this->restManager = $restManager;
-    }
 
-    /**
-     * Sets the ServiceManager instance to be used by the handler.
-     * @param \BedRest\Service\ServiceManager $serviceManager
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
+        $this->serviceManager = new ServiceManager($restManager->getConfiguration());
     }
 
     /**
@@ -79,9 +72,11 @@ class SimpleDoctrineHandler implements Handler
     }
 
     /**
-     * Handles GET requests on single entities.
-     * @param \BedRest\Rest\Request  $request
-     * @param \BedRest\Rest\Response $response
+     * Handles GET requests on single resources.
+     * @param  \BedRest\Rest\Request                   $request
+     * @param  \BedRest\Rest\Response                  $response
+     * @throws \BedRest\Rest\ResourceNotFoundException
+     * @return void
      */
     public function handleGetResource(Request $request, Response $response)
     {
@@ -106,7 +101,7 @@ class SimpleDoctrineHandler implements Handler
     }
 
     /**
-     * Handles GET requests on collections of entities.
+     * Handles GET requests on collections of resources.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
@@ -124,5 +119,54 @@ class SimpleDoctrineHandler implements Handler
         $data = $service->getCollection();
 
         $response->setBody($dataMapper->reverse($data));
+    }
+
+    /**
+     * Handles POST requests on single resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePostResource(Request $request, Response $response)
+    {
+        // create an empty instance of the resource entity
+        $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
+
+        $className = $resourceMetadata->getClassName();
+        $resource = new $className;
+
+        // populate the resource with data from the request using a DataMapper
+        $requestData = (array) $request->getPayload();
+
+        $dataMapper = $this->getDataMapper();
+        $dataMapper->map($resource, $requestData);
+
+        // perform the actual service operation
+        $service = $this->serviceManager->getService($resourceMetadata);
+        $service->setEntityManager($this->restManager->getConfiguration()->getEntityManager());
+
+        $service->create($resource);
+
+        // set the response with the content of the new resource entity
+        $response->setBody($dataMapper->reverse($resource));
+    }
+
+    /**
+     * Handles PUT requests on single resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePutResource(Request $request, Response $response)
+    {
+        throw new \RuntimeException('PUT resource has not been implemented yet.');
+    }
+
+    /**
+     * Handles DELETE requests on single resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handleDeleteResource(Request $request, Response $response)
+    {
+        throw new \RuntimeException('DELETE resource has not been implemented yet.');
     }
 }

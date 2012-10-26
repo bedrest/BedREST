@@ -38,4 +38,25 @@ interface Handler
      * @param \BedRest\Rest\Response $response
      */
     public function handleGetCollection(Request $request, Response $response);
+
+    /**
+     * Handles POST requests on single entities.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePostResource(Request $request, Response $response);
+
+    /**
+     * Handles PUT requests on single resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePutResource(Request $request, Response $response);
+
+    /**
+     * Handles DELETE requests on single resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handleDeleteResource(Request $request, Response $response);
 }

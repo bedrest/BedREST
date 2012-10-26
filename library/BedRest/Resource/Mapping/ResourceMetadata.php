@@ -31,7 +31,7 @@ class ResourceMetadata
     protected $name;
 
     /**
-     * Name of the class for this resource.
+     * Class name of this resource.
      * @var string
      */
     protected $className;
@@ -88,7 +88,7 @@ class ResourceMetadata
     }
 
     /**
-     * Sets the handler for this resource.
+     * Sets the class name of the handler for this resource.
      * @param string $handler
      */
     public function setHandler($handler)
@@ -97,7 +97,7 @@ class ResourceMetadata
     }
 
     /**
-     * Returns the handler for this resource.
+     * Returns the class name of the handler for this resource.
      * @return string
      */
     public function getHandler()

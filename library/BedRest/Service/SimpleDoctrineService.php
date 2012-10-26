@@ -115,4 +115,17 @@ class SimpleDoctrineService
 
         return $entity;
     }
+
+    /**
+     * Creates a single resource entity.
+     * @param  mixed $entity
+     * @return mixed
+     */
+    public function create($entity)
+    {
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        return $entity;
+    }
 }

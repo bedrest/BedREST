@@ -15,7 +15,6 @@
 
 namespace BedRest\Service\Data;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -139,15 +138,20 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
                 $value->__load();
             }
 
-            if ($value instanceof Collection) {
+            if ($mapping['type'] & ClassMetadata::TO_ONE) {
+                // single entity
+                $data[$association] = $this->reverseEntity($resource->$association);
+            } else {
                 // collections must be looped through, assume each item within is an entity
                 $data[$association] = array();
+
+                if ($value === null) {
+                    $value = array();
+                }
 
                 foreach ($value as $item) {
                     $data[$association][] = $this->reverseEntity($item);
                 }
-            } else {
-                $data[$association] = $this->reverseEntity($resource->$association);
             }
         }
 

@@ -126,7 +126,12 @@ class RestManager
             case Request::METHOD_GET_COLLECTION:
                 $handler->handleGetCollection($request, $response);
                 break;
-            // TODO: implement other methods
+            case Request::METHOD_POST:
+                $handler->handlePostResource($request, $response);
+                break;
+            case Request::METHOD_PUT:
+                $handler->handlePutResource($request, $response);
+                break;
             default:
                 throw Exception::methodNotAllowed();
                 break;

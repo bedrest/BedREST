@@ -91,6 +91,14 @@ class Response
     {
         if (!$this->bodyProcessed) {
             $converterClass = $this->configuration->getContentConverter($this->getContentType());
+
+            // TODO: check if content type is supported
+            if (empty($converterClass)) {
+                throw new \RuntimeException('Invalid content type specified in Accept.');
+            } elseif (!class_exists($converterClass)) {
+                throw new \RuntimeException('Content converter class could not be found.');
+            }
+
             $converter = new $converterClass;
 
             $this->rawBody = $converter->encode($this->body);
