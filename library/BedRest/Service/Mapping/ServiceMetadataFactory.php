@@ -15,7 +15,7 @@
 
 namespace BedRest\Service\Mapping;
 
-use BedRest\Rest\Configuration;
+use BedRest\Service\Configuration;
 use BedRest\Service\Mapping\Exception;
 
 /**
@@ -27,7 +27,7 @@ class ServiceMetadataFactory
 {
     /**
      * Configuration object.
-     * @var \BedRest\Rest\Configuration
+     * @var \BedRest\Service\Configuration
      */
     protected $configuration;
 
@@ -46,7 +46,7 @@ class ServiceMetadataFactory
     /**
      * Constructor.
      * Initialises the factory with the set configuration.
-     * @param \BedRest\Rest\Configuration $configuration
+     * @param \BedRest\Service\Configuration $configuration
      */
     public function __construct(Configuration $configuration)
     {

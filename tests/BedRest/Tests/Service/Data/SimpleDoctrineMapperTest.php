@@ -16,6 +16,16 @@ use BedRest\Tests\BaseTestCase;
  */
 class SimpleDoctrineMapperTest extends BaseTestCase
 {
+    /**
+     * DataMapper under test.
+     * @var \BedRest\Service\Data\SimpleDoctrineMapper
+     */
+    protected $mapper;
+
+    /**
+     * A set of test data cast in the intended data types.
+     * @return array
+     */
     protected function getTestData()
     {
         return array(
@@ -28,6 +38,11 @@ class SimpleDoctrineMapperTest extends BaseTestCase
         );
     }
 
+    /**
+     * A set of test data, corresponding to that of getTestData(), but with each field
+     * cast to a different type (if possible).
+     * @return array
+     */
     protected function getUncastTestData()
     {
         $dob = new \DateTime('1st May 2012 00:00:00 +00:00');
@@ -48,8 +63,8 @@ class SimpleDoctrineMapperTest extends BaseTestCase
     protected function setUp()
     {
         $this->mapper = new SimpleDoctrineMapper(
-            self::getConfiguration(),
-            new ServiceManager(self::getConfiguration())
+            self::getServiceConfiguration(),
+            new ServiceManager(self::getServiceConfiguration())
         );
     }
 

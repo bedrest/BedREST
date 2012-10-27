@@ -16,7 +16,7 @@
 namespace BedRest\Service;
 
 use BedRest\Resource\Mapping\ResourceMetadata;
-use BedRest\Rest\Configuration;
+use BedRest\Service\Configuration;
 use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 
@@ -32,7 +32,7 @@ class ServiceManager
 {
     /**
      * BedRest configuration.
-     * @var \BedRest\Rest\Configuration
+     * @var \BedRest\Service\Configuration
      */
     protected $configuration;
 
@@ -50,7 +50,7 @@ class ServiceManager
 
     /**
      * Constructor.
-     * @param \BedRest\Rest\Configuration $configuration
+     * @param \BedRest\Service\Configuration $configuration
      */
     public function __construct(Configuration $configuration)
     {
@@ -61,7 +61,7 @@ class ServiceManager
 
     /**
      * Returns the configuration object.
-     * @return \BedRest\Rest\Configuration
+     * @return \BedRest\Service\Configuration
      */
     public function getConfiguration()
     {

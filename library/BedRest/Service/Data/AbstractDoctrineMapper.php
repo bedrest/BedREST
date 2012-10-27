@@ -16,7 +16,7 @@
 
 namespace BedRest\Service\Data;
 
-use BedRest\Rest\Configuration;
+use BedRest\Service\Configuration;
 use BedRest\Service\ServiceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Types\Type;
@@ -30,7 +30,7 @@ abstract class AbstractDoctrineMapper implements DataMapper
 {
     /**
      * Configuration.
-     * @var \BedRest\Rest\Configuration
+     * @var \BedRest\Service\Configuration
      */
     protected $configuration;
 
@@ -43,7 +43,7 @@ abstract class AbstractDoctrineMapper implements DataMapper
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
-     * @param \BedRest\Rest\Configuration     $configuration
+     * @param \BedRest\Service\Configuration     $configuration
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
     public function __construct(Configuration $configuration = null, ServiceManager $serviceManager = null)

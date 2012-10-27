@@ -16,7 +16,6 @@
 namespace BedRest\Rest;
 
 use BedRest\Resource\Mapping\Driver\Driver as ResourceDriver;
-use BedRest\Service\Mapping\Driver\Driver as ServiceDriver;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -39,18 +38,6 @@ class Configuration
      * @var \BedRest\Resource\Mapping\Driver\Driver
      */
     protected $resourceMetadataDriverImpl;
-
-    /**
-     * Service metadata driver.
-     * @var \BedRest\Service\Mapping\Driver\Driver
-     */
-    protected $serviceMetadataDriverImpl;
-
-    /**
-     * Array of service namespaces, analogous to Doctrine\ORM\Configuration's entity namespace storage.
-     * @var array
-     */
-    protected $serviceNamespaces = array();
 
     /**
      * Default resource handler class name.
@@ -99,64 +86,6 @@ class Configuration
     }
 
     /**
-     * Sets all service namespace mappings.
-     * @param array $serviceNamespaces
-     */
-    public function setServiceNamespaces(array $serviceNamespaces)
-    {
-        foreach ($serviceNamespaces as $alias => $namespace) {
-            $this->addServiceNamespace($alias, $namespace);
-        }
-    }
-
-    /**
-     * Adds a single service namespace mapping.
-     * @param string $alias
-     * @param string $namespace
-     */
-    public function addServiceNamespace($alias, $namespace)
-    {
-        $namespace = $this->normaliseNamespace($namespace);
-
-        $this->serviceNamespaces[$alias] = $namespace;
-    }
-
-    /**
-     * Returns all registered service namespace mappings.
-     * @return array
-     */
-    public function getServiceNamespaces()
-    {
-        return $this->serviceNamespaces;
-    }
-
-    /**
-     * Returns the service namespace associated with an alias, if defined.
-     * @param $alias
-     * @return string|null
-     */
-    public function getServiceNamespace($alias)
-    {
-        if (!isset($this->serviceNamespaces[$alias])) {
-            return null;
-        }
-
-        return $this->serviceNamespaces[$alias];
-    }
-
-    /**
-     * Normalises a namespace by appending the trailing slash.
-     * @param  string $namespace
-     * @return string
-     */
-    protected function normaliseNamespace($namespace)
-    {
-        $namespace = rtrim($namespace, '\\');
-
-        return $namespace . '\\';
-    }
-
-    /**
      * Sets the resource metadata driver implementation.
      * @param \BedRest\Resource\Mapping\Driver\Driver $driver
      */
@@ -172,24 +101,6 @@ class Configuration
     public function getResourceMetadataDriverImpl()
     {
         return $this->resourceMetadataDriverImpl;
-    }
-
-    /**
-     * Sets the service metadata driver implementation.
-     * @param \BedRest\Service\Mapping\Driver\Driver $driver
-     */
-    public function setServiceMetadataDriverImpl(ServiceDriver $driver)
-    {
-        $this->serviceMetadataDriverImpl = $driver;
-    }
-
-    /**
-     * Returns the service metadata driver implementation.
-     * @return \BedRest\Service\Mapping\Driver\Driver
-     */
-    public function getServiceMetadataDriverImpl()
-    {
-        return $this->serviceMetadataDriverImpl;
     }
 
     /**

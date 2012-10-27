@@ -2,6 +2,9 @@
 
 namespace BedRest\Tests;
 
+use \BedRest\Rest\Configuration as RestConfiguration;
+use \BedRest\Service\Configuration as ServiceConfiguration;
+
 /**
  * BedRest\Tests\BaseTestCase
  *
@@ -20,6 +23,12 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @var \BedRest\Rest\Configuration
      */
     protected static $config;
+
+    /**
+     * Service configuration used for tests.
+     * @var \BedRest\Service\Configuration
+     */
+    protected static $serviceConfig;
 
     /**
      * Retrieves an entity manager to be used by tests requiring one.
@@ -82,12 +91,28 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     public static function getConfiguration()
     {
         if (!self::$config) {
-            $config = new \BedRest\Rest\Configuration();
+            $config = new RestConfiguration();
             $config->setEntityManager(self::getEntityManager());
 
             self::$config = $config;
         }
 
         return self::$config;
+    }
+
+    /**
+     * Returns a service configuration object for use in tests.
+     * @return \BedRest\Service\Configuration
+     */
+    public static function getServiceConfiguration()
+    {
+        if (!self::$serviceConfig) {
+            $config = new ServiceConfiguration();
+            $config->setEntityManager(self::getEntityManager());
+
+            self::$serviceConfig = $config;
+        }
+
+        return self::$serviceConfig;
     }
 }

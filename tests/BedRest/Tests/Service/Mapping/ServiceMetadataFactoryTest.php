@@ -2,6 +2,7 @@
 
 namespace BedRest\Tests\Service\Mapping;
 
+use BedRest\Service\Configuration;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver;
 use BedRest\Tests\BaseTestCase;
@@ -28,7 +29,7 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
     protected function setUp()
     {
-        $configuration = self::getConfiguration();
+        $configuration = self::getServiceConfiguration();
 
         $reader = new AnnotationReader();
         $this->driver = new AnnotationDriver($reader);
