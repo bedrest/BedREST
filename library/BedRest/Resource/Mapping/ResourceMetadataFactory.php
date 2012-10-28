@@ -17,7 +17,6 @@ namespace BedRest\Resource\Mapping;
 
 use BedRest\Rest\Configuration;
 use BedRest\Resource\Mapping\Exception;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * ResourceMetadataFactory
@@ -37,12 +36,6 @@ class ResourceMetadataFactory
      * @var \BedRest\Resource\Mapping\Driver\Driver
      */
     protected $driver;
-
-    /**
-     * ClassMetadataFactory instance
-     * @var \Doctrine\ORM\Mapping\ClassMetadataFactory
-     */
-    protected $classMetadataFactory;
 
     /**
      * Stores all loaded ResourceMetadata instances.
@@ -66,7 +59,6 @@ class ResourceMetadataFactory
         $this->configuration = $configuration;
 
         $this->driver = $configuration->getResourceMetadataDriverImpl();
-        $this->classMetadataFactory = $configuration->getEntityManager()->getMetadataFactory();
     }
 
     /**
@@ -112,14 +104,12 @@ class ResourceMetadataFactory
      */
     public function getAllMetadata()
     {
-        $classMetadataCollection = $this->classMetadataFactory->getAllMetadata();
+        $resourceClasses = $this->driver->getAllClassNames();
 
-        foreach ($classMetadataCollection as $classMetadata) {
-            $className = $classMetadata->getName();
-
-            if (!isset($this->loadedMetadata[$className]) &&
-                $this->isResource($className)) {
-                $this->loadMetadata($classMetadata);
+        foreach ($resourceClasses as $class) {
+            if (!isset($this->loadedMetadata[$class]) &&
+                $this->isResource($class)) {
+                $this->loadMetadata($class);
             }
         }
 
@@ -127,31 +117,21 @@ class ResourceMetadataFactory
     }
 
     /**
-     * Loads the ResourceMetadata for the supplied class. Class can be provided either as a class name or as a
-     * ClassMetadata object.
-     * @param mixed $class
+     * Loads the ResourceMetadata for the specified class.
+     * @param string $className
      */
-    protected function loadMetadata($class)
+    protected function loadMetadata($className)
     {
-        // load ClassMetadata
-        if ($class instanceof ClassMetadata) {
-            $classMetadata = $class;
-            $class = $classMetadata->getName();
-        } else {
-            $classMetadata = $this->classMetadataFactory->getMetadataFor($class);
-        }
-
-        $resource = new ResourceMetadata($class);
-        $resource->setClassMetadata($classMetadata);
+        $resource = new ResourceMetadata($className);
         $resource->setHandler($this->configuration->getDefaultResourceHandler());
         $resource->setService($this->configuration->getDefaultService());
 
         // use the driver to load metadata
-        $this->driver->loadMetadataForClass($class, $resource);
+        $this->driver->loadMetadataForClass($className, $resource);
 
         // store the metadata
-        $this->loadedMetadata[$class] = $resource;
-        $this->resourceClassMap[$resource->getName()] = $class;
+        $this->loadedMetadata[$className] = $resource;
+        $this->resourceClassMap[$resource->getName()] = $className;
     }
 
     /**

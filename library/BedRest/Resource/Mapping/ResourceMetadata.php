@@ -15,8 +15,6 @@
 
 namespace BedRest\Resource\Mapping;
 
-use Doctrine\ORM\Mapping\ClassMetadata;
-
 /**
  * ResourceMetadata
  *
@@ -55,14 +53,9 @@ class ResourceMetadata
     protected $identifierFields = array();
 
     /**
-     * Class metadata for the entity.
-     * @var \Doctrine\ORM\Mapping\ClassMetadata
-     */
-    protected $classMetadata;
-
-    /**
      * Constructor.
-     * @param string $className
+     * @param $className
+     * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
     public function __construct($className)
     {
@@ -139,23 +132,5 @@ class ResourceMetadata
     public function getClassName()
     {
         return $this->className;
-    }
-
-    /**
-     * Sets the class metadata object for the entity associated with this resource.
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
-     */
-    public function setClassMetadata(ClassMetadata $classMetadata)
-    {
-        $this->classMetadata = $classMetadata;
-    }
-
-    /**
-     * Returns the class metadata for the entity associated with this resource.
-     * @return \Doctrine\ORM\Mapping\ClassMetadata
-     */
-    public function getClassMetadata()
-    {
-        return $this->classMetadata;
     }
 }

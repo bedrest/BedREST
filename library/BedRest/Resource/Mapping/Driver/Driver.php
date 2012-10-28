@@ -32,6 +32,12 @@ interface Driver
     public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata);
 
     /**
+     * Returns the names of all classes known to this driver.
+     * @return array
+     */
+    public function getAllClassNames();
+
+    /**
      * Whether the specified class is a mapped resource.
      * @param  string  $className
      * @return boolean

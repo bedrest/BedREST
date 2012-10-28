@@ -26,6 +26,12 @@ class RestManagerTest extends BaseTestCase
 
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
+        $driver->addPaths(
+            array(
+                TESTS_BASEDIR . '/BedRest/TestFixtures/Models',
+                TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company'
+            )
+        );
 
         $config->setResourceMetadataDriverImpl($driver);
 

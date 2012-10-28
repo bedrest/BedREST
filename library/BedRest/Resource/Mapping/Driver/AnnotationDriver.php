@@ -15,6 +15,7 @@
 
 namespace BedRest\Resource\Mapping\Driver;
 
+use BedRest\Resource\Mapping\Exception;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\Driver\Driver;
 use Doctrine\Common\Annotations\Reader;
@@ -33,6 +34,12 @@ class AnnotationDriver implements Driver
     protected $reader;
 
     /**
+     * Array of paths to search for services.
+     * @var array
+     */
+    protected $paths = array();
+
+    /**
      * Constructor.
      * @param \Doctrine\Common\Annotations\Reader $reader
      */
@@ -42,12 +49,39 @@ class AnnotationDriver implements Driver
     }
 
     /**
+     * Adds a path to search for services.
+     * @param string $path
+     */
+    public function addPath($path)
+    {
+        $this->paths[] = $path;
+    }
+
+    /**
+     * Adds a set of paths to search for services.
+     * @param array $paths
+     */
+    public function addPaths($paths)
+    {
+        $this->paths = array_merge($this->paths, $paths);
+    }
+
+    /**
+     * Retrieves the set of paths to search for services.
+     * @return array
+     */
+    public function getPaths()
+    {
+        return $this->paths;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function loadMetadataForClass($className, ResourceMetadata $resourceMetadata)
     {
         // get all class annotations
-        $reflClass = $resourceMetadata->getClassMetadata()->getReflectionClass();
+        $reflClass = new \ReflectionClass($className);
 
         $classAnnotations = $this->reader->getClassAnnotations($reflClass);
 
@@ -84,6 +118,57 @@ class AnnotationDriver implements Driver
                 $resourceMetadata->setService($handlerAnnotation->service);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * This has been lifted pretty much wholesale from Doctrine ORM, so credit where credit is due.
+     * @see Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver
+     */
+    public function getAllClassNames()
+    {
+        if (!$this->paths) {
+            throw Exception::pathsRequired();
+        }
+
+        $classes = array();
+        $includedFiles = array();
+
+        foreach ($this->paths as $path) {
+            if (!is_dir($path)) {
+                throw Exception::invalidPath($path);
+            }
+
+            $iterator = new \RegexIterator(
+                new \RecursiveIteratorIterator(
+                    new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
+                    \RecursiveIteratorIterator::LEAVES_ONLY
+                ),
+                '/^.+\.php$/i',
+                \RecursiveRegexIterator::GET_MATCH
+            );
+
+            foreach ($iterator as $file) {
+                $sourceFile = realpath($file[0]);
+
+                require_once $sourceFile;
+
+                $includedFiles[] = $sourceFile;
+            }
+        }
+
+        $declared = get_declared_classes();
+
+        foreach ($declared as $className) {
+            $rc = new \ReflectionClass($className);
+            $sourceFile = $rc->getFileName();
+            if (in_array($sourceFile, $includedFiles) && $this->isResource($className)) {
+                $classes[] = $className;
+            }
+        }
+
+        return $classes;
     }
 
     /**
