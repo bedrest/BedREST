@@ -43,7 +43,7 @@ abstract class AbstractDoctrineMapper implements DataMapper
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
-     * @param \BedRest\Service\Configuration     $configuration
+     * @param \BedRest\Service\Configuration  $configuration
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
     public function __construct(Configuration $configuration = null, ServiceManager $serviceManager = null)

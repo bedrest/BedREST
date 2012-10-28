@@ -16,7 +16,6 @@
 namespace BedRest\Rest;
 
 use BedRest\Resource\Mapping\Driver\Driver as ResourceDriver;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Configuration
@@ -27,12 +26,6 @@ use Doctrine\ORM\EntityManager;
  */
 class Configuration
 {
-    /**
-     * Doctrine entity manager.
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
-
     /**
      * Resource metadata driver.
      * @var \BedRest\Resource\Mapping\Driver\Driver
@@ -66,24 +59,6 @@ class Configuration
     protected $contentConverters = array(
         'application/json' => 'BedRest\Content\Converter\JsonConverter'
     );
-
-    /**
-     * Sets the entity manager.
-     * @param \Doctrine\ORM\EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * Returns the entity manager.
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
 
     /**
      * Sets the resource metadata driver implementation.

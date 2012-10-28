@@ -47,7 +47,7 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
 
     /**
      * Reverse maps data into an array.
-     * @param  mixed  $data Data to reverse map.
+     * @param  mixed $data Data to reverse map.
      * @return array
      */
     public function reverse($data)

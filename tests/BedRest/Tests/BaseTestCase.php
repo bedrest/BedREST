@@ -92,7 +92,6 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         if (!self::$config) {
             $config = new RestConfiguration();
-            $config->setEntityManager(self::getEntityManager());
 
             self::$config = $config;
         }
