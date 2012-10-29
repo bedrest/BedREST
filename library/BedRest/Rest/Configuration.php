@@ -61,6 +61,12 @@ class Configuration
     );
 
     /**
+     * Array of paths where resources should be auto-discovered.
+     * @var array
+     */
+    protected $resourcePaths = array();
+
+    /**
      * Sets the resource metadata driver implementation.
      * @param \BedRest\Resource\Mapping\Driver\Driver $driver
      */
@@ -162,5 +168,23 @@ class Configuration
     public function getContentTypes()
     {
         return $this->contentTypes;
+    }
+
+    /**
+     * Sets a group of paths in which resources can be auto-discovered.
+     * @param array $paths
+     */
+    public function setResourcePaths(array $paths)
+    {
+        $this->resourcePaths = $paths;
+    }
+
+    /**
+     * Returns the paths in which resources can be auto-discovered.
+     * @return array
+     */
+    public function getResourcePaths()
+    {
+        return $this->resourcePaths;
     }
 }

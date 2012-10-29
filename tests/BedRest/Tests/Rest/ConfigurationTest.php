@@ -60,4 +60,19 @@ class ConfigurationTest extends BaseTestCase
 
         $this->assertEquals('Services\DefaultService', $config->getDefaultService());
     }
+
+    public function testResourcePaths()
+    {
+        $config = new Configuration();
+
+        $this->assertEmpty($config->getResourcePaths());
+
+        $paths = array(
+            'test1',
+            'test2'
+        );
+        $config->setResourcePaths($paths);
+
+        $this->assertEquals($paths, $config->getResourcePaths());
+    }
 }
