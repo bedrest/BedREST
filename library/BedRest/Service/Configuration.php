@@ -16,7 +16,7 @@
 namespace BedRest\Service;
 
 use BedRest\Service\Mapping\Driver\Driver as ServiceDriver;
-use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Configuration
@@ -25,12 +25,6 @@ use Doctrine\ORM\EntityManager;
  */
 class Configuration
 {
-    /**
-     * Doctrine entity manager.
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
-
     /**
      * Array of service namespaces.
      * @var array
@@ -44,22 +38,10 @@ class Configuration
     protected $serviceMetadataDriverImpl;
 
     /**
-     * Sets the entity manager.
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * Service container.
+     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
      */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * Returns the entity manager.
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->entityManager;
-    }
+    protected $serviceContainer;
 
     /**
      * Sets all service namespace mappings.
@@ -135,5 +117,23 @@ class Configuration
     public function getServiceMetadataDriverImpl()
     {
         return $this->serviceMetadataDriverImpl;
+    }
+
+    /**
+     * Sets the service container.
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     */
+    public function setServiceContainer(ContainerBuilder $container)
+    {
+        $this->serviceContainer = $container;
+    }
+
+    /**
+     * Returns the service container.
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    public function getServiceContainer()
+    {
+        return $this->serviceContainer;
     }
 }

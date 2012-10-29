@@ -18,6 +18,7 @@ namespace BedRest\Rest;
 use BedRest\Rest\Configuration;
 use BedRest\Rest\Request;
 use BedRest\Rest\Response;
+use BedRest\Service\Configuration as ServiceConfiguration;
 use BedRest\Service\ServiceManager;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 
@@ -35,6 +36,12 @@ class RestManager
      * @var \BedRest\Rest\Configuration
      */
     protected $configuration;
+
+    /**
+     * Service configuration.
+     * @var \BedRest\Service\Configuration
+     */
+    protected $serviceConfiguration;
 
     /**
      * The resource metadata factory.
@@ -63,6 +70,24 @@ class RestManager
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    /**
+     * Sets the Service\Configuration object.
+     * @param \BedRest\Service\Configuration $serviceConfiguration
+     */
+    public function setServiceConfiguration(ServiceConfiguration $serviceConfiguration)
+    {
+        $this->serviceConfiguration = $serviceConfiguration;
+    }
+
+    /**
+     * Returns the Service\Configuration object.
+     * @return \BedRest\Service\Configuration
+     */
+    public function getServiceConfiguration()
+    {
+        return $this->serviceConfiguration;
     }
 
     /**

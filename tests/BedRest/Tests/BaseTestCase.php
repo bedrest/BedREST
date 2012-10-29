@@ -107,7 +107,6 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         if (!self::$serviceConfig) {
             $config = new ServiceConfiguration();
-            $config->setEntityManager(self::getEntityManager());
 
             self::$serviceConfig = $config;
         }

@@ -66,6 +66,8 @@ class SimpleDoctrineMapperTest extends BaseTestCase
             self::getServiceConfiguration(),
             new ServiceManager(self::getServiceConfiguration())
         );
+
+        $this->mapper->setEntityManager(self::getEntityManager());
     }
 
     /**

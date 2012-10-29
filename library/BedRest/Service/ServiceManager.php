@@ -140,9 +140,16 @@ class ServiceManager
         }
 
         // instantiate the class
-        $service = new $className($resourceMetadata);
+        $id = "{$className}#{$resourceMetadata->getName()}";
+        $container = $this->configuration->getServiceContainer();
 
-        return $service;
+        if (!$container->hasDefinition($id)) {
+            $container->register($id, $className)
+                ->addArgument($resourceMetadata)
+                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
+        }
+
+        return $container->get($id);
     }
 
     /**

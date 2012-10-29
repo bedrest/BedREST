@@ -49,7 +49,7 @@ class SimpleDoctrineHandler implements Handler
     {
         $this->restManager = $restManager;
 
-        $this->serviceManager = new ServiceManager($restManager->getConfiguration());
+        $this->serviceManager = new ServiceManager($restManager->getServiceConfiguration());
     }
 
     /**
@@ -67,8 +67,21 @@ class SimpleDoctrineHandler implements Handler
      */
     public function getDataMapper()
     {
-        // TODO: this should be pulled in from the configuration
-        return new SimpleDoctrineMapper($this->restManager->getConfiguration(), $this->serviceManager);
+        // TODO: the choice of data mapper should be in configuration somewhere
+        $className = 'BedRest\Service\Data\SimpleDoctrineMapper';
+
+        // instantiate
+        $id = "{$className}";
+        $container = $this->restManager->getServiceConfiguration()->getServiceContainer();
+
+        if (!$container->hasDefinition($id)) {
+            $container->register($id, $className)
+                ->addArgument($this->restManager->getServiceConfiguration())
+                ->addArgument($this->serviceManager)
+                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
+        }
+
+        return $container->get($id);
     }
 
     /**
@@ -83,9 +96,7 @@ class SimpleDoctrineHandler implements Handler
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
         // get the service
-        // TODO: injection of dependencies should happen in the ServiceManager, perhaps using config
         $service = $this->serviceManager->getService($resourceMetadata);
-        $service->setEntityManager($this->restManager->getConfiguration()->getEntityManager());
 
         $dataMapper = $this->getDataMapper();
 
@@ -110,9 +121,7 @@ class SimpleDoctrineHandler implements Handler
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
         // get the service
-        // TODO: injection of dependencies should happen in the ServiceManager
         $service = $this->serviceManager->getService($resourceMetadata);
-        $service->setEntityManager($this->restManager->getConfiguration()->getEntityManager());
 
         $dataMapper = $this->getDataMapper();
 
@@ -142,7 +151,6 @@ class SimpleDoctrineHandler implements Handler
 
         // perform the actual service operation
         $service = $this->serviceManager->getService($resourceMetadata);
-        $service->setEntityManager($this->restManager->getConfiguration()->getEntityManager());
 
         $service->create($resource);
 

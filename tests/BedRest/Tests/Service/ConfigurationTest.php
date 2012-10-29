@@ -4,6 +4,7 @@ namespace BedRest\Tests\Service;
 
 use BedRest\Tests\BaseTestCase;
 use BedRest\Service\Configuration;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * ConfigurationTest
@@ -14,24 +15,6 @@ use BedRest\Service\Configuration;
  */
 class ConfigurationTest extends BaseTestCase
 {
-    public function testGetNullEntityManager()
-    {
-        $config = new Configuration();
-
-        $this->assertEquals(null, $config->getEntityManager());
-    }
-
-    public function testSetEntityManager()
-    {
-        $config = new Configuration();
-
-        $em = $this->getEntityManager();
-
-        $config->setEntityManager($em);
-
-        $this->assertEquals($em, $config->getEntityManager());
-    }
-
     public function testServiceNamespaces()
     {
         $config = new Configuration();
@@ -56,5 +39,15 @@ class ConfigurationTest extends BaseTestCase
         $config->addServiceNamespace('setThree', 'Services\SetThree\\');
 
         $this->assertEquals('Services\SetThree\\', $config->getServiceNamespace('setThree'));
+    }
+
+    public function testServiceContainer()
+    {
+        $config = new Configuration();
+
+        $container = new ContainerBuilder();
+        $config->setServiceContainer($container);
+
+        $this->assertEquals($container, $config->getServiceContainer());
     }
 }

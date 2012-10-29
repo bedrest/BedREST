@@ -29,16 +29,22 @@ use Doctrine\DBAL\Types\Type;
 abstract class AbstractDoctrineMapper implements DataMapper
 {
     /**
-     * Configuration.
+     * Service configuration.
      * @var \BedRest\Service\Configuration
      */
     protected $configuration;
 
     /**
-     * Service manager.
+     * ServiceManager instance.
      * @var \BedRest\Service\ServiceManager
      */
     protected $serviceManager;
+
+    /**
+     * EntityManager instance.
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
 
     /**
      * Constructor.
@@ -53,23 +59,22 @@ abstract class AbstractDoctrineMapper implements DataMapper
     }
 
     /**
-     * Gets the entity manager.
+     * Sets the EntityManager instance.
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     */
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * Returns the EntityManager instance.
      * @throws \BedRest\Service\Data\Exception
      * @return \Doctrine\ORM\EntityManager
      */
-    protected function getEntityManager()
+    public function getEntityManager()
     {
-        if (!$this->configuration instanceof Configuration) {
-            throw new Exception('Configuration not provided');
-        }
-
-        $em = $this->configuration->getEntityManager();
-
-        if (!$em instanceof EntityManager) {
-            throw new Exception('EntityManager not provided');
-        }
-
-        return $em;
+        return $this->entityManager;
     }
 
     /**
