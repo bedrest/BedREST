@@ -51,6 +51,7 @@ class ServiceManager
     /**
      * Constructor.
      * @param \BedRest\Service\Configuration $configuration
+     * @return \BedRest\Service\ServiceManager
      */
     public function __construct(Configuration $configuration)
     {
@@ -90,43 +91,10 @@ class ServiceManager
     /**
      * Returns an instance of the service for the specified resource.
      * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
-     * @return object
-     */
-    public function getService(ResourceMetadata $resourceMetadata)
-    {
-        $hash = $this->getServiceHash($resourceMetadata);
-
-        if (!$this->hasService($resourceMetadata)) {
-            $this->loadedServices[$resourceMetadata->getService()][$hash]
-                = $this->loadService($resourceMetadata);
-        }
-
-        return $this->loadedServices[$resourceMetadata->getService()][$hash];
-    }
-
-    /**
-     * Whether a service has been loaded or not yet.
-     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
-     * @return boolean
-     */
-    protected function hasService(ResourceMetadata $resourceMetadata)
-    {
-        $hash = $this->getServiceHash($resourceMetadata);
-
-        if (isset($this->loadedServices[$resourceMetadata->getService()][$hash])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Loads the specified service class.
-     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @throws \BedRest\Service\Exception
      * @return object
      */
-    protected function loadService(ResourceMetadata $resourceMetadata)
+    public function getService(ResourceMetadata $resourceMetadata)
     {
         $className = $resourceMetadata->getService();
 
@@ -139,28 +107,17 @@ class ServiceManager
             throw new Exception("The class '{$className}' is not a mapped service.");
         }
 
-        // instantiate the class
-        $id = "{$className}#{$resourceMetadata->getName()}";
+        // get the DI container for instantiating classes
         $container = $this->configuration->getServiceContainer();
 
+        $id = "{$className}#{$resourceMetadata->getName()}";
         if (!$container->hasDefinition($id)) {
+            // TODO: detect if the service is a Doctrine service here, before adding the method call injection
             $container->register($id, $className)
                 ->addArgument($resourceMetadata)
                 ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
         }
 
         return $container->get($id);
-    }
-
-    /**
-     * Gets the hash used for indexing loaded services.
-     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
-     * @return string
-     */
-    protected function getServiceHash(ResourceMetadata $resourceMetadata)
-    {
-        $hash = spl_object_hash($resourceMetadata);
-
-        return $hash;
     }
 }
