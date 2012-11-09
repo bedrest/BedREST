@@ -191,15 +191,23 @@ abstract class AbstractDoctrineMapper implements DataMapper
 
     /**
      * Maps data into a resource or set of resources.
+     * @todo Make this method abstract once again. Can't have an abstract method implement an interface method, see
+     *       https://bugs.php.net/bug.php?id=43200 for more information. PHP 5.3.9+ allows this.
      * @param mixed $resource Resource to map data into.
      * @param mixed $data     Data to be mapped.
      */
-    abstract public function map($resource, $data);
+    public function map($resource, $data)
+    {
+    }
 
     /**
      * Reverse maps data into the desired format.
+     * @todo Make this method abstract once again. Can't have an abstract method implement an interface method, see
+     *       https://bugs.php.net/bug.php?id=43200 for more information. PHP 5.3.9+ allows this.
      * @param  mixed $data Data to reverse map.
      * @return mixed
      */
-    abstract public function reverse($data);
+    public function reverse($data)
+    {
+    }
 }
