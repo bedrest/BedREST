@@ -21,7 +21,7 @@ use BedRest\Rest\Response;
 /**
  * Handler
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  */
 interface Handler
 {

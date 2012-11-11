@@ -20,12 +20,11 @@ use BedRest\Rest\ResourceNotFoundException;
 use BedRest\Rest\Response;
 use BedRest\Rest\RestManager;
 use BedRest\Service\ServiceManager;
-use BedRest\Service\Data\SimpleDoctrineMapper;
 
 /**
  * SimpleDoctrineHandler
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  */
 class SimpleDoctrineHandler implements Handler
 {

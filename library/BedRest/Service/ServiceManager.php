@@ -50,7 +50,7 @@ class ServiceManager
 
     /**
      * Constructor.
-     * @param \BedRest\Service\Configuration $configuration
+     * @param  \BedRest\Service\Configuration  $configuration
      * @return \BedRest\Service\ServiceManager
      */
     public function __construct(Configuration $configuration)

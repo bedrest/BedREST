@@ -5,7 +5,7 @@ namespace BedRest\Resource\Mapping\Annotation;
 /**
  * Handler
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  *
  * @Annotation
  * @Target("CLASS")

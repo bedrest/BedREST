@@ -18,7 +18,7 @@ namespace BedRest\Rest;
 /**
  * ResourceNotFoundException
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  */
 class ResourceNotFoundException extends Exception
 {
