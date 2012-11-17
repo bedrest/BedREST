@@ -15,6 +15,8 @@
 
 namespace BedRest\Service\Mapping\Annotation;
 
+use BedRest\Service\Mapping\ServiceMetadata;
+
 /**
  * Service
  *
@@ -25,4 +27,9 @@ namespace BedRest\Service\Mapping\Annotation;
  */
 class Service
 {
+    /**
+     * Type of the service.
+     * @var string
+     */
+    public $type = ServiceMetadata::TYPE_BASIC;
 }

@@ -2,10 +2,11 @@
 
 namespace BedRest\Tests\Service\Mapping;
 
-use BedRest\Service\Configuration;
+use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver;
 use BedRest\Tests\BaseTestCase;
+use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
@@ -41,16 +42,23 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
     public function testGetMetadata()
     {
-        $meta = $this->factory->getMetadataFor('BedRest\TestFixtures\Services\Company\Employee');
+        $entity = new EmployeeService;
 
+        $meta = $this->factory->getMetadataFor(get_class($entity));
         $this->assertInstanceOf('BedRest\Service\Mapping\ServiceMetadata', $meta);
+
+        $expectedMeta = $entity->getMetadata();
+        $this->assertEquals($expectedMeta['className'], $meta->getClassName());
+        $this->assertEquals($expectedMeta['type'], $meta->getType());
+        $this->assertEquals($expectedMeta['listeners']['eventOne'], $meta->getListeners('eventOne'));
+        $this->assertEquals($expectedMeta['listeners']['eventTwo'], $meta->getListeners('eventTwo'));
     }
 
     public function testGetMetadataInvalid()
     {
         $this->setExpectedException('BedRest\Service\Mapping\Exception');
 
-        $meta = $this->factory->getMetadataFor('BedRest\TestFixtures\Services\InvalidService');
+        $this->factory->getMetadataFor('BedRest\TestFixtures\Services\InvalidService');
     }
 
     public function testGetAllMetadata()
@@ -61,36 +69,5 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
         $this->assertInternalType('array', $metaCollection);
         $this->assertGreaterThan(0, count($metaCollection));
-    }
-
-    public function testListenersPopulated()
-    {
-        $meta = $this->factory->getMetadataFor('BedRest\TestFixtures\Services\Company\Employee');
-
-        $eventOne = $meta->getListeners('eventOne');
-        $this->assertInternalType('array', $eventOne);
-        $this->assertCount(1, $eventOne);
-        $this->assertContains('listenerOne', $eventOne);
-
-        $eventTwo = $meta->getListeners('eventTwo');
-        $this->assertInternalType('array', $eventTwo);
-        $this->assertCount(2, $eventTwo);
-        $this->assertContains('listenerOne', $eventTwo);
-        $this->assertContains('listenerTwo', $eventTwo);
-
-        $eventThree = $meta->getListeners('eventThree');
-        $this->assertInternalType('array', $eventThree);
-        $this->assertCount(0, $eventThree);
-
-        $allListeners = array(
-            'eventOne' => array(
-                'listenerOne'
-            ),
-            'eventTwo' => array(
-                'listenerOne',
-                'listenerTwo'
-            )
-        );
-        $this->assertEquals($allListeners, $meta->getAllListeners());
     }
 }

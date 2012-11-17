@@ -58,6 +58,7 @@ class ServiceMetadataFactory
     /**
      * Returns ServiceMetadata for the specified class.
      * @param  string                                   $className
+     * @throws \BedRest\Service\Mapping\Exception
      * @return \BedRest\Service\Mapping\ServiceMetadata
      */
     public function getMetadataFor($className)
@@ -109,6 +110,7 @@ class ServiceMetadataFactory
             if ($parent) {
                 $class->setClassName($parent->getClassName());
                 $class->setAllListeners($parent->getAllListeners());
+                $class->setType($parent->getType());
             }
 
             // now overlay the metadata from the class itself

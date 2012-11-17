@@ -27,6 +27,7 @@ use Doctrine\Common\Annotations\Reader;
  */
 class AnnotationDriver implements Driver
 {
+    const ANNOTATION_SERVICE = 'BedRest\Service\Mapping\Annotation\Service';
     const ANNOTATION_LISTENER = 'BedRest\Service\Mapping\Annotation\Listener';
 
     /**
@@ -89,8 +90,9 @@ class AnnotationDriver implements Driver
         $classAnnotations = $this->indexAnnotationsByType($classAnnotations);
 
         // load headline service information
-        if (isset($classAnnotations['BedRest\Service\Mapping\Annotation\Service'])) {
-            $serviceAnnotation = $classAnnotations['BedRest\Service\Mapping\Annotation\Service'];
+        if (isset($classAnnotations[self::ANNOTATION_SERVICE])) {
+            $serviceAnnotation = $classAnnotations[self::ANNOTATION_SERVICE];
+            $serviceMetadata->setType($serviceAnnotation->type);
         }
 
         // process events
