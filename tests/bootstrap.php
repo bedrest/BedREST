@@ -20,7 +20,7 @@ set_include_path(
 // Load the Composer autoloader and point it at the TCol namespace
 require_once VENDOR_PATH . '/autoload.php';
 
-$loader = ComposerAutoloaderInit::getLoader();
+$loader = new Composer\Autoload\ClassLoader();
 $loader->add('BedRest\TestFixtures', TESTS_BASEDIR);
 $loader->add('BedRest\Tests', TESTS_BASEDIR);
 $loader->add('BedRest', LIBRARY_PATH);
