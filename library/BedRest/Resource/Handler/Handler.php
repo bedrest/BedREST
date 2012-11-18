@@ -40,23 +40,44 @@ interface Handler
     public function handleGetCollection(Request $request, Response $response);
 
     /**
-     * Handles POST requests on single entities.
+     * Handles a POST request for a single resource.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
     public function handlePostResource(Request $request, Response $response);
 
     /**
-     * Handles PUT requests on single resources.
+     * Handles a POST request for a collection of resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePostCollection(Request $request, Response $response);
+
+    /**
+     * Handles a PUT request for a single resource.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
     public function handlePutResource(Request $request, Response $response);
 
     /**
-     * Handles DELETE requests on single resources.
+     * Handles a PUT request for a collection of resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePutCollection(Request $request, Response $response);
+
+    /**
+     * Handles a DELETE request for a single resource.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
     public function handleDeleteResource(Request $request, Response $response);
+
+    /**
+     * Handles a DELETE request for a collection of resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handleDeleteCollection(Request $request, Response $response);
 }

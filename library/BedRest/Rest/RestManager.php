@@ -15,12 +15,12 @@
 
 namespace BedRest\Rest;
 
+use BedRest\Resource\Mapping\ResourceMetadata;
+use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Configuration;
 use BedRest\Rest\Request;
 use BedRest\Rest\Response;
 use BedRest\Service\Configuration as ServiceConfiguration;
-use BedRest\Service\ServiceManager;
-use BedRest\Resource\Mapping\ResourceMetadataFactory;
 
 /**
  * RestManager
@@ -52,7 +52,6 @@ class RestManager
     /**
      * Constructor.
      * @param  \BedRest\Rest\Configuration     $configuration
-     * @param  \BedRest\Service\ServiceManager $serviceManager
      * @return \BedRest\Rest\RestManager
      */
     public function __construct(
@@ -139,11 +138,12 @@ class RestManager
 
         $response->setContentType($contentType);
 
-        // get service handler
-        // TODO: this should be pulled in from the configuration
-        $handler = new \BedRest\Resource\Handler\SimpleDoctrineHandler($this);
+        // get resource handler for the specified resource
+        $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
 
-        // TODO: implement other methods
+        $handler = $this->getResourceHandler($resourceMetadata);
+
+        // handle the request
         switch ($request->getMethod()) {
             case Request::METHOD_GET:
                 $handler->handleGetResource($request, $response);
@@ -154,8 +154,20 @@ class RestManager
             case Request::METHOD_POST:
                 $handler->handlePostResource($request, $response);
                 break;
+            case Request::METHOD_POST_COLLECTION:
+                $handler->handlePostCollection($request, $response);
+                break;
             case Request::METHOD_PUT:
                 $handler->handlePutResource($request, $response);
+                break;
+            case Request::METHOD_PUT_COLLECTION:
+                $handler->handlePutCollection($request, $response);
+                break;
+            case Request::METHOD_DELETE:
+                $handler->handleDeleteResource($request, $response);
+                break;
+            case Request::METHOD_DELETE_COLLECTION:
+                $handler->handleDeleteCollection($request, $response);
                 break;
             default:
                 throw Exception::methodNotAllowed();
@@ -163,5 +175,18 @@ class RestManager
         }
 
         return $response;
+    }
+
+    /**
+     * Creates and returns the handler for a particular resource.
+     * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
+     * @return \BedRest\Resource\Handler\Handler
+     */
+    protected function getResourceHandler(ResourceMetadata $resourceMetadata)
+    {
+        $handlerClass = $resourceMetadata->getHandler();
+        $handler = new $handlerClass($this);
+
+        return $handler;
     }
 }

@@ -84,7 +84,7 @@ class SimpleDoctrineHandler implements Handler
     }
 
     /**
-     * Handles GET requests on single resources.
+     * Handles a GET request for a single resource.
      * @param  \BedRest\Rest\Request                   $request
      * @param  \BedRest\Rest\Response                  $response
      * @throws \BedRest\Rest\ResourceNotFoundException
@@ -111,7 +111,7 @@ class SimpleDoctrineHandler implements Handler
     }
 
     /**
-     * Handles GET requests on collections of resources.
+     * Handles a GET request for a collection of resources.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
@@ -130,7 +130,7 @@ class SimpleDoctrineHandler implements Handler
     }
 
     /**
-     * Handles POST requests on single resources.
+     * Handles a POST request for a single resource.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
@@ -158,22 +158,52 @@ class SimpleDoctrineHandler implements Handler
     }
 
     /**
-     * Handles PUT requests on single resources.
+     * Handles a POST request for a collection of resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePostCollection(Request $request, Response $response)
+    {
+        // TODO: Implement handlePostCollection() method.
+    }
+
+    /**
+     * Handles a PUT request for a single resource.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
     public function handlePutResource(Request $request, Response $response)
     {
-        throw new \RuntimeException('PUT resource has not been implemented yet.');
+        // TODO: Implement handlePutResource() method.
     }
 
     /**
-     * Handles DELETE requests on single resources.
+     * Handles a PUT request for a collection of resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handlePutCollection(Request $request, Response $response)
+    {
+        // TODO: Implement handlePutCollection() method.
+    }
+
+    /**
+     * Handles a DELETE request for a single resource.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
      */
     public function handleDeleteResource(Request $request, Response $response)
     {
-        throw new \RuntimeException('DELETE resource has not been implemented yet.');
+        // TODO: Implement handleDeleteResource() method.
+    }
+
+    /**
+     * Handles a DELETE request for a collection of resources.
+     * @param \BedRest\Rest\Request  $request
+     * @param \BedRest\Rest\Response $response
+     */
+    public function handleDeleteCollection(Request $request, Response $response)
+    {
+        // TODO: Implement handleDeleteCollection() method.
     }
 }
