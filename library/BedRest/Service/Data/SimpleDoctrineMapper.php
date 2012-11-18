@@ -15,6 +15,7 @@
 
 namespace BedRest\Service\Data;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -38,53 +39,87 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
         }
 
         // cast data
-        $data = $this->castFields($resource, $data);
+        $fields = $this->castFields($resource, $data);
+        $associations = $this->castAssociations($resource, $data);
+
+        $data = array_merge($fields, $associations);
 
         foreach ($data as $property => $value) {
             $resource->$property = $value;
         }
     }
 
-    /**
-     * Reverse maps data into an array.
-     * @param  mixed $data Data to reverse map.
-     * @return array
-     */
-    public function reverse($data)
+    protected function castAssociations($resource, array $data)
     {
-        $return = null;
+        // get the class meta data for the entity
+        $em = $this->getEntityManager();
 
-        if (is_array($data)) {
-            // arrays
-            $return = array();
+        $classMetaInfo = $em->getClassMetadata(get_class($resource));
 
-            foreach ($data as $key => $value) {
-                $return[$key] = $this->reverse($value);
+        // process all associations
+        $output = array();
+
+        foreach ($classMetaInfo->associationMappings as $name => $mapping) {
+            // skip associations not included in the data
+            if (!isset($data[$name])) {
+                continue;
             }
-        } elseif (is_object($data) && !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data))) {
-            // entities
-            $return = $this->reverseEntity($data);
-        } else {
-            // non-arrays and non-entity objects, along with native types
-            $return = $data;
+
+            // detect the value of the association
+            if ($classMetaInfo->isSingleValuedAssociation($name)) {
+                $value = $this->castSingleValuedAssociation($data[$name], $mapping);
+            } elseif ($classMetaInfo->isCollectionValuedAssociation($name)) {
+                $value = $this->castCollectionValuedAssociation($data[$name], $mapping);
+            } else {
+                throw Exception::invalidAssociationType($classMetaInfo->getName(), $name);
+            }
+
+            $output[$name] = $value;
         }
 
-        return $return;
+        return $output;
+    }
+
+    protected function castSingleValuedAssociation($data, $mapping)
+    {
+        $output = $this->getEntityManager()->find($mapping['targetEntity'], $data);
+
+        return $output;
+    }
+
+    protected function castCollectionValuedAssociation($data, $mapping)
+    {
+        $output = array();
+
+        foreach ($data as $item) {
+            $output[] = $this->getEntityManager()->find($mapping['targetEntity'], $item);
+        }
+
+        return $output;
     }
 
     /**
-     * Reverse maps an entity instance.
-     * @param  mixed $resource
+     * Reverse maps a resource into an array.
+     * @param  mixed $resource Data to reverse map.
      * @return array
      */
-    protected function reverseEntity($resource)
+    public function reverse($resource, $maxDepth = 1, $currentDepth = 0)
     {
         $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
+        $return = null;
 
-        $fieldData = $this->reverseEntityFields($resource, $classMetadata);
-        $associationData = $this->reverseEntityAssociations($resource, $classMetadata);
+        if ($currentDepth > $maxDepth) {
+            $return = $resource->id;
+        } else {
+            $currentDepth++;
 
-        return array_merge($fieldData, $associationData);
+            $fieldData = $this->reverseEntityFields($resource, $classMetadata);
+            $associationData = $this->reverseEntityAssociations($resource, $classMetadata, $maxDepth, $currentDepth);
+
+            $return = array_merge($fieldData, $associationData);
+        }
+
+        return $return;
     }
 
     /**
@@ -98,21 +133,7 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
         $data = array();
 
         foreach ($classMetadata->fieldMappings as $property => $mapping) {
-            switch ($mapping['type']) {
-                /**
-                case Type::DATE:
-                case Type::DATETIME:
-                case Type::DATETIMETZ:
-                case Type::TIME:
-                    if ($resource->$property instanceof \DateTime) {
-                        $value = $resource->$property->format(\DateTime::ISO8601);
-                    }
-                    break;
-                    */
-                default:
-                    $value = $resource->$property;
-                    break;
-            }
+            $value = $resource->$property;
 
             $data[$property] = $value;
         }
@@ -126,7 +147,7 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
      * @param  \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
      * @return array
      */
-    protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata)
+    protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata, $maxDepth, $currentDepth)
     {
         $data = array();
 
@@ -140,7 +161,7 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
 
             if ($mapping['type'] & ClassMetadata::TO_ONE) {
                 // single entity
-                $data[$association] = $this->reverseEntity($resource->$association);
+                $data[$association] = $this->reverse($resource->$association, $maxDepth, $currentDepth);
             } else {
                 // collections must be looped through, assume each item within is an entity
                 $data[$association] = array();
@@ -150,7 +171,7 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
                 }
 
                 foreach ($value as $item) {
-                    $data[$association][] = $this->reverseEntity($item);
+                    $data[$association][] = $this->reverse($item, $maxDepth, $currentDepth);
                 }
             }
         }

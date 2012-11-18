@@ -30,9 +30,9 @@ interface DataMapper
     public function map($resource, $data);
 
     /**
-     * Reverse maps data into the desired format.
-     * @param  mixed $data Data to reverse map.
+     * Reverse maps a resource into the desired format.
+     * @param  mixed $resource Data to reverse map.
      * @return mixed
      */
-    public function reverse($data);
+    public function reverse($resource);
 }

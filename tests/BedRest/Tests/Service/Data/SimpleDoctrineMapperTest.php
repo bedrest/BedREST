@@ -26,7 +26,7 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      * A set of test data cast in the intended data types.
      * @return array
      */
-    protected function getTestData()
+    protected function getEmployeeTestData()
     {
         return array(
             'id' => 1,
@@ -43,7 +43,7 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      * cast to a different type (if possible).
      * @return array
      */
-    protected function getUncastTestData()
+    protected function getEmployeeUncastTestData()
     {
         $dob = new \DateTime('1st May 2012 00:00:00 +00:00');
 
@@ -81,10 +81,10 @@ class SimpleDoctrineMapperTest extends BaseTestCase
     /**
      * Test basic field mapping to ensure data is correctly mapped over.
      */
-    public function testBasicFieldMapping()
+    public function testFieldMapping()
     {
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
-        $data = $this->getTestData();
+        $data = $this->getEmployeeTestData();
 
         $this->mapper->map($resource, $data);
 
@@ -96,15 +96,18 @@ class SimpleDoctrineMapperTest extends BaseTestCase
     /**
      * Test basic field reverse mapping to ensure data is correctly reversed.
      */
-    public function testBasicFieldReverse()
+    public function testFieldReverse()
     {
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
-        $data = $this->getTestData();
+        $data = $this->getEmployeeTestData();
 
+        // first map the data into the resource
         $this->mapper->map($resource, $data);
 
+        // now reverse it back out
         $reversed = $this->mapper->reverse($resource);
 
+        // data in the reverse-mapped resource should be equal to the original data
         foreach ($reversed as $property => $value) {
             $this->assertEquals($data[$property], $value);
         }
@@ -115,11 +118,11 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      * present in the target resource. Data should be mapped as expected, with
      * non-existant fields not throwing any errors.
      */
-    public function testBasicFieldMappingWithNonExistentFields()
+    public function testFieldMappingWithNonExistentFields()
     {
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
 
-        $data = $this->getTestData();
+        $data = $this->getEmployeeTestData();
         $nonExistentFields = array(
             'dummyField' => 'dummyValue'
         );
@@ -135,12 +138,12 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      * Tests basic field mapping with a dataset which requires casting and then
      * checks the resultant casting was successful.
      */
-    public function testBasicFieldMappingWithCasting()
+    public function testFieldMappingWithCasting()
     {
         $resource = new \BedRest\TestFixtures\Models\Company\Employee();
 
-        $data = $this->getTestData();
-        $uncastData = $this->getUncastTestData();
+        $data = $this->getEmployeeTestData();
+        $uncastData = $this->getEmployeeUncastTestData();
 
         $this->mapper->map($resource, $uncastData);
 

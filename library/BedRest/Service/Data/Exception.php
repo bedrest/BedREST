@@ -26,4 +26,10 @@ class Exception extends \Exception
     {
         return new self("The data mapper '{$className}' does not exist or could not be found.");
     }
+
+    public static function invalidAssociationType($className, $associationName)
+    {
+        return new self("Unknown or invalid association type for association '{$associationName}' in " .
+            "resource '{$className}''");
+    }
 }
