@@ -51,7 +51,7 @@ class RestManager
 
     /**
      * Constructor.
-     * @param  \BedRest\Rest\Configuration     $configuration
+     * @param  \BedRest\Rest\Configuration $configuration
      * @return \BedRest\Rest\RestManager
      */
     public function __construct(
@@ -179,7 +179,7 @@ class RestManager
 
     /**
      * Creates and returns the handler for a particular resource.
-     * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
+     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @return \BedRest\Resource\Handler\Handler
      */
     protected function getResourceHandler(ResourceMetadata $resourceMetadata)

@@ -99,27 +99,55 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
     }
 
     /**
-     * Reverse maps a resource into an array.
-     * @param  mixed $resource Data to reverse map.
+     * Reverse maps a data set into an array.
+     * @param  mixed   $data         Data to reverse map.
+     * @param  integer $maxDepth
+     * @param  integer $currentDepth
      * @return array
      */
-    public function reverse($resource, $maxDepth = 1, $currentDepth = 0)
+    public function reverse($data, $maxDepth = 1, $currentDepth = 0)
     {
-        $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
         $return = null;
 
-        if ($currentDepth > $maxDepth) {
-            $return = $resource->id;
-        } else {
+        if (is_array($data) || $data instanceof Collection) {
+            $return = array();
+
+            foreach ($data as $key => $value) {
+                $return[$key] = $this->reverse($value, $maxDepth, $currentDepth);
+            }
+        } elseif (is_object($data) &&
+            !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data))
+        ) {
             $currentDepth++;
+            $return = $this->reverseEntity($data, $maxDepth, $currentDepth);
+        } else {
+            $return = $data;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Reverse maps a single resource entity.
+     * @param  object  $resource
+     * @param  integer $maxDepth
+     * @param  integer $currentDepth
+     * @return array
+     */
+    protected function reverseEntity($resource, $maxDepth, $currentDepth)
+    {
+        if ($currentDepth > $maxDepth) {
+            $output = $resource->id;
+        } else {
+            $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
             $fieldData = $this->reverseEntityFields($resource, $classMetadata);
             $associationData = $this->reverseEntityAssociations($resource, $classMetadata, $maxDepth, $currentDepth);
 
-            $return = array_merge($fieldData, $associationData);
+            $output = array_merge($fieldData, $associationData);
         }
 
-        return $return;
+        return $output;
     }
 
     /**
