@@ -53,6 +53,12 @@ class Request
      */
     protected $routeComponents = array();
 
+    /**
+     * Query string parameters.
+     * @var array
+     */
+    protected $parameters = array();
+
     const CONTENTTYPE_JSON = 'application/json';
     const CONTENTTYPE_URLENCODED = 'application/x-www-form-urlencoded';
     const CONTENTTYPE_XML = 'text/xml';
@@ -93,6 +99,8 @@ class Request
         $this->setAccept();
 
         $this->setAcceptEncoding();
+
+        $this->setParameters($_GET);
     }
 
     /**
@@ -166,6 +174,48 @@ class Request
     public function setRouteComponents(array $components)
     {
         $this->routeComponents = $components;
+    }
+
+    /**
+     * Returns the query string parameters.
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Returns the value of a single query string parameter.
+     * @param $parameter
+     * @return mixed
+     */
+    public function getParameter($parameter)
+    {
+        if (!isset($this->parameters[$parameter])) {
+            return null;
+        }
+
+        return $this->parameters[$parameter];
+    }
+
+    /**
+     * Sets the query string parameters, discarding all existing values.
+     * @param array $parameters
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * Sets an individual query string parameter.
+     * @param string $parameter
+     * @param mixed $value
+     */
+    public function setParameter($parameter, $value)
+    {
+        $this->parameters[$parameter] = $value;
     }
 
     /**
