@@ -92,12 +92,13 @@ class SimpleDoctrineHandler implements Handler
      */
     public function handleGetResource(Request $request, Response $response)
     {
+        // get the parameters
+        $depth = (int) $request->getParameter('depth', 1);
+
+        // get the service and request the collection
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
-        // get the service
         $service = $this->serviceManager->getService($resourceMetadata);
-
-        $dataMapper = $this->getDataMapper();
 
         $identifier = $request->getRouteComponent('identifier');
         $data = $service->get($identifier);
@@ -107,7 +108,10 @@ class SimpleDoctrineHandler implements Handler
             throw new ResourceNotFoundException;
         }
 
-        $response->setBody($dataMapper->reverse($data));
+        // get the data mapper and compose the response body
+        $dataMapper = $this->getDataMapper();
+
+        $response->setBody($dataMapper->reverse($data, $depth));
     }
 
     /**
