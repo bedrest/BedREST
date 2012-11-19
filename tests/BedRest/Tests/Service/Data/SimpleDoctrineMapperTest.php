@@ -105,7 +105,7 @@ class SimpleDoctrineMapperTest extends BaseTestCase
         $this->mapper->map($resource, $data);
 
         // now reverse it back out
-        $reversed = $this->mapper->reverse($resource);
+        $reversed = $this->mapper->reverse($resource, 1);
 
         // data in the reverse-mapped resource should be equal to the original data
         foreach ($reversed as $property => $value) {
