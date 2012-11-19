@@ -16,6 +16,7 @@
 namespace BedRest\Service\Data;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Persistence\Proxy as DoctrineProxy;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -100,12 +101,23 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
 
     /**
      * Reverse maps a data set into an array.
-     * @param  mixed   $data         Data to reverse map.
-     * @param  integer $maxDepth
-     * @param  integer $currentDepth
+     * @param  mixed $data  Data to reverse map.
+     * @param  mixed $depth Depth to reverse map associations.
      * @return array
      */
-    public function reverse($data, $maxDepth = 1, $currentDepth = 0)
+    public function reverse($data, $depth)
+    {
+        return $this->reverseItem($data, $depth, 0);
+    }
+
+    /**
+     * Reverse maps a single item from a data set.
+     * @param  mixed        $data
+     * @param  integer      $depth
+     * @param  integer      $currentDepth
+     * @return array|object
+     */
+    protected function reverseItem($data, $depth, $currentDepth)
     {
         $return = null;
 
@@ -113,13 +125,22 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
             $return = array();
 
             foreach ($data as $key => $value) {
-                $return[$key] = $this->reverse($value, $maxDepth, $currentDepth);
+                $return[$key] = $this->reverseItem($value, $depth, $currentDepth);
             }
-        } elseif (is_object($data) &&
-            !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data))
-        ) {
-            $currentDepth++;
-            $return = $this->reverseEntity($data, $maxDepth, $currentDepth);
+        } elseif (is_object($data)) {
+            $class = get_class($data);
+            $parentClass = get_parent_class($data);
+
+            $isProxy = ($data instanceof DoctrineProxy);
+
+            if (!$this->getEntityManager()->getMetadataFactory()->isTransient($class) ||
+                ($isProxy && !$this->getEntityManager()->getMetadataFactory()->isTransient($parentClass))
+            ) {
+                $currentDepth++;
+                $return = $this->reverseEntity($data, $depth, $currentDepth);
+            } elseif (method_exists($data, '__sleep')) {
+                $return = $data->__sleep();
+            }
         } else {
             $return = $data;
         }
@@ -173,6 +194,8 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
      * Reverse maps entity associations, using the class metadata to determine those associations.
      * @param  mixed                               $resource
      * @param  \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @param  integer                             $maxDepth
+     * @param  integer                             $currentDepth
      * @return array
      */
     protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata, $maxDepth, $currentDepth)
@@ -183,13 +206,13 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
             $value = $resource->$association;
 
             // force proxies to load data
-            if ($value instanceof \Doctrine\ORM\Proxy\Proxy) {
+            if ($value instanceof DoctrineProxy) {
                 $value->__load();
             }
 
             if ($mapping['type'] & ClassMetadata::TO_ONE) {
                 // single entity
-                $data[$association] = $this->reverse($resource->$association, $maxDepth, $currentDepth);
+                $data[$association] = $this->reverseItem($resource->$association, $maxDepth, $currentDepth);
             } else {
                 // collections must be looped through, assume each item within is an entity
                 $data[$association] = array();
@@ -199,7 +222,7 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
                 }
 
                 foreach ($value as $item) {
-                    $data[$association][] = $this->reverse($item, $maxDepth, $currentDepth);
+                    $data[$association][] = $this->reverseItem($item, $maxDepth, $currentDepth);
                 }
             }
         }

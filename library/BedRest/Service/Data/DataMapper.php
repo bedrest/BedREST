@@ -32,7 +32,8 @@ interface DataMapper
     /**
      * Reverse maps a resource into the desired format.
      * @param  mixed $resource Data to reverse map.
+     * @param  mixed $depth    Depth to reverse map associations.
      * @return mixed
      */
-    public function reverse($resource);
+    public function reverse($resource, $depth);
 }

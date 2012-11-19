@@ -120,6 +120,7 @@ class SimpleDoctrineHandler implements Handler
         // get the parameters
         $limit = (int) $request->getParameter('maxResults', 10);
         $offset = 0;
+        $depth = (int) $request->getParameter('depth', 1);
 
         // get the service and request the collection
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
@@ -131,7 +132,7 @@ class SimpleDoctrineHandler implements Handler
         // get the data mapper and compose the response body
         $dataMapper = $this->getDataMapper();
 
-        $response->setBody($dataMapper->reverse($data));
+        $response->setBody($dataMapper->reverse($data, $depth));
     }
 
     /**

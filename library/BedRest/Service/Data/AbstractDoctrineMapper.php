@@ -205,9 +205,10 @@ abstract class AbstractDoctrineMapper implements DataMapper
      * @todo Make this method abstract once again. Can't have an abstract method implement an interface method, see
      *       https://bugs.php.net/bug.php?id=43200 for more information. PHP 5.3.9+ allows this.
      * @param  mixed $resource Data to reverse map.
+     * @param  mixed $depth    Depth to reverse map associations.
      * @return mixed
      */
-    public function reverse($resource)
+    public function reverse($resource, $depth)
     {
     }
 }
