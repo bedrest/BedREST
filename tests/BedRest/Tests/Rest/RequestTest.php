@@ -40,7 +40,7 @@ class RequestTest extends BaseTestCase
         $this->defaultServerEnvironment = $_SERVER;
         $_SERVER = $this->serverEnvironment;
 
-        $this->request = new Request();
+        $this->request = new Request(self::getConfiguration());
     }
 
     protected function tearDown()
@@ -224,26 +224,27 @@ class RequestTest extends BaseTestCase
         $this->assertEquals($expected, $this->request->getAcceptEncoding());
     }
 
-    public function testRawPayload()
+    public function testRawBody()
     {
-        $rawPayload = '{fieldOne:"valueOne",fieldTwo:"valueTwo}';
+        $rawBody = '{fieldOne:"valueOne",fieldTwo:"valueTwo}';
 
-        $this->request->setRawPayload($rawPayload);
+        $this->request->setRawBody($rawBody);
 
-        $this->assertEquals($rawPayload, $this->request->getPayload(false));
+        $this->assertEquals($rawBody, $this->request->getBody(false));
     }
 
-    public function testPayloadDecoded()
+    public function testBodyDecoded()
     {
-        $rawPayload = '{"fieldOne":"valueOne","fieldTwo":"valueTwo"}';
+        $rawBody = '{"fieldOne":"valueOne","fieldTwo":"valueTwo"}';
 
-        $decodedPayload = new \stdClass();
-        $decodedPayload->fieldOne = 'valueOne';
-        $decodedPayload->fieldTwo = 'valueTwo';
+        $decodedBody = array(
+            'fieldOne' => 'valueOne',
+            'fieldTwo' => 'valueTwo'
+        );
 
-        $this->request->setRawPayload($rawPayload);
+        $this->request->setRawBody($rawBody);
 
-        $this->assertEquals($decodedPayload, $this->request->getPayload());
+        $this->assertEquals($decodedBody, $this->request->getBody());
     }
 
     public function testResource()

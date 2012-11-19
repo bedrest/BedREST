@@ -156,7 +156,7 @@ class SimpleDoctrineHandler implements Handler
         $resource = new $className;
 
         // populate the resource with data from the request using a DataMapper
-        $requestData = (array) $request->getPayload();
+        $requestData = (array) $request->getBody();
 
         $dataMapper = $this->getDataMapper();
         $dataMapper->map($resource, $requestData);

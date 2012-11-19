@@ -58,6 +58,11 @@ class Response
      */
     protected $code = 200;
 
+    /**
+     * Constructor.
+     * Initialises the Response object with the specified REST configuration.
+     * @param \BedRest\Rest\Configuration $configuration
+     */
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
@@ -94,9 +99,9 @@ class Response
 
             // TODO: check if content type is supported
             if (empty($converterClass)) {
-                throw new \RuntimeException('Invalid content type specified in Accept.');
+                throw new \RuntimeException('Invalid content type specified in Accept header.');
             } elseif (!class_exists($converterClass)) {
-                throw new \RuntimeException('Content converter class could not be found.');
+                throw new \RuntimeException("The Content Converter class '$converterClass' could not be found.");
             }
 
             $converter = new $converterClass;

@@ -25,6 +25,12 @@ namespace BedRest\Rest;
  */
 class Request
 {
+    /**
+     * Configuration object.
+     * @var \BedRest\Rest\Configuration
+     */
+    protected $configuration;
+
     const METHOD_HEAD = 'HEAD';
     const METHOD_GET = 'GET';
     const METHOD_GET_COLLECTION = 'GET_COLLECTION';
@@ -59,12 +65,8 @@ class Request
      */
     protected $parameters = array();
 
-    const CONTENTTYPE_JSON = 'application/json';
-    const CONTENTTYPE_URLENCODED = 'application/x-www-form-urlencoded';
-    const CONTENTTYPE_XML = 'text/xml';
-
     /**
-     * Content type of any request payload.
+     * Content type of the request body.
      * @var string
      */
     protected $contentType = '';
@@ -82,16 +84,20 @@ class Request
     protected $acceptEncoding = array();
 
     /**
-     * Raw payload of the request.
+     * Raw body of the request.
      * @var mixed
      */
-    protected $payload = null;
+    protected $body = null;
 
     /**
      * Constructor.
+     * Initialises the Response object with the specified REST configuration.
+     * @param \BedRest\Rest\Configuration $configuration
      */
-    public function __construct()
+    public function __construct(Configuration $configuration)
     {
+        $this->configuration = $configuration;
+
         $this->setMethod();
 
         $this->setContentType();
@@ -220,7 +226,7 @@ class Request
     }
 
     /**
-     * Returns the content type of the request payload, usually determined from the 'Content-Type' HTTP header.
+     * Returns the content type of the request body, usually determined from the 'Content-Type' HTTP header.
      * @return string
      */
     public function getContentType()
@@ -229,7 +235,7 @@ class Request
     }
 
     /**
-     * Sets the content type of the request payload. If the provided value is null, it is automatically detected
+     * Sets the content type of the request body. If the provided value is null, it is automatically detected
      * from the environment.
      * @param string $contentType
      */
@@ -363,41 +369,39 @@ class Request
     }
 
     /**
-     * Set the request payload.
-     * @param mixed $payload
+     * Set the request body.
+     * @param mixed $body
      */
-    public function setRawPayload($payload)
+    public function setRawBody($body)
     {
-        $this->payload = $payload;
+        $this->body = $body;
     }
 
     /**
-     * Returns the request payload, decoded according to the Content-Type specified in the request.
+     * Returns the request body, decoded according to the Content-Type specified in the request.
      * @TODO allow registration of an arbitrary set of content converters to be used in here.
      * @param  boolean           $decode
      * @throws \RuntimeException
      * @return mixed
      */
-    public function getPayload($decode = true)
+    public function getBody($decode = true)
     {
         if (!$decode) {
-            return $this->payload;
+            return $this->body;
         }
 
-        switch ($this->contentType) {
-            case self::CONTENTTYPE_JSON:
-                $data = json_decode($this->payload);
-                break;
-            case self::CONTENTTYPE_URLENCODED:
-                $data = urldecode($this->payload);
-                break;
-            case self::CONTENTTYPE_XML:
-                $data = simplexml_load_string($this->payload);
-                break;
-            default:
-                throw new \RuntimeException("The Content-Type '{$this->contentType}' is unsupported.");
-                break;
+        $converterClass = $this->configuration->getContentConverter($this->getContentType());
+
+        // TODO: check if content type is supported
+        if (empty($converterClass)) {
+            throw new \RuntimeException('Invalid content type specified in Accept.');
+        } elseif (!class_exists($converterClass)) {
+            throw new \RuntimeException('Content converter class could not be found.');
         }
+
+        $converter = new $converterClass;
+
+        $data = $converter->decode($this->body);
 
         return $data;
     }
