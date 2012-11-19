@@ -187,13 +187,14 @@ class Request
 
     /**
      * Returns the value of a single query string parameter.
-     * @param $parameter
+     * @param  string $parameter
+     * @param  mixed  $default
      * @return mixed
      */
-    public function getParameter($parameter)
+    public function getParameter($parameter, $default = null)
     {
         if (!isset($this->parameters[$parameter])) {
-            return null;
+            return $default;
         }
 
         return $this->parameters[$parameter];
@@ -211,7 +212,7 @@ class Request
     /**
      * Sets an individual query string parameter.
      * @param string $parameter
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function setParameter($parameter, $value)
     {

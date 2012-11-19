@@ -67,13 +67,14 @@ class SimpleDoctrineService
 
     /**
      * Retrieves a collection of resource entities.
+     * @param  array $filters
+     * @param  array $order
+     * @param  int   $limit
+     * @param  int   $offset
      * @return array
      */
-    public function getCollection()
+    public function getCollection($filters = array(), $order = array(), $limit = 10, $offset = 0)
     {
-        $offset = 0;
-        $limit = 10;
-
         $query = $this->entityManager->createQuery("SELECT r FROM {$this->resourceClassName} r");
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
@@ -85,8 +86,8 @@ class SimpleDoctrineService
         $data = array(
             'items' => count($collection) ? $collection : array(),
             'count' => count($collection),
-            'total' => $total,
-            'perPage' => $limit
+            'total' => (int) $total,
+            'perPage' => (int) $limit
         );
 
         return $data;

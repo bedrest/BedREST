@@ -117,14 +117,19 @@ class SimpleDoctrineHandler implements Handler
      */
     public function handleGetCollection(Request $request, Response $response)
     {
+        // get the parameters
+        $limit = (int) $request->getParameter('maxResults', 10);
+        $offset = 0;
+
+        // get the service and request the collection
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
-        // get the service
         $service = $this->serviceManager->getService($resourceMetadata);
 
-        $dataMapper = $this->getDataMapper();
+        $data = $service->getCollection(array(), array(), $limit, $offset);
 
-        $data = $service->getCollection();
+        // get the data mapper and compose the response body
+        $dataMapper = $this->getDataMapper();
 
         $response->setBody($dataMapper->reverse($data));
     }
