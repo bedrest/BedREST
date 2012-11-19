@@ -146,6 +146,9 @@ class SimpleDoctrineHandler implements Handler
      */
     public function handlePostResource(Request $request, Response $response)
     {
+        // get the parameters
+        $depth = (int) $request->getParameter('depth', 1);
+
         // create an empty instance of the resource entity
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
@@ -164,7 +167,7 @@ class SimpleDoctrineHandler implements Handler
         $service->create($resource);
 
         // set the response with the content of the new resource entity
-        $response->setBody($dataMapper->reverse($resource));
+        $response->setBody($dataMapper->reverse($resource, $depth));
     }
 
     /**
