@@ -15,6 +15,7 @@
 
 namespace BedRest\Rest;
 
+use BedRest\Content\Negotiation\EncodingList;
 use BedRest\Content\Negotiation\MediaTypeList;
 
 /**
@@ -266,7 +267,7 @@ class Request
     /**
      * Returns the parsed accepted content types of the request, usually determined by the 'Accept-Encoding'
      * HTTP header.
-     * @return \BedRest\Content\Negotiation\MediaTypeList
+     * @return \BedRest\Content\Negotiation\EncodingList
      */
     public function getAcceptEncoding()
     {
@@ -284,7 +285,7 @@ class Request
             $acceptEncoding = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : null;
         }
 
-        $this->acceptEncoding = new MediaTypeList($acceptEncoding);
+        $this->acceptEncoding = new EncodingList($acceptEncoding);
     }
 
     /**

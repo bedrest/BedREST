@@ -103,12 +103,12 @@ class RequestTest extends BaseTestCase
     {
         $expected = array(
             array(
-                'media_range' => 'gzip',
+                'encoding' => 'gzip',
                 'q' => 1
             )
         );
 
-        $this->assertEquals($expected, $this->request->getAcceptEncoding()->getMediaTypes());
+        $this->assertEquals($expected, $this->request->getAcceptEncoding()->getEncodings());
     }
 
     public function testSetAcceptEncoding()
@@ -117,12 +117,12 @@ class RequestTest extends BaseTestCase
 
         $expected = array(
             array(
-                'media_range' => 'deflate',
+                'encoding' => 'deflate',
                 'q' => 1
             )
         );
 
-        $this->assertEquals($expected, $this->request->getAcceptEncoding()->getMediaTypes());
+        $this->assertEquals($expected, $this->request->getAcceptEncoding()->getEncodings());
     }
 
     public function testRawBody()

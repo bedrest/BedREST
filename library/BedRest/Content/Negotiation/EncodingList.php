@@ -16,17 +16,17 @@
 namespace BedRest\Content\Negotiation;
 
 /**
- * MediaTypeList
+ * EncodingList
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class MediaTypeList extends AbstractList
+class EncodingList extends AbstractList
 {
     /**
      * The list of media types.
      * @var array
      */
-    protected $mediaTypes = array();
+    protected $encodings = array();
 
     /**
      * Constructor.
@@ -39,8 +39,8 @@ class MediaTypeList extends AbstractList
             $list = explode(',', $list);
         }
 
-        $mediaTypes = $this->parse($list);
-        $this->mediaTypes = $this->sort($mediaTypes);
+        $encodings = $this->parse($list);
+        $this->encodings = $this->sort($encodings);
     }
 
     /**
@@ -56,7 +56,7 @@ class MediaTypeList extends AbstractList
             $item = explode(';', trim($item));
 
             $entry = array(
-                'media_range' => array_shift($item),
+                'encoding' => array_shift($item),
                 'q' => 1
             );
 
@@ -81,9 +81,9 @@ class MediaTypeList extends AbstractList
      * Returns the full, ordered list of media types.
      * @return array
      */
-    public function getMediaTypes()
+    public function getEncodings()
     {
-        return $this->mediaTypes;
+        return $this->encodings;
     }
 
     /**
@@ -93,9 +93,9 @@ class MediaTypeList extends AbstractList
      */
     public function getBestMatch(array $formats)
     {
-        foreach ($this->mediaTypes as $item) {
-            if (in_array($item['media_range'], $formats)) {
-                return $item['media_range'];
+        foreach ($this->encodings as $item) {
+            if (in_array($item['encoding'], $formats)) {
+                return $item['encoding'];
             }
         }
 
