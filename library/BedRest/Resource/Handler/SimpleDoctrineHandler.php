@@ -187,7 +187,28 @@ class SimpleDoctrineHandler implements Handler
      */
     public function handlePutResource(Request $request, Response $response)
     {
-        // TODO: Implement handlePutResource() method.
+        // get the parameters
+        $depth = (int) $request->getParameter('depth', 1);
+
+        // get the metadata for the resource and the service required
+        $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
+        $service = $this->serviceManager->getService($resourceMetadata);
+
+        // get the instance referred to
+        $identifier = $request->getRouteComponent('identifier');
+        $resource = $service->get($identifier);
+
+        // populate the resource with data from the request using a DataMapper
+        $requestData = (array) $request->getBody();
+
+        $dataMapper = $this->getDataMapper();
+        $dataMapper->map($resource, $requestData);
+
+        // perform the actual service operation
+        $service->update($resource);
+
+        // set the response with the content of the new resource entity
+        $response->setBody($dataMapper->reverse($resource, $depth));
     }
 
     /**

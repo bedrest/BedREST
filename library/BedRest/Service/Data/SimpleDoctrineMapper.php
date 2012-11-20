@@ -158,7 +158,9 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
     protected function reverseEntity($resource, $maxDepth, $currentDepth)
     {
         if ($currentDepth > $maxDepth) {
-            $output = $resource->id;
+            $output = array(
+                'id' => $resource->id
+            );
         } else {
             $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
