@@ -45,7 +45,7 @@ class MediaTypeList extends AbstractList
 
     /**
      * Parses a list of media types out into a normalised structure.
-     * @param array $list
+     * @param  array $list
      * @return array
      */
     protected function parse(array $list)
@@ -88,7 +88,7 @@ class MediaTypeList extends AbstractList
 
     /**
      * Returns the best format out of a list of supplied formats.
-     * @param array $formats
+     * @param  array          $formats
      * @return string|boolean
      */
     public function getBestMatch(array $formats)

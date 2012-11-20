@@ -24,7 +24,7 @@ abstract class AbstractList
 {
     /**
      * Sorts a list by the quality comparator.
-     * @param array $list
+     * @param  array $list
      * @return array
      */
     protected function sort(array $list)
@@ -38,8 +38,8 @@ abstract class AbstractList
 
     /**
      * Comparator function for sorting a list of arrays by their 'q' factor.
-     * @param array $mediaType1
-     * @param array $mediaType2
+     * @param  array   $mediaType1
+     * @param  array   $mediaType2
      * @return integer
      */
     public function qualityFactorComparator($mediaType1, $mediaType2)
