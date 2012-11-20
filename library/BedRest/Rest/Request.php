@@ -15,6 +15,8 @@
 
 namespace BedRest\Rest;
 
+use BedRest\Content\Negotiation\MediaTypeList;
+
 /**
  * Request
  *
@@ -30,16 +32,6 @@ class Request
      * @var \BedRest\Rest\Configuration
      */
     protected $configuration;
-
-    const METHOD_HEAD = 'HEAD';
-    const METHOD_GET = 'GET';
-    const METHOD_GET_COLLECTION = 'GET_COLLECTION';
-    const METHOD_POST = 'POST';
-    const METHOD_POST_COLLECTION = 'POST_COLLECTION';
-    const METHOD_PUT = 'PUT';
-    const METHOD_PUT_COLLECTION = 'PUT_COLLECTION';
-    const METHOD_DELETE = 'DELETE';
-    const METHOD_DELETE_COLLECTION = 'DELETE_COLLECTION';
 
     /**
      * HTTP method of the request.
@@ -73,13 +65,13 @@ class Request
 
     /**
      * Parsed and ordered 'Accept' header.
-     * @var array
+     * @var \BedRest\Content\Negotiation\MediaTypeList
      */
     protected $accept = array();
 
     /**
      * Parsed and ordered 'Accept-Encoding' header.
-     * @var array
+     * @var \BedRest\Content\Negotiation\MediaTypeList
      */
     protected $acceptEncoding = array();
 
@@ -250,7 +242,7 @@ class Request
 
     /**
      * Returns the parsed accepted content types of the request, usually determined by the 'Accept' HTTP header.
-     * @return array
+     * @return \BedRest\Content\Negotiation\MediaTypeList
      */
     public function getAccept()
     {
@@ -268,58 +260,13 @@ class Request
             $accept = isset($_SERVER['HTTP_ACCEPT']) ? $_SERVER['HTTP_ACCEPT'] : null;
         }
 
-        // split accept into components
-        $accept = explode(',', $accept);
-
-        $this->accept = array();
-
-        foreach ($accept as $item) {
-            $item = explode(';', trim($item));
-
-            $entry = array(
-                'media_range' => array_shift($item),
-                'q' => 1
-            );
-
-            foreach ($item as $param) {
-                $param = explode('=', $param);
-
-                // ignore malformed params
-                if (count($param) != 2) {
-                    continue;
-                }
-
-                $entry[$param[0]] = $param[1];
-            }
-
-            $this->accept[] = $entry;
-        }
-
-        // @todo Take account of specificity with wildcard media ranges
-        // (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
-        $this->mergeSort($this->accept, array($this, 'sortQualityComparator'));
-    }
-
-    /**
-     * Gets the best match format to return a response in based on a supplied list of formats.
-     * @param  array          $formats
-     * @return string|boolean
-     */
-    public function getAcceptBestMatch(array $formats)
-    {
-        foreach ($this->accept as $accept) {
-            if (in_array($accept['media_range'], $formats)) {
-                return $accept['media_range'];
-            }
-        }
-
-        return false;
+        $this->accept = new MediaTypeList($accept);
     }
 
     /**
      * Returns the parsed accepted content types of the request, usually determined by the 'Accept-Encoding'
      * HTTP header.
-     * @return array
+     * @return \BedRest\Content\Negotiation\MediaTypeList
      */
     public function getAcceptEncoding()
     {
@@ -337,35 +284,7 @@ class Request
             $acceptEncoding = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : null;
         }
 
-        // split accept into components
-        $acceptEncoding = explode(',', $acceptEncoding);
-
-        $this->acceptEncoding = array();
-
-        foreach ($acceptEncoding as $item) {
-            $item = explode(';', trim($item));
-
-            $entry = array(
-                'encoding' => array_shift($item),
-                'q' => 1
-            );
-
-            foreach ($item as $param) {
-                $param = explode('=', $param);
-
-                // ignore malformed params and anything which isn't the quality factor
-                if (count($param) != 2 || $param[0] != 'q') {
-                    continue;
-                }
-
-                $entry['q'] = $param[1];
-            }
-
-            $this->acceptEncoding[] = $entry;
-        }
-
-        // sort according to quality factor
-        $this->mergeSort($this->acceptEncoding, array($this, 'sortQualityComparator'));
+        $this->acceptEncoding = new MediaTypeList($acceptEncoding);
     }
 
     /**
@@ -379,7 +298,6 @@ class Request
 
     /**
      * Returns the request body, decoded according to the Content-Type specified in the request.
-     * @TODO allow registration of an arbitrary set of content converters to be used in here.
      * @param  boolean           $decode
      * @throws \RuntimeException
      * @return mixed
@@ -404,80 +322,5 @@ class Request
         $data = $converter->decode($this->body);
 
         return $data;
-    }
-
-    /**
-     * Comparator function for sorting a list of arrays by their 'q' factor.
-     * @param  array   $e1
-     * @param  array   $e2
-     * @return integer
-     */
-    protected function sortQualityComparator($e1, $e2)
-    {
-        $r = $e2['q'] - $e1['q'];
-
-        // doesn't cope too well with values 1 > v > -1, so make sure we return simple integers
-        if ($r > 0) {
-            $r = 1;
-        } elseif ($r < 0) {
-            $r = -1;
-        }
-
-        return $r;
-    }
-
-    /**
-     * Sorts the parsed accept header using a merge sort algorithm, in order to maintain order as presented in the
-     * header.
-     *
-     * All of this code has been taken from http://www.php.net/manual/en/function.usort.php#38827, some changes made
-     * are purely for readability and code style.
-     * @param  array  $array
-     * @param  string $comparator
-     * @return null
-     */
-    protected function mergeSort(array &$array, $comparator = 'strcmp')
-    {
-        // optimisation, no sorting required on arrays with 0 or 1 items
-        if (count($array) < 2) {
-            return;
-        }
-
-        // split the array in half
-        $halfway = count($array) / 2;
-        $array1 = array_slice($array, 0, $halfway);
-        $array2 = array_slice($array, $halfway);
-
-        // use recursion to sort both halves
-        $this->mergeSort($array1, $comparator);
-        $this->mergeSort($array2, $comparator);
-
-        // optimisation, if the end of $array1 is less than the start of $array2, append and return
-        if (call_user_func($comparator, end($array1), $array2[0]) < 1) {
-            $array = array_merge($array1, $array2);
-
-            return;
-        }
-
-        // merge the arrays into a single array
-        $array = array();
-        $ptr1 = $ptr2 = 0;
-
-        while ($ptr1 < count($array1) && $ptr2 < count($array2)) {
-            if (call_user_func($comparator, $array1[$ptr1], $array2[$ptr2]) < 1) {
-                $array[] = $array1[$ptr1++];
-            } else {
-                $array[] = $array2[$ptr2++];
-            }
-        }
-
-        // merge the remainder
-        while ($ptr1 < count($array1)) {
-            $array[] = $array1[$ptr1++];
-        }
-
-        while ($ptr2 < count($array2)) {
-            $array[] = $array2[$ptr2++];
-        }
     }
 }

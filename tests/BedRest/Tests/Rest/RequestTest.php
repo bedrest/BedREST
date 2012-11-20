@@ -82,7 +82,7 @@ class RequestTest extends BaseTestCase
             )
         );
 
-        $this->assertEquals($expected, $this->request->getAccept());
+        $this->assertEquals($expected, $this->request->getAccept()->getMediaTypes());
     }
 
     public function testSetAccept()
@@ -96,82 +96,19 @@ class RequestTest extends BaseTestCase
             )
         );
 
-        $this->assertEquals($expected, $this->request->getAccept());
-    }
-
-    public function testMultipleAccept()
-    {
-        $this->request->setAccept('application/json, text/xml');
-
-        $expected = array(
-            array(
-                'media_range' => 'application/json',
-                'q' => 1
-            ),
-            array(
-                'media_range' => 'text/xml',
-                'q' => 1
-            )
-        );
-
-        $this->assertEquals($expected, $this->request->getAccept());
-    }
-
-    public function testAcceptBestMatch()
-    {
-        $this->request->setAccept('application/json;q=1, text/xml;q=0.5');
-
-        $bestMatch = $this->request->getAcceptBestMatch(
-            array(
-                'application/json',
-                'text/xml'
-            )
-        );
-
-        $this->assertEquals('application/json', $bestMatch);
-    }
-
-    public function testAcceptBestMatchNoMatch()
-    {
-        $this->request->setAccept('application/json');
-
-        $bestMatch = $this->request->getAcceptBestMatch(
-            array(
-                'text/xml'
-            )
-        );
-
-        $this->assertFalse($bestMatch);
-    }
-
-    public function testMultipleAcceptQualityOrdering()
-    {
-        $this->request->setAccept('text/xml;q=0.5, application/json;q=1');
-
-        $expected = array(
-            array(
-                'media_range' => 'application/json',
-                'q' => 1
-            ),
-            array(
-                'media_range' => 'text/xml',
-                'q' => 0.5
-            )
-        );
-
-        $this->assertEquals($expected, $this->request->getAccept());
+        $this->assertEquals($expected, $this->request->getAccept()->getMediaTypes());
     }
 
     public function testAcceptEncodingDetected()
     {
         $expected = array(
             array(
-                'encoding' => 'gzip',
+                'media_range' => 'gzip',
                 'q' => 1
             )
         );
 
-        $this->assertEquals($expected, $this->request->getAcceptEncoding());
+        $this->assertEquals($expected, $this->request->getAcceptEncoding()->getMediaTypes());
     }
 
     public function testSetAcceptEncoding()
@@ -180,48 +117,12 @@ class RequestTest extends BaseTestCase
 
         $expected = array(
             array(
-                'encoding' => 'deflate',
+                'media_range' => 'deflate',
                 'q' => 1
             )
         );
 
-        $this->assertEquals($expected, $this->request->getAcceptEncoding());
-    }
-
-    public function testMultipleAcceptEncoding()
-    {
-        $this->request->setAcceptEncoding('gzip, deflate');
-
-        $expected = array(
-            array(
-                'encoding' => 'gzip',
-                'q' => 1
-            ),
-            array(
-                'encoding' => 'deflate',
-                'q' => 1
-            )
-        );
-
-        $this->assertEquals($expected, $this->request->getAcceptEncoding());
-    }
-
-    public function testMultipleAcceptEncodingQualityOrdering()
-    {
-        $this->request->setAcceptEncoding('deflate;q=0.5, gzip;q=1');
-
-        $expected = array(
-            array(
-                'encoding' => 'gzip',
-                'q' => 1
-            ),
-            array(
-                'encoding' => 'deflate',
-                'q' => 0.5
-            )
-        );
-
-        $this->assertEquals($expected, $this->request->getAcceptEncoding());
+        $this->assertEquals($expected, $this->request->getAcceptEncoding()->getMediaTypes());
     }
 
     public function testRawBody()

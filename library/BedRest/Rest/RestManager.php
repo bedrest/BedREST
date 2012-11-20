@@ -19,6 +19,7 @@ use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Configuration;
 use BedRest\Rest\Request;
+use BedRest\Rest\RequestType;
 use BedRest\Rest\Response;
 use BedRest\Service\Configuration as ServiceConfiguration;
 
@@ -130,7 +131,7 @@ class RestManager
         $response = new Response($this->configuration);
 
         // establish the best content type
-        $contentType = $request->getAcceptBestMatch($this->configuration->getContentTypes());
+        $contentType = $request->getAccept()->getBestMatch($this->configuration->getContentTypes());
 
         if (!$contentType) {
             throw Exception::notAcceptable();
@@ -145,28 +146,28 @@ class RestManager
 
         // handle the request
         switch ($request->getMethod()) {
-            case Request::METHOD_GET:
+            case RequestType::METHOD_GET:
                 $handler->handleGetResource($request, $response);
                 break;
-            case Request::METHOD_GET_COLLECTION:
+            case RequestType::METHOD_GET_COLLECTION:
                 $handler->handleGetCollection($request, $response);
                 break;
-            case Request::METHOD_POST:
+            case RequestType::METHOD_POST:
                 $handler->handlePostResource($request, $response);
                 break;
-            case Request::METHOD_POST_COLLECTION:
+            case RequestType::METHOD_POST_COLLECTION:
                 $handler->handlePostCollection($request, $response);
                 break;
-            case Request::METHOD_PUT:
+            case RequestType::METHOD_PUT:
                 $handler->handlePutResource($request, $response);
                 break;
-            case Request::METHOD_PUT_COLLECTION:
+            case RequestType::METHOD_PUT_COLLECTION:
                 $handler->handlePutCollection($request, $response);
                 break;
-            case Request::METHOD_DELETE:
+            case RequestType::METHOD_DELETE:
                 $handler->handleDeleteResource($request, $response);
                 break;
-            case Request::METHOD_DELETE_COLLECTION:
+            case RequestType::METHOD_DELETE_COLLECTION:
                 $handler->handleDeleteCollection($request, $response);
                 break;
             default:
