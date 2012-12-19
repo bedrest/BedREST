@@ -98,7 +98,7 @@ abstract class AbstractDoctrineMapper implements DataMapper
 
         foreach ($classMetaInfo->fieldMappings as $fieldName => $fieldMapping) {
             // skip fields not included in the data
-            if (!isset($data[$fieldName])) {
+            if (!array_key_exists($fieldName, $data)) {
                 continue;
             }
 
@@ -167,7 +167,11 @@ abstract class AbstractDoctrineMapper implements DataMapper
     {
         if ($value instanceof \DateTime) {
             // do nothing
+        } elseif (empty($value)) {
+            // force empty values to NULL
+            $value = null;
         } elseif (is_array($value)) {
+            // interpret the value as an array-cast DateTime object
             if (!isset($value['date'])) {
                 throw new Exception(
                     'Missing "date" component in array.'
@@ -181,8 +185,10 @@ abstract class AbstractDoctrineMapper implements DataMapper
 
             $value = new \DateTime($dateString);
         } elseif (is_string($value)) {
+            // treat it as a DateTime string
             $value = new \DateTime($value);
         } elseif (is_integer($value)) {
+            // treat it as a UTC timestamp
             $value = \DateTime::createFromFormat('U', $value);
         }
 
