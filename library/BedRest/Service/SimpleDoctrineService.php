@@ -142,4 +142,18 @@ class SimpleDoctrineService
 
         return $entity;
     }
+
+    /**
+     * Deletes an entity, referenced by an identifier.
+     * @param string $entity
+     */
+    public function delete($entity)
+    {
+        if (!is_object($entity)) {
+            $entity = $this->entityManager->find($this->resourceClassName, $entity);
+        }
+
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+    }
 }

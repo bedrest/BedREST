@@ -177,7 +177,36 @@ class SimpleDoctrineHandler implements Handler
      */
     public function handlePostCollection(Request $request, Response $response)
     {
-        // TODO: Implement handlePostCollection() method.
+        // get the parameters
+        $depth = (int) $request->getParameter('depth', 1);
+
+        // create an empty instance of the resource entity
+        $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
+        $className = $resourceMetadata->getClassName();
+
+        // get the service instance and DataMapper
+        $dataMapper = $this->getDataMapper();
+        $service = $this->serviceManager->getService($resourceMetadata);
+
+        // loop through each item in the collection provided in the request
+        $requestData = (array) $request->getBody();
+
+        $resources = array();
+
+        foreach ($requestData as $item) {
+            $resource = new $className;
+
+            // populate the resource with data from the request using the DataMapper
+            $dataMapper->map($resource, $requestData);
+
+            // perform the actual service operation
+            $service->create($resource);
+
+            $resources[] = $resource;
+        }
+
+        // set the response with the content of the new resource entity
+        $response->setBody($dataMapper->reverse($resources, $depth));
     }
 
     /**
@@ -215,10 +244,12 @@ class SimpleDoctrineHandler implements Handler
      * Handles a PUT request for a collection of resources.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
+     * @throws \BedRest\Rest\Exception
+     * @return void
      */
     public function handlePutCollection(Request $request, Response $response)
     {
-        // TODO: Implement handlePutCollection() method.
+        throw new \BedRest\Rest\Exception("PUT requests to resource collections are not supported at this time.");
     }
 
     /**
@@ -228,16 +259,39 @@ class SimpleDoctrineHandler implements Handler
      */
     public function handleDeleteResource(Request $request, Response $response)
     {
-        // TODO: Implement handleDeleteResource() method.
+        // get the service
+        $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
+
+        $service = $this->serviceManager->getService($resourceMetadata);
+
+        // retrieve the resource and check it exists
+        $identifier = $request->getRouteComponent('identifier');
+        $resource = $service->get($identifier);
+
+        if ($resource === null) {
+            throw new ResourceNotFoundException;
+        }
+
+        // delete the requested item
+        $service->delete($resource);
+
+        // populate the response
+        $data = array(
+            'deleted' => true
+        );
+
+        $response->setBody($data);
     }
 
     /**
      * Handles a DELETE request for a collection of resources.
      * @param \BedRest\Rest\Request  $request
      * @param \BedRest\Rest\Response $response
+     * @throws \BedRest\Rest\Exception
+     * @return void
      */
     public function handleDeleteCollection(Request $request, Response $response)
     {
-        // TODO: Implement handleDeleteCollection() method.
+        throw new \BedRest\Rest\Exception("DELETE requests to resource collections are not supported at this time.");
     }
 }
