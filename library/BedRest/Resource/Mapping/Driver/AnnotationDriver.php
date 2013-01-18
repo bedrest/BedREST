@@ -19,6 +19,7 @@ use BedRest\Resource\Mapping\Exception;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\Driver\Driver;
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Util\Inflector;
 
 /**
  * AnnotationDriver
@@ -100,7 +101,8 @@ class AnnotationDriver implements Driver
             if (!empty($resourceAnnotation->name)) {
                 $resourceMetadata->setName($resourceAnnotation->name);
             } else {
-                $resourceMetadata->setName(substr($className, strrpos($className, '\\') + 1));
+                $resourceName = Inflector::tableize(substr($className, strrpos($className, '\\') + 1));
+                $resourceMetadata->setName($resourceName);
             }
         }
 

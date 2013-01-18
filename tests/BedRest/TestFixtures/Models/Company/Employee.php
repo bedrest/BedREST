@@ -8,11 +8,15 @@ use BedRest\Resource\Mapping\Annotation as BedRest;
 /**
  * Employee
  *
+ * This model uses protected properties and magic getters and setters. It also
+ * does not have an explicit resource name set, so it should be auto-generated
+ * by BedREST.
+ *
  * @author Geoff Adams <geoff@dianode.net>
  *
  * @ORM\Entity
  * @ORM\Table(name="employee")
- * @BedRest\Resource(name="employee")
+ * @BedRest\Resource
  * @BedRest\Handler(
  *      handler="BedRest\TestFixtures\ResourceHandlers\DefaultHandler",
  *      service="BedRest\TestFixtures\Services\Company\Employee"
