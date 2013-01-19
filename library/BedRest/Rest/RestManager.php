@@ -120,12 +120,11 @@ class RestManager
     }
 
     /**
-     * Processes a REST request, returning a Response object.
-     * @param  \BedRest\Rest\Request   $request
-     * @throws \BedRest\Rest\Exception
+     * Creates and prepares a new Response object, using the supplied Request object where needed.
+     * @param  \BedRest\Rest\Request  $request
      * @return \BedRest\Rest\Response
      */
-    public function process(Request $request)
+    protected function createResponse(Request $request)
     {
         // create an empty response
         $response = new Response($this->configuration);
@@ -139,9 +138,21 @@ class RestManager
 
         $response->setContentType($contentType);
 
+        return $response;
+    }
+
+    /**
+     * Processes a REST request, returning a Response object.
+     * @param  \BedRest\Rest\Request   $request
+     * @throws \BedRest\Rest\Exception
+     * @return \BedRest\Rest\Response
+     */
+    public function process(Request $request)
+    {
+        $response = $this->createResponse($request);
+
         // get resource handler for the specified resource
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
-
         $handler = $this->getResourceHandler($resourceMetadata);
 
         // handle the request

@@ -119,7 +119,7 @@ class Request
     public function setMethod($method = null)
     {
         if ($method === null) {
-            $method = $_SERVER['REQUEST_METHOD'];
+            $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null;
         }
 
         $this->method = $method;
