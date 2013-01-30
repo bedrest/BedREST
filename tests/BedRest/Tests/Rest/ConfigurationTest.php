@@ -27,24 +27,6 @@ class ConfigurationTest extends BaseTestCase
         $this->assertEquals($contentTypes, $config->getContentTypes());
     }
 
-    public function testContentConverters()
-    {
-        $config = new Configuration();
-        $converters = array(
-            'application/json' => 'Test1',
-            'text/xml' => 'Test2'
-        );
-
-        $config->setContentConverters($converters);
-
-        $this->assertEquals($converters, $config->getContentConverters());
-
-        $this->assertEquals('Test1', $config->getContentConverter('application/json'));
-        $this->assertEquals('Test2', $config->getContentConverter('text/xml'));
-
-        $this->assertNull($config->getContentConverter('text/plain'));
-    }
-
     public function testDefaultResourceHandler()
     {
         $config = new Configuration();

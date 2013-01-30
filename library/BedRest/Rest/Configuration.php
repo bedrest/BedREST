@@ -53,14 +53,6 @@ class Configuration
     );
 
     /**
-     * Mapping of content type to converter class name.
-     * @var array
-     */
-    protected $contentConverters = array(
-        'application/json' => 'BedRest\Content\Converter\JsonConverter'
-    );
-
-    /**
      * Array of paths where resources should be auto-discovered.
      * @var array
      */
@@ -118,38 +110,6 @@ class Configuration
     public function getDefaultService()
     {
         return $this->defaultService;
-    }
-
-    /**
-     * Sets the mapping between content types and content converters.
-     * @param array $contentConverters
-     */
-    public function setContentConverters(array $contentConverters)
-    {
-        $this->contentConverters = $contentConverters;
-    }
-
-    /**
-     * Returns the content type mappings.
-     * @return array
-     */
-    public function getContentConverters()
-    {
-        return $this->contentConverters;
-    }
-
-    /**
-     * Returns the content converter for the supplied content type, if available.
-     * @param  string         $contentType
-     * @return string|boolean
-     */
-    public function getContentConverter($contentType)
-    {
-        if (!isset($this->contentConverters[$contentType])) {
-            return null;
-        }
-
-        return $this->contentConverters[$contentType];
     }
 
     /**

@@ -15,6 +15,7 @@
 
 namespace BedRest\Rest;
 
+use BedRest\Content\Converter\Registry as ContentConverterRegistry;
 use BedRest\Content\Negotiation\EncodingList;
 use BedRest\Content\Negotiation\MediaTypeList;
 
@@ -28,12 +29,6 @@ use BedRest\Content\Negotiation\MediaTypeList;
  */
 class Request
 {
-    /**
-     * Configuration object.
-     * @var \BedRest\Rest\Configuration
-     */
-    protected $configuration;
-
     /**
      * HTTP method of the request.
      * @var string
@@ -84,13 +79,10 @@ class Request
 
     /**
      * Constructor.
-     * Initialises the Response object with the specified REST configuration.
-     * @param \BedRest\Rest\Configuration $configuration
+     * By default, the Request object will be populated from environment settings (such as $_SERVER and $_GET).
      */
-    public function __construct(Configuration $configuration)
+    public function __construct()
     {
-        $this->configuration = $configuration;
-
         $this->setMethod();
 
         $this->setContentType();
@@ -309,16 +301,7 @@ class Request
             return $this->body;
         }
 
-        $converterClass = $this->configuration->getContentConverter($this->getContentType());
-
-        // TODO: check if content type is supported
-        if (empty($converterClass)) {
-            throw new \RuntimeException('Invalid content type specified in Accept.');
-        } elseif (!class_exists($converterClass)) {
-            throw new \RuntimeException('Content converter class could not be found.');
-        }
-
-        $converter = new $converterClass;
+        $converter = ContentConverterRegistry::getConverterInstance($this->getContentType());
 
         $data = $converter->decode($this->body);
 

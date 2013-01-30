@@ -15,6 +15,8 @@
 
 namespace BedRest\Rest;
 
+use BedRest\Content\Converter\Registry as ContentConverterRegistry;
+
 /**
  * Response
  *
@@ -22,12 +24,6 @@ namespace BedRest\Rest;
  */
 class Response
 {
-    /**
-     * Configuration object.
-     * @var \BedRest\Rest\Configuration
-     */
-    protected $configuration;
-
     /**
      * Body content before Content-Type encoding.
      * @var mixed
@@ -59,16 +55,6 @@ class Response
     protected $code = 200;
 
     /**
-     * Constructor.
-     * Initialises the Response object with the specified REST configuration.
-     * @param \BedRest\Rest\Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
      * Sets the body content.
      * @param mixed $body
      */
@@ -95,16 +81,7 @@ class Response
     public function getRawBody()
     {
         if (!$this->bodyProcessed) {
-            $converterClass = $this->configuration->getContentConverter($this->getContentType());
-
-            // TODO: check if content type is supported
-            if (empty($converterClass)) {
-                throw new \RuntimeException('Invalid content type specified in Accept header.');
-            } elseif (!class_exists($converterClass)) {
-                throw new \RuntimeException("The Content Converter class '$converterClass' could not be found.");
-            }
-
-            $converter = new $converterClass;
+            $converter = ContentConverterRegistry::getConverterInstance($this->getContentType());
 
             $this->rawBody = $converter->encode($this->body);
             $this->bodyProcessed = true;
