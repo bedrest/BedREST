@@ -16,6 +16,7 @@
 namespace BedRest\Rest;
 
 use BedRest\Resource\Mapping\Driver\Driver as ResourceDriver;
+use Doctrine\Common\Cache\Cache;
 
 /**
  * Configuration
@@ -31,6 +32,12 @@ class Configuration
      * @var \BedRest\Resource\Mapping\Driver\Driver
      */
     protected $resourceMetadataDriverImpl;
+
+    /**
+     * Resource cache implementation.
+     * @var \Doctrine\Common\Cache\Cache
+     */
+    protected $resourceMetadataCacheImpl;
 
     /**
      * Default resource handler class name.
@@ -74,6 +81,24 @@ class Configuration
     public function getResourceMetadataDriverImpl()
     {
         return $this->resourceMetadataDriverImpl;
+    }
+
+    /**
+     * Sets the resource metadata cache implementation.
+     * @param \Doctrine\Common\Cache\Cache $cache
+     */
+    public function setResourceMetadataCacheImpl(Cache $cache)
+    {
+        $this->resourceMetadataCacheImpl = $cache;
+    }
+
+    /**
+     * Returns the resource metadata cache implementation.
+     * @return \Doctrine\Common\Cache\Cache
+     */
+    public function getResourceMetadataCacheImpl()
+    {
+        return $this->resourceMetadataCacheImpl;
     }
 
     /**

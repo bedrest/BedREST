@@ -17,6 +17,7 @@ namespace BedRest\Resource\Mapping;
 
 use BedRest\Rest\Configuration;
 use BedRest\Resource\Mapping\Exception;
+use Doctrine\Common\Cache\Cache;
 
 /**
  * ResourceMetadataFactory
@@ -26,10 +27,28 @@ use BedRest\Resource\Mapping\Exception;
 class ResourceMetadataFactory
 {
     /**
+     * Prefix for cache IDs.
+     * @var string
+     */
+    protected $cachePrefix = 'BEDREST::';
+
+    /**
+     * Suffix for cache IDs.
+     * @var string
+     */
+    protected $cacheSuffix = '\$RESOURCEMETADATA';
+
+    /**
      * Configuration object.
      * @var \BedRest\Rest\Configuration
      */
     protected $configuration;
+
+    /**
+     * Cache driver to use.
+     * @var \Doctrine\Common\Cache\Cache
+     */
+    protected $cache;
 
     /**
      * Mapping metadata driver.
@@ -59,6 +78,25 @@ class ResourceMetadataFactory
         $this->configuration = $configuration;
 
         $this->driver = $configuration->getResourceMetadataDriverImpl();
+        $this->cache = $configuration->getResourceMetadataCacheImpl();
+    }
+
+    /**
+     * Sets the cache driver for this factory instance.
+     * @param \Doctrine\Common\Cache\Cache $cache
+     */
+    public function setCache(Cache $cache = null)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Returns the cache driver in use by this factory instance.
+     * @return \Doctrine\Common\Cache\Cache
+     */
+    public function getCache()
+    {
+        return $this->cache;
     }
 
     /**
@@ -73,7 +111,20 @@ class ResourceMetadataFactory
             throw Exception::classIsNotMappedResource($className);
         }
 
-        if (!isset($this->loadedMetadata[$className])) {
+        if (isset($this->loadedMetadata[$className])) {
+            return $this->loadedMetadata[$className];
+        }
+
+        if ($this->cache) {
+            $cacheId = $this->cachePrefix . $className . $this->cacheSuffix;
+
+            if (($cached = $this->cache->fetch($cacheId)) !== false) {
+                $this->loadedMetadata[$className] = $cached;
+            } else {
+                $this->loadMetadata($className);
+                $this->cache->save($cacheId, $this->loadedMetadata[$className], null);
+            }
+        } else {
             $this->loadMetadata($className);
         }
 
@@ -107,10 +158,7 @@ class ResourceMetadataFactory
         $resourceClasses = $this->driver->getAllClassNames();
 
         foreach ($resourceClasses as $class) {
-            if (!isset($this->loadedMetadata[$class]) &&
-                $this->isResource($class)) {
-                $this->loadMetadata($class);
-            }
+            $this->getMetadataFor($class);
         }
 
         return $this->loadedMetadata;
