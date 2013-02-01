@@ -46,6 +46,7 @@
                  codecoverage="true"
                  bootstrap="${tests.dir}bootstrap.php">
             <batchtest>
+                <fileset refid="library" />
                 <fileset refid="testsuite" />
             </batchtest>
 
@@ -87,11 +88,9 @@
     <target name="api-doc" description="Generates the BedREST API Documentation">
         <mkdir dir="${docs.api.dir}" />
 
-        <!--
         <phpdoc2 title="BedREST API Documentation" destdir="${docs.api.dir}" template="responsive">
             <fileset refid="library" />
         </phpdoc2>
-        -->
     </target>
 
     <!-- Reports -->
