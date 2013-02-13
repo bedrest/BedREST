@@ -22,31 +22,40 @@ namespace BedRest\Resource\Mapping;
  */
 class Exception extends \Exception
 {
-    public static function serviceClassNotProvided($className)
-    {
-        return new self("Class '{$className}' does not have a specified service class.");
-    }
-
+    /**
+     * Exception for when a class is not a mapped resource.
+     * @param  string                              $className
+     * @return \BedRest\Resource\Mapping\Exception
+     */
     public static function classIsNotMappedResource($className)
     {
         return new self("Class '{$className}' is not a mapped resource.");
     }
 
+    /**
+     * Exception for when a resource cannot be found.
+     * @param  string                              $resourceName
+     * @return \BedRest\Resource\Mapping\Exception
+     */
     public static function resourceNotFound($resourceName)
     {
         return new self("Resource '{$resourceName}' not found.");
     }
 
-    public static function classIsNotMappedService($className)
-    {
-        return new self("Class '{$className}' is not a mapped service.");
-    }
-
+    /**
+     * Exception for when no paths have been supplied.
+     * @return \BedRest\Resource\Mapping\Exception
+     */
     public static function pathsRequired()
     {
         return new self("A set of paths must be provided in order to discover classes.");
     }
 
+    /**
+     * Exception for when an invalid path has been supplied.
+     * @param $path
+     * @return \BedRest\Resource\Mapping\Exception
+     */
     public static function invalidPath($path)
     {
         return new self("The path '{$path}' is invalid.");
