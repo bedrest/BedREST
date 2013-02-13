@@ -23,28 +23,8 @@ namespace BedRest\Content\Negotiation;
 class EncodingList extends AbstractList
 {
     /**
-     * The list of media types.
-     * @var array
-     */
-    protected $encodings = array();
-
-    /**
-     * Constructor.
-     * Takes a list of media types, either as a full string or an array of strings.
-     * @param mixed $list
-     */
-    public function __construct($list)
-    {
-        if (!is_array($list)) {
-            $list = explode(',', $list);
-        }
-
-        $encodings = $this->parse($list);
-        $this->encodings = $this->sort($encodings);
-    }
-
-    /**
      * Parses a list of media types out into a normalised structure.
+     *
      * @param  array $list
      * @return array
      */
@@ -79,21 +59,23 @@ class EncodingList extends AbstractList
 
     /**
      * Returns the full, ordered list of media types.
+     *
      * @return array
      */
     public function getEncodings()
     {
-        return $this->encodings;
+        return $this->items;
     }
 
     /**
      * Returns the best format out of a list of supplied formats.
+     *
      * @param  array          $formats
      * @return string|boolean
      */
     public function getBestMatch(array $formats)
     {
-        foreach ($this->encodings as $item) {
+        foreach ($this->items as $item) {
             if (in_array($item['encoding'], $formats)) {
                 return $item['encoding'];
             }

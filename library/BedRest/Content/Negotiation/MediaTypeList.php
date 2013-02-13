@@ -23,28 +23,8 @@ namespace BedRest\Content\Negotiation;
 class MediaTypeList extends AbstractList
 {
     /**
-     * The list of media types.
-     * @var array
-     */
-    protected $mediaTypes = array();
-
-    /**
-     * Constructor.
-     * Takes a list of media types, either as a full string or an array of strings.
-     * @param mixed $list
-     */
-    public function __construct($list)
-    {
-        if (!is_array($list)) {
-            $list = explode(',', $list);
-        }
-
-        $mediaTypes = $this->parse($list);
-        $this->mediaTypes = $this->sort($mediaTypes);
-    }
-
-    /**
      * Parses a list of media types out into a normalised structure.
+     *
      * @param  array $list
      * @return array
      */
@@ -79,21 +59,23 @@ class MediaTypeList extends AbstractList
 
     /**
      * Returns the full, ordered list of media types.
+     *
      * @return array
      */
     public function getMediaTypes()
     {
-        return $this->mediaTypes;
+        return $this->items;
     }
 
     /**
      * Returns the best format out of a list of supplied formats.
+     *
      * @param  array          $formats
      * @return string|boolean
      */
     public function getBestMatch(array $formats)
     {
-        foreach ($this->mediaTypes as $item) {
+        foreach ($this->items as $item) {
             if (in_array($item['media_range'], $formats)) {
                 return $item['media_range'];
             }

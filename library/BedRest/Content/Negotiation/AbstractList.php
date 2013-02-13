@@ -22,8 +22,39 @@ namespace BedRest\Content\Negotiation;
  */
 abstract class AbstractList
 {
+    protected $items;
+
+    /**
+     * Constructor.
+     * Takes a list of items, either as an array or a comma-delimited string.
+     *
+     * @param mixed $items
+     */
+    public function __construct($items)
+    {
+        if (!is_array($items)) {
+            $items = explode(',', $items);
+        }
+
+        $items = $this->parse($items);
+        $this->items = $this->sort($items);
+    }
+
+    /**
+     * Parses an array of items out into a normalised structure.
+     * Should be overridden by subclasses.
+     *
+     * @param  array $data
+     * @return array
+     */
+    protected function parse(array $data)
+    {
+        return $data;
+    }
+
     /**
      * Sorts a list by the quality comparator.
+     *
      * @param  array $list
      * @return array
      */
@@ -38,6 +69,7 @@ abstract class AbstractList
 
     /**
      * Comparator function for sorting a list of arrays by their 'q' factor.
+     *
      * @param  array   $mediaType1
      * @param  array   $mediaType2
      * @return integer
