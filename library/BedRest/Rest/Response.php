@@ -49,10 +49,10 @@ class Response
     protected $headers = array();
 
     /**
-     * HTTP response code.
+     * HTTP status code.
      * @var integer
      */
-    protected $code = 200;
+    protected $statusCode = 200;
 
     /**
      * Sets the body content.
@@ -159,25 +159,25 @@ class Response
     }
 
     /**
-     * Sets the HTTP response code.
+     * Sets the HTTP status code.
      * @param  integer                 $code
      * @throws \BedRest\Rest\Exception
      */
-    public function setResponseCode($code)
+    public function setStatusCode($code)
     {
         if (!is_int($code) || ($code < 100) || ($code > 599)) {
             throw new \BedRest\Rest\Exception("Invalid HTTP response code.");
         }
 
-        $this->code = $code;
+        $this->statusCode = $code;
     }
 
     /**
-     * Returns the HTTP response code.
+     * Returns the HTTP status code.
      * @return integer
      */
-    public function getResponseCode()
+    public function getStatusCode()
     {
-        return $this->code;
+        return $this->statusCode;
     }
 }

@@ -26,15 +26,15 @@ class ResponseTest extends BaseTestCase
     public function testResponseCode()
     {
         // test default code is 200
-        $this->assertEquals(200, $this->response->getResponseCode());
+        $this->assertEquals(200, $this->response->getStatusCode());
 
         // test setting a code
-        $this->response->setResponseCode(404);
-        $this->assertEquals(404, $this->response->getResponseCode());
+        $this->response->setStatusCode(404);
+        $this->assertEquals(404, $this->response->getStatusCode());
 
         // test setting an invalid code
         $this->setExpectedException('BedRest\Rest\Exception');
-        $this->response->setResponseCode(605);
+        $this->response->setStatusCode(605);
     }
 
     public function testHeaders()
