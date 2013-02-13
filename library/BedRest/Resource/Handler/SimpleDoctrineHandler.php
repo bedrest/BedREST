@@ -242,8 +242,8 @@ class SimpleDoctrineHandler implements Handler
 
     /**
      * Handles a PUT request for a collection of resources.
-     * @param \BedRest\Rest\Request  $request
-     * @param \BedRest\Rest\Response $response
+     * @param  \BedRest\Rest\Request   $request
+     * @param  \BedRest\Rest\Response  $response
      * @throws \BedRest\Rest\Exception
      * @return void
      */
@@ -285,8 +285,8 @@ class SimpleDoctrineHandler implements Handler
 
     /**
      * Handles a DELETE request for a collection of resources.
-     * @param \BedRest\Rest\Request  $request
-     * @param \BedRest\Rest\Response $response
+     * @param  \BedRest\Rest\Request   $request
+     * @param  \BedRest\Rest\Response  $response
      * @throws \BedRest\Rest\Exception
      * @return void
      */

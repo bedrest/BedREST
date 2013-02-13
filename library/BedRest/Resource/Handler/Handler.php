@@ -21,6 +21,16 @@ use BedRest\Rest\Response;
 /**
  * Handler
  *
+ * This interface is the minimum contract expected of a resource handler.
+ *
+ * Each method is expected to accept both a Request and Response object, allowing
+ * the handler to determine the appropriate action to take depending on any aspect
+ * of the Request.
+ *
+ * The Response object should be populated with the generated output, ensuring that
+ * the instance supplied when the method is called is maintained. Failure to do
+ * this could result in undefined behaviour.
+ *
  * @author Geoff Adams <geoff@dianode.net>
  */
 interface Handler

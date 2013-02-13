@@ -114,7 +114,8 @@ class Response
 
     /**
      * Sets all HTTP headers, replacing all existing headers unless the $merge parameter is set to true.
-     * @param array $headers
+     * @param array   $headers
+     * @param boolean $merge
      */
     public function setHeaders(array $headers, $merge = false)
     {
