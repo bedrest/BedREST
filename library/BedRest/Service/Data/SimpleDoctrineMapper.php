@@ -15,9 +15,12 @@
 
 namespace BedRest\Service\Data;
 
+use BedRest\Service\Configuration;
+use BedRest\Service\ServiceManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\Proxy as DoctrineProxy;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
@@ -25,8 +28,57 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class SimpleDoctrineMapper extends AbstractDoctrineMapper
+class SimpleDoctrineMapper implements DataMapper
 {
+    /**
+     * Service configuration.
+     * @var \BedRest\Service\Configuration
+     */
+    protected $configuration;
+
+    /**
+     * ServiceManager instance.
+     * @var \BedRest\Service\ServiceManager
+     */
+    protected $serviceManager;
+
+    /**
+     * EntityManager instance.
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * Constructor.
+     * Initialises the data mapper with the supplied options.
+     * @param \BedRest\Service\Configuration  $configuration
+     * @param \BedRest\Service\ServiceManager $serviceManager
+     */
+    public function __construct(Configuration $configuration = null, ServiceManager $serviceManager = null)
+    {
+        $this->configuration = $configuration;
+        $this->serviceManager = $serviceManager;
+    }
+
+    /**
+     * Sets the EntityManager instance.
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     */
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * Returns the EntityManager instance.
+     * @throws \BedRest\Service\Data\Exception
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
     /**
      * Maps an input array into a resource or set of resources.
      * @param  mixed                           $resource Resource to map data into.
@@ -50,6 +102,132 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
         }
     }
 
+    /**
+     * Takes an input array of data and a resource, then proceeds to process each
+     * property of the resource by finding data and casting it to the appropriate
+     * format.
+     * @param  object                          $resource
+     * @param  array                           $data
+     * @throws \BedRest\Service\Data\Exception
+     * @return array
+     */
+    protected function castFields($resource, array $data)
+    {
+        // get the class meta data for the entity
+        $em = $this->getEntityManager();
+
+        $classMetaInfo = $em->getClassMetadata(get_class($resource));
+
+        // process basic fields
+        $castData = array();
+
+        foreach ($classMetaInfo->fieldMappings as $fieldName => $fieldMapping) {
+            // skip fields not included in the data
+            if (!array_key_exists($fieldName, $data)) {
+                continue;
+            }
+
+            // enter into the final cast data array
+            $castData[$fieldName] = $this->castField($data[$fieldName], $fieldMapping);
+        }
+
+        return $castData;
+    }
+
+    /**
+     * @param  mixed                           $value
+     * @param  array                           $fieldMapping
+     * @throws \BedRest\Service\Data\Exception
+     * @return mixed
+     */
+    protected function castField($value, array $fieldMapping)
+    {
+        switch ($fieldMapping['type']) {
+            case Type::INTEGER:
+            case Type::BIGINT:
+            case Type::SMALLINT:
+                $value = (int) $value;
+                break;
+            case Type::BOOLEAN:
+                $value = (bool) $value;
+                break;
+            case Type::DATE:
+            case Type::DATETIME:
+            case Type::DATETIMETZ:
+            case Type::TIME:
+                $value = $this->castDateField($value);
+                break;
+            case Type::DECIMAL:
+            case Type::FLOAT:
+                $value = (float) $value;
+                break;
+            case Type::STRING:
+            case Type::TEXT:
+                $value = (string) $value;
+                break;
+            case Type::TARRAY:
+                $value = (array) $value;
+                break;
+            case Type::OBJECT:
+                throw new Exception('"object" type mapping is not currently supported');
+                break;
+            case TYPE::BLOB:
+                throw new Exception('"blob" type mapping is not currently supported');
+                break;
+            default:
+                throw new Exception("Unknown type \"{$fieldMapping['type']}\"");
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Casts Date, DateTime and Time fields, handling a variety of formats.
+     * @param  mixed                           $value
+     * @throws \BedRest\Service\Data\Exception
+     * @return \DateTime
+     */
+    protected function castDateField($value)
+    {
+        if ($value instanceof \DateTime) {
+            // do nothing
+        } elseif (empty($value)) {
+            // force empty values to NULL
+            $value = null;
+        } elseif (is_array($value)) {
+            // interpret the value as an array-cast DateTime object
+            if (!isset($value['date'])) {
+                throw new Exception(
+                    'Missing "date" component in array.'
+                );
+            }
+
+            $dateString = $value['date'];
+            if (isset($value['timezone'])) {
+                $dateString .= ' ' . $value['timezone'];
+            }
+
+            $value = new \DateTime($dateString);
+        } elseif (is_string($value)) {
+            // treat it as a DateTime string
+            $value = new \DateTime($value);
+        } elseif (is_integer($value)) {
+            // treat it as a UTC timestamp
+            $value = \DateTime::createFromFormat('U', $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Casts raw association data into entities or collections using the Doctrine ClassMetadata object
+     * for a particular entity.
+     * @param  string                          $resource
+     * @param  array                           $data
+     * @return array
+     * @throws \BedRest\Service\Data\Exception
+     */
     protected function castAssociations($resource, array $data)
     {
         // get the class meta data for the entity
@@ -81,14 +259,26 @@ class SimpleDoctrineMapper extends AbstractDoctrineMapper
         return $output;
     }
 
-    protected function castSingleValuedAssociation($data, $mapping)
+    /**
+     * Casts raw association data for a single valued association (e.g. a to-one mapping).
+     * @param  mixed  $data
+     * @param  array  $mapping
+     * @return object
+     */
+    protected function castSingleValuedAssociation($data, array $mapping)
     {
         $output = $this->getEntityManager()->find($mapping['targetEntity'], $data);
 
         return $output;
     }
 
-    protected function castCollectionValuedAssociation($data, $mapping)
+    /**
+     * Casts raw association data for a multi-valued association (e.g. a to-many mapping).
+     * @param  mixed $data
+     * @param  array $mapping
+     * @return array
+     */
+    protected function castCollectionValuedAssociation($data, array $mapping)
     {
         $output = array();
 
