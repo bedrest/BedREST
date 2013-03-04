@@ -41,13 +41,6 @@ class Employee
     protected $name;
 
     /**
-     * Department name.
-     * @var string
-     * @ORM\Column(type="string")
-     */
-    protected $department;
-
-    /**
      * SSN of the employee.
      * @var string
      * @ORM\Column(type="string")
@@ -68,11 +61,42 @@ class Employee
      */
     protected $active;
 
+    /**
+     * Employee salary.
+     * @var float
+     * @ORM\Column(type="decimal")
+     */
+    protected $salary;
+
+    /**
+     * Assets associated with this employee.
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="BedRest\TestFixtures\Models\Company\Asset", mappedBy="LoanedTo")
+     */
+    protected $Assets;
+
+    /**
+     * Department this employee belongs to.
+     * @var \BedRest\TestFixtures\Models\Company\Department
+     * @ORM\ManyToOne(targetEntity="BedRest\TestFixtures\Models\Company\Department")
+     */
+    protected $Department;
+
+    /**
+     * Magic setter.
+     * @param string $property
+     * @param mixed  $value
+     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
+    /**
+     * Magic getter.
+     * @param  string $property
+     * @return mixed
+     */
     public function __get($property)
     {
         return $this->$property;

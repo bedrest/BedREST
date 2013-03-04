@@ -6,15 +6,18 @@ use Doctrine\ORM\Mapping as ORM;
 use BedRest\Resource\Mapping\Annotation as BedRest;
 
 /**
- * Asset
+ * Department
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="asset")
- * @BedRest\Resource(name="asset")
+ * @ORM\Table(name="department")
+ * @BedRest\Resource
+ * @BedRest\Handler(
+ *      handler="BedRest\TestFixtures\ResourceHandlers\DefaultHandler"
+ * )
  */
-class Asset
+class Department
 {
     /**
      * ID reference.
@@ -26,18 +29,18 @@ class Asset
     protected $id;
 
     /**
-     * Name of the asset.
+     * Name of the department.
      * @var string
      * @ORM\Column(type="string")
      */
     protected $name;
 
     /**
-     * Who the asset is currently loaned to.
-     * @var \BedRest\TestFixtures\Models\Company\Employee
-     * @ORM\ManyToOne(targetEntity="BedRest\TestFixtures\Models\Company\Employee")
+     * Employees belonging to this department.
+     * @var \Doctrine\Common\Collections\Collection
+     * @ORM\OneToMany(targetEntity="BedRest\TestFixtures\Models\Company\Employee", mappedBy="Department")
      */
-    protected $LoanedTo;
+    protected $Employees;
 
     /**
      * Magic setter.
