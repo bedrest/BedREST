@@ -267,6 +267,14 @@ class SimpleDoctrineMapper implements DataMapper
      */
     protected function castSingleValuedAssociation($data, array $mapping)
     {
+        if (is_array($data)) {
+            if (isset($data['id'])) {
+                $data = $data['id'];
+            } else {
+                throw Exception::invalidAssociationData();
+            }
+        }
+
         $output = $this->getEntityManager()->find($mapping['targetEntity'], $data);
 
         return $output;
@@ -283,6 +291,14 @@ class SimpleDoctrineMapper implements DataMapper
         $output = array();
 
         foreach ($data as $item) {
+            if (is_array($item)) {
+                if (isset($item['id'])) {
+                    $item = $item['id'];
+                } else {
+                    throw Exception::invalidAssociationData();
+                }
+            }
+
             $output[] = $this->getEntityManager()->find($mapping['targetEntity'], $item);
         }
 

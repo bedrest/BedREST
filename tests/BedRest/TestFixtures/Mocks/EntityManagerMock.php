@@ -51,8 +51,8 @@ class EntityManagerMock extends \Doctrine\ORM\EntityManager
 
     /**
      * Overridden for allowing mock 'find' requests.
-     * @param  string $className
-     * @param  mixed  $id
+     * @param  string      $className
+     * @param  mixed       $id
      * @return object|void
      */
     public function find($className, $id)

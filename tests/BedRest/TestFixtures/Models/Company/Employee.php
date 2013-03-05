@@ -41,13 +41,6 @@ class Employee
     protected $name;
 
     /**
-     * SSN of the employee.
-     * @var string
-     * @ORM\Column(type="string")
-     */
-    protected $ssn;
-
-    /**
      * Date of birth of the employee.
      * @var \DateTime
      * @ORM\Column(type="datetime")

@@ -21,12 +21,14 @@ class SimpleDoctrineMapperTest extends BaseTestCase
 {
     /**
      * DataMapper under test.
+     *
      * @var \BedRest\Service\Data\SimpleDoctrineMapper
      */
     protected $mapper;
 
     /**
      * Mock entity store.
+     *
      * @var array
      */
     protected $mockEntities = array();
@@ -49,28 +51,43 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      */
     protected function createMockEntities()
     {
+        $employee1 = new EmployeeEntity();
+        $employee1->id = 1;
+        $employee1->name = 'Jane Doe';
+
         $department1 = new DepartmentEntity();
         $department1->id = 1;
         $department1->name = 'Department #1';
-        $this->registerMockEntity('Department', 1, $department1);
 
         $asset1 = new AssetEntity();
         $asset1->id = 1;
-        $this->registerMockEntity('Asset', 1, $asset1);
 
         $asset2 = new AssetEntity();
         $asset2->id = 2;
-        $this->registerMockEntity('Asset', 2, $asset2);
 
         $asset3 = new AssetEntity();
         $asset3->id = 3;
+
+        $employee1->Department = $department1;
+        $department1->Employees = array($employee1);
+
+        $employee1->Assets = array($asset1, $asset2, $asset3);
+        $asset1->LoanedTo = $employee1;
+        $asset2->LoanedTo = $employee1;
+        $asset3->LoanedTo = $employee1;
+
+        $this->registerMockEntity('Employee', 1, $employee1);
+        $this->registerMockEntity('Department', 1, $department1);
+        $this->registerMockEntity('Asset', 1, $asset1);
+        $this->registerMockEntity('Asset', 2, $asset2);
         $this->registerMockEntity('Asset', 3, $asset3);
     }
 
     /**
      * Returns a mock entity instance.
-     * @param string  $entity
-     * @param integer $id
+     *
+     * @param  string  $entity
+     * @param  integer $id
      * @return object
      */
     protected function getMockEntity($entity, $id)
@@ -84,6 +101,7 @@ class SimpleDoctrineMapperTest extends BaseTestCase
 
     /**
      * Registers a mock entity instance.
+     *
      * @param string  $entity
      * @param integer $id
      * @param object  $instance
@@ -97,36 +115,28 @@ class SimpleDoctrineMapperTest extends BaseTestCase
     }
 
     /**
-     * A set of test data cast in the intended data types.
+     * Data provider for testing casting of field data during mapping.
+     *
      * @return array
      */
-    protected function getEmployeeTestData()
-    {
-        return array(
-            'id' => 1,
-            'name' => 'John Doe',
-            'ssn' => '123456',
-            'dob' => new \DateTime('1st May 2012 00:00:00 +00:00'),
-            'active' => true,
-            'salary' => 50000.00
-        );
-    }
-
-    /**
-     * Data provider for testing casting of field data during mapping.
-     */
-    public function uncastFieldData()
+    public function sampleFieldData()
     {
         $dob = new \DateTime('1st May 2012 00:00:00 +00:00');
 
         return array(
-            array('id', 1, '1'),
+            array('id', 2, 2),
+            array('id', 2, '2'),
+            array('name', 'John Doe', 'John Doe'),
             array('name', '789', 789),
+            array('dob', $dob, $dob),
             array('dob', $dob, $dob->format(\DateTime::ISO8601)),
             array('dob', $dob, $dob->getTimestamp()),
             array('dob', $dob, (array) $dob),
             array('dob', null, null),
+            array('active', true, true),
             array('active', true, '1'),
+            array('active', false, 0),
+            array('salary', 50000.00, 50000.00),
             array('salary', 50000.00, '50000.00'),
             array('salary', 50000.00, 50000)
         );
@@ -134,8 +144,10 @@ class SimpleDoctrineMapperTest extends BaseTestCase
 
     /**
      * Data provider for testing association mapping.
+     *
+     * @return array
      */
-    public function associationData()
+    public function sampleAssociationData()
     {
         $this->createMockEntities();
 
@@ -161,6 +173,17 @@ class SimpleDoctrineMapperTest extends BaseTestCase
         );
     }
 
+    public function sampleAssociationReverseData()
+    {
+        $this->createMockEntities();
+
+        return array(
+            array('Employee', 1, $this->getMockEntity('Employee', 1)),
+            array('Department', 1, $this->getMockEntity('Department', 1)),
+            array('Asset', 1, $this->getMockEntity('Asset', 1))
+        );
+    }
+
     /**
      * Test the class fulfills all contracts demanded of it.
      */
@@ -170,92 +193,69 @@ class SimpleDoctrineMapperTest extends BaseTestCase
     }
 
     /**
-     * Test basic field mapping to ensure data is correctly mapped over.
+     * Tests field mapping.
+     *
+     * @dataProvider sampleFieldData
+     *
+     * @param string $field
+     * @param mixed  $expected
+     * @param mixed  $provided
      */
-    public function testFieldMapping()
+    public function testFieldMapping($field, $expected, $provided)
     {
         $resource = new EmployeeEntity();
-        $data = $this->getEmployeeTestData();
 
+        $data = array(
+            $field => $provided
+        );
         $this->mapper->map($resource, $data);
 
-        foreach ($data as $property => $value) {
-            $this->assertEquals($value, $resource->{$property});
-        }
+        // check the cast was correct
+        $cast = $resource->{$field};
+
+        $this->assertEquals(gettype($expected), gettype($cast));
+        $this->assertEquals($expected, $cast);
     }
 
     /**
-     * Test basic field reverse mapping to ensure data is correctly reversed.
+     * Tests field reverse mapping.
+     *
+     * @dataProvider sampleFieldData
+     *
+     * @param string $field
+     * @param mixed  $value
      */
-    public function testFieldReverse()
+    public function testFieldReverse($field, $value)
     {
         $resource = new EmployeeEntity();
-        $data = $this->getEmployeeTestData();
 
+        $data = array(
+            $field => $value
+        );
         $this->mapper->map($resource, $data);
 
         // data in the reverse-mapped resource should be equal to the original data
         $reversed = $this->mapper->reverse($resource, 1);
 
-        foreach (array_keys($data) as $property) {
-            $this->assertEquals($data[$property], $reversed[$property]);
-        }
-    }
-
-    /**
-     * Test field mapping with a data set including fields which are not present in
-     * the target resource. Data should be mapped as normal, without the presence of
-     * the non-existent fields causing any errors.
-     */
-    public function testFieldMappingWithNonExistentFields()
-    {
-        $resource = new EmployeeEntity();
-
-        // add a non-existent field to the input data set
-        $data = $this->getEmployeeTestData();
-        $nonExistentFields = array(
-            'dummyField' => 'dummyValue'
-        );
-
-        $this->mapper->map($resource, array_merge($data, $nonExistentFields));
-
-        foreach ($data as $property => $value) {
-            $this->assertEquals($value, $resource->{$property});
-        }
-    }
-
-    /**
-     * Tests field mapping with a data which requires casting.
-     *
-     * @dataProvider uncastFieldData
-     */
-    public function testFieldMappingCasting($field, $expected, $uncast)
-    {
-        $resource = new EmployeeEntity();
-
-        $data = array(
-            $field => $uncast
-        );
-        $this->mapper->map($resource, $data);
-
-        // check the cast was correct
-        $cast = $resource->{$field};
-
-        $this->assertEquals(gettype($expected), gettype($cast));
-        $this->assertEquals($expected, $cast);
+        $this->assertEquals(gettype($value), gettype($reversed[$field]));
+        $this->assertEquals($value, $reversed[$field]);
     }
 
     /**
      * Tests association mapping, using various relationship types.
      *
-     * @dataProvider associationData
+     * @dataProvider sampleAssociationData
+     *
+     * @param string $field
+     * @param mixed  $expected
+     * @param mixed  $provided
      */
-    public function testAssociationMapping($field, $expected, $uncast)
+    public function testAssociationMapping($field, $expected, $provided)
     {
         $resource = new EmployeeEntity();
 
         $data = array(
-            $field => $uncast
+            $field => $provided
         );
         $this->mapper->map($resource, $data);
 
@@ -264,5 +264,24 @@ class SimpleDoctrineMapperTest extends BaseTestCase
 
         $this->assertEquals(gettype($expected), gettype($cast));
         $this->assertEquals($expected, $cast);
+    }
+
+    /**
+     * Tests reverse association mapping.
+     *
+     * @dataProvider sampleAssociationReverseData
+     *
+     * @param string $entity
+     * @param mixed  $id
+     */
+    public function testAssociationReverse($entity, $id, $resource)
+    {
+        $resourceClass = get_class($resource);
+        $newResource = new $resourceClass;
+
+        $data = $this->mapper->reverse($resource, 1);
+        $this->mapper->map($newResource, $data);
+
+        $this->assertEquals($resource, $newResource);
     }
 }

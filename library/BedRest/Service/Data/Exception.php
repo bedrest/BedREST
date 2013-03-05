@@ -32,4 +32,9 @@ class Exception extends \Exception
         return new self("Unknown or invalid association type for association '{$associationName}' in " .
             "resource '{$className}''");
     }
+
+    public static function invalidAssociationData()
+    {
+        return new self("Invalid data provided to describe association");
+    }
 }
