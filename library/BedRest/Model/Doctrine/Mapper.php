@@ -13,10 +13,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Service\Data;
+namespace BedRest\Model\Doctrine;
 
 use BedRest\Service\Configuration;
 use BedRest\Service\ServiceManager;
+use BedRest\Service\Data\Mapper as MapperInterface;
+use BedRest\Service\Data\Exception as DataException;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\Proxy as DoctrineProxy;
 use Doctrine\DBAL\Types\Type;
@@ -28,7 +30,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class SimpleDoctrineMapper implements DataMapper
+class Mapper implements MapperInterface
 {
     /**
      * Service configuration.
@@ -88,7 +90,7 @@ class SimpleDoctrineMapper implements DataMapper
     public function map($resource, $data)
     {
         if (!is_array($data)) {
-            throw new Exception('Supplied data is not an array.');
+            throw new DataException('Supplied data is not an array.');
         }
 
         // cast data
@@ -169,13 +171,13 @@ class SimpleDoctrineMapper implements DataMapper
                 $value = (array) $value;
                 break;
             case Type::OBJECT:
-                throw new Exception('"object" type mapping is not currently supported');
+                throw new DataException('"object" type mapping is not currently supported');
                 break;
             case TYPE::BLOB:
-                throw new Exception('"blob" type mapping is not currently supported');
+                throw new DataException('"blob" type mapping is not currently supported');
                 break;
             default:
-                throw new Exception("Unknown type \"{$fieldMapping['type']}\"");
+                throw new DataException("Unknown type \"{$fieldMapping['type']}\"");
                 break;
         }
 
@@ -198,7 +200,7 @@ class SimpleDoctrineMapper implements DataMapper
         } elseif (is_array($value)) {
             // interpret the value as an array-cast DateTime object
             if (!isset($value['date'])) {
-                throw new Exception(
+                throw new DataException(
                     'Missing "date" component in array.'
                 );
             }

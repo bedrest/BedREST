@@ -43,13 +43,13 @@ class Configuration
      * Default resource handler class name.
      * @var string
      */
-    protected $defaultResourceHandler = 'BedRest\Resource\Handler\SimpleDoctrineHandler';
+    protected $defaultResourceHandler = 'BedRest\Model\Doctrine\Handler';
 
     /**
      * Default service class name.
      * @var string
      */
-    protected $defaultService = 'BedRest\Service\SimpleDoctrineService';
+    protected $defaultService = 'BedRest\Model\Doctrine\Service';
 
     /**
      * Allowable content types with associated converters.

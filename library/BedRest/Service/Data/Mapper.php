@@ -16,11 +16,11 @@
 namespace BedRest\Service\Data;
 
 /**
- * DataMapper
+ * Mapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-interface DataMapper
+interface Mapper
 {
     /**
      * Maps data into a resource or set of resources.

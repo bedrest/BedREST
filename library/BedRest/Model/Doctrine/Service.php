@@ -13,20 +13,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Service;
+namespace BedRest\Model\Doctrine;
 
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Service\Mapping\Annotation as BedRest;
 use Doctrine\ORM\EntityManager;
 
 /**
- * SimpleDoctrineService
+ * Service
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
  * @BedRest\Service
  */
-class SimpleDoctrineService
+class Service
 {
     /**
      * EntityManager instance.

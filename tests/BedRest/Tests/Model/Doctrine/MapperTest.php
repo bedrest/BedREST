@@ -1,9 +1,9 @@
 <?php
 
-namespace BedRest\Tests\Service\Data;
+namespace BedRest\Tests\Model\Doctrine;
 
-use BedRest\Service\Data\DataMapper;
-use BedRest\Service\Data\SimpleDoctrineMapper;
+use BedRest\Model\Doctrine\Mapper;
+use BedRest\Service\Data\Mapper as MapperInterface;
 use BedRest\Service\ServiceManager;
 use BedRest\TestFixtures\Models\Company\Asset as AssetEntity;
 use BedRest\TestFixtures\Models\Company\Department as DepartmentEntity;
@@ -11,18 +11,18 @@ use BedRest\TestFixtures\Models\Company\Employee as EmployeeEntity;
 use BedRest\Tests\BaseTestCase;
 
 /**
- * SimpleDoctrineMapperTest
+ * MapperTest
  *
- * Tests BedRest\DataMapper\SimpleDoctrineMapper.
+ * Tests BedRest\DataMapper\Mapper.
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class SimpleDoctrineMapperTest extends BaseTestCase
+class MapperTest extends BaseTestCase
 {
     /**
      * DataMapper under test.
      *
-     * @var \BedRest\Service\Data\SimpleDoctrineMapper
+     * @var \BedRest\Model\Doctrine\Mapper
      */
     protected $mapper;
 
@@ -38,7 +38,7 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      */
     protected function setUp()
     {
-        $this->mapper = new SimpleDoctrineMapper(
+        $this->mapper = new Mapper(
             self::getServiceConfiguration(),
             new ServiceManager(self::getServiceConfiguration())
         );
@@ -189,7 +189,7 @@ class SimpleDoctrineMapperTest extends BaseTestCase
      */
     public function testClassContract()
     {
-        $this->assertTrue($this->mapper instanceof DataMapper);
+        $this->assertTrue($this->mapper instanceof MapperInterface);
     }
 
     /**

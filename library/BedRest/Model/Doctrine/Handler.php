@@ -13,8 +13,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Resource\Handler;
+namespace BedRest\Model\Doctrine;
 
+use BedRest\Resource\Handler\Handler as HandlerInterface;
 use BedRest\Rest\Request;
 use BedRest\Rest\ResourceNotFoundException;
 use BedRest\Rest\Response;
@@ -22,11 +23,11 @@ use BedRest\Rest\RestManager;
 use BedRest\Service\ServiceManager;
 
 /**
- * SimpleDoctrineHandler
+ * Handler
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class SimpleDoctrineHandler implements Handler
+class Handler implements HandlerInterface
 {
     /**
      * ServiceManager instance.
@@ -62,12 +63,12 @@ class SimpleDoctrineHandler implements Handler
 
     /**
      * Returns the DataMapper to be used by the handler.
-     * @return \BedRest\Service\Data\DataMapper
+     * @return \BedRest\Service\Data\Mapper
      */
     public function getDataMapper()
     {
         // TODO: the choice of data mapper should be in configuration somewhere
-        $className = 'BedRest\Service\Data\SimpleDoctrineMapper';
+        $className = 'BedRest\Service\Data\Mapper';
 
         // instantiate
         $id = "{$className}";
