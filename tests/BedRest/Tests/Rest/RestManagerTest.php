@@ -6,6 +6,7 @@ use BedRest\Rest\Request;
 use BedRest\Rest\RequestType;
 use BedRest\Rest\RestManager;
 use BedRest\Resource\Mapping\Driver\AnnotationDriver;
+use BedRest\Service\ServiceManager;
 use BedRest\Tests\BaseTestCase;
 use BedRest\TestFixtures\ResourceHandlers\DefaultHandler;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -46,11 +47,12 @@ class RestManagerTest extends BaseTestCase
         $this->assertEquals(self::getConfiguration(), $this->restManager->getConfiguration());
     }
 
-    public function testServiceConfiguration()
+    public function testServiceManager()
     {
-        $this->restManager->setServiceConfiguration(self::getServiceConfiguration());
+        $serviceManager = new ServiceManager(self::getServiceConfiguration());
+        $this->restManager->setServiceManager($serviceManager);
 
-        $this->assertEquals(self::getServiceConfiguration(), $this->restManager->getServiceConfiguration());
+        $this->assertEquals($serviceManager, $this->restManager->getServiceManager());
     }
 
     public function testResourceMetadata()

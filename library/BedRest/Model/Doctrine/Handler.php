@@ -30,12 +30,6 @@ use BedRest\Service\ServiceManager;
 class Handler implements HandlerInterface
 {
     /**
-     * ServiceManager instance.
-     * @var \BedRest\Service\ServiceManager
-     */
-    protected $serviceManager;
-
-    /**
      * RestManager instance.
      * @var \BedRest\Rest\RestManager
      */
@@ -48,8 +42,6 @@ class Handler implements HandlerInterface
     public function __construct(RestManager $restManager)
     {
         $this->restManager = $restManager;
-
-        $this->serviceManager = new ServiceManager($restManager->getServiceConfiguration());
     }
 
     /**
@@ -58,7 +50,7 @@ class Handler implements HandlerInterface
      */
     public function getServiceManager()
     {
-        return $this->serviceManager;
+        return $this->restManager->getServiceManager();
     }
 
     /**
@@ -72,12 +64,15 @@ class Handler implements HandlerInterface
 
         // instantiate
         $id = "{$className}";
-        $container = $this->restManager->getServiceConfiguration()->getServiceContainer();
+
+        $serviceManager = $this->getServiceManager();
+        $configuration = $serviceManager->getConfiguration();
+        $container = $configuration->getServiceContainer();
 
         if (!$container->hasDefinition($id)) {
             $container->register($id, $className)
-                ->addArgument($this->restManager->getServiceConfiguration())
-                ->addArgument($this->serviceManager)
+                ->addArgument($configuration)
+                ->addArgument($serviceManager)
                 ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
         }
 
@@ -99,7 +94,7 @@ class Handler implements HandlerInterface
         // get the service and request the collection
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
-        $service = $this->serviceManager->getService($resourceMetadata);
+        $service = $this->getServiceManager()->getService($resourceMetadata);
 
         $identifier = $request->getRouteComponent('identifier');
         $data = $service->get($identifier);
@@ -130,7 +125,7 @@ class Handler implements HandlerInterface
         // get the service and request the collection
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
-        $service = $this->serviceManager->getService($resourceMetadata);
+        $service = $this->getServiceManager()->getService($resourceMetadata);
 
         $data = $service->getCollection(array(), array(), $limit, $offset);
 
@@ -163,7 +158,7 @@ class Handler implements HandlerInterface
         $dataMapper->map($resource, $requestData);
 
         // perform the actual service operation
-        $service = $this->serviceManager->getService($resourceMetadata);
+        $service = $this->getServiceManager()->getService($resourceMetadata);
 
         $service->create($resource);
 
@@ -187,7 +182,7 @@ class Handler implements HandlerInterface
 
         // get the service instance and DataMapper
         $dataMapper = $this->getDataMapper();
-        $service = $this->serviceManager->getService($resourceMetadata);
+        $service = $this->getServiceManager()->getService($resourceMetadata);
 
         // loop through each item in the collection provided in the request
         $requestData = (array) $request->getBody();
@@ -222,7 +217,7 @@ class Handler implements HandlerInterface
 
         // get the metadata for the resource and the service required
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
-        $service = $this->serviceManager->getService($resourceMetadata);
+        $service = $this->getServiceManager()->getService($resourceMetadata);
 
         // get the instance referred to
         $identifier = $request->getRouteComponent('identifier');
@@ -263,7 +258,7 @@ class Handler implements HandlerInterface
         // get the service
         $resourceMetadata = $this->restManager->getResourceMetadataByName($request->getResource());
 
-        $service = $this->serviceManager->getService($resourceMetadata);
+        $service = $this->getServiceManager()->getService($resourceMetadata);
 
         // retrieve the resource and check it exists
         $identifier = $request->getRouteComponent('identifier');
