@@ -16,11 +16,11 @@
 namespace BedRest\Content\Negotiation;
 
 /**
- * AbstractList
+ * QualityFactorList
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-abstract class AbstractList
+abstract class QualityFactorList
 {
     protected $items;
 

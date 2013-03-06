@@ -20,7 +20,7 @@ namespace BedRest\Content\Negotiation;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class EncodingList extends AbstractList
+class EncodingList extends QualityFactorList
 {
     /**
      * Parses a list of media types out into a normalised structure.
