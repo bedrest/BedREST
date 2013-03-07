@@ -176,7 +176,6 @@ class RestManager
         $response->setBody($dataMapper->reverse($data, $mapDepth));
 
         // TODO: generate additional response information (ETag, Cache-Control etc)
-
         return $response;
     }
 }
