@@ -121,7 +121,7 @@ class RestManager
 
     /**
      * Creates and prepares a new Response object, using the supplied Request object where needed.
-     * @param  \BedRest\Rest\Request\Request  $request
+     * @param  \BedRest\Rest\Request\Request   $request
      * @return \BedRest\Rest\Response\Response
      */
     protected function createResponse(Request $request)

@@ -81,8 +81,8 @@ class Handler implements HandlerInterface
 
     /**
      * Handles a GET request for a single resource.
-     * @param  \BedRest\Rest\Request\Request\Request                   $request
-     * @param  \BedRest\Rest\Response\Response                  $response
+     * @param  \BedRest\Rest\Request\Request           $request
+     * @param  \BedRest\Rest\Response\Response         $response
      * @throws \BedRest\Rest\ResourceNotFoundException
      * @return void
      */
@@ -112,7 +112,7 @@ class Handler implements HandlerInterface
 
     /**
      * Handles a GET request for a collection of resources.
-     * @param \BedRest\Rest\Request\Request  $request
+     * @param \BedRest\Rest\Request\Request   $request
      * @param \BedRest\Rest\Response\Response $response
      */
     public function handleGetCollection(Request $request, Response $response)
@@ -137,7 +137,7 @@ class Handler implements HandlerInterface
 
     /**
      * Handles a POST request for a single resource.
-     * @param \BedRest\Rest\Request\Request  $request
+     * @param \BedRest\Rest\Request\Request   $request
      * @param \BedRest\Rest\Response\Response $response
      */
     public function handlePostResource(Request $request, Response $response)
@@ -168,7 +168,7 @@ class Handler implements HandlerInterface
 
     /**
      * Handles a POST request for a collection of resources.
-     * @param \BedRest\Rest\Request\Request  $request
+     * @param \BedRest\Rest\Request\Request   $request
      * @param \BedRest\Rest\Response\Response $response
      */
     public function handlePostCollection(Request $request, Response $response)
@@ -207,7 +207,7 @@ class Handler implements HandlerInterface
 
     /**
      * Handles a PUT request for a single resource.
-     * @param \BedRest\Rest\Request\Request  $request
+     * @param \BedRest\Rest\Request\Request   $request
      * @param \BedRest\Rest\Response\Response $response
      */
     public function handlePutResource(Request $request, Response $response)
@@ -239,7 +239,7 @@ class Handler implements HandlerInterface
     /**
      * Handles a PUT request for a collection of resources.
      * @param  \BedRest\Rest\Request\Request   $request
-     * @param  \BedRest\Rest\Response\Response  $response
+     * @param  \BedRest\Rest\Response\Response $response
      * @throws \BedRest\Rest\Exception
      * @return void
      */
@@ -250,7 +250,7 @@ class Handler implements HandlerInterface
 
     /**
      * Handles a DELETE request for a single resource.
-     * @param \BedRest\Rest\Request\Request  $request
+     * @param \BedRest\Rest\Request\Request   $request
      * @param \BedRest\Rest\Response\Response $response
      */
     public function handleDeleteResource(Request $request, Response $response)
@@ -282,7 +282,7 @@ class Handler implements HandlerInterface
     /**
      * Handles a DELETE request for a collection of resources.
      * @param  \BedRest\Rest\Request\Request   $request
-     * @param  \BedRest\Rest\Response\Response  $response
+     * @param  \BedRest\Rest\Response\Response $response
      * @throws \BedRest\Rest\Exception
      * @return void
      */
