@@ -2,8 +2,8 @@
 
 namespace BedRest\Tests\Rest;
 
-use BedRest\Rest\Request;
-use BedRest\Rest\RequestType;
+use BedRest\Rest\Request\Request;
+use BedRest\Rest\Request\RequestType;
 use BedRest\Rest\RestManager;
 use BedRest\Resource\Mapping\Driver\AnnotationDriver;
 use BedRest\Service\ServiceManager;

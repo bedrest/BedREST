@@ -1,9 +1,9 @@
 <?php
 
-namespace BedRest\Tests\Rest;
+namespace BedRest\Tests\Rest\Request;
 
 use BedRest\Tests\BaseTestCase;
-use BedRest\Rest\Request;
+use BedRest\Rest\Request\Request;
 
 /**
  * RequestTest
@@ -14,7 +14,7 @@ class RequestTest extends BaseTestCase
 {
     /**
      * Request object in test.
-     * @var \BedRest\Rest\Request
+     * @var \BedRest\Rest\Request\Request
      */
     protected $request;
 

@@ -3,8 +3,8 @@
 namespace BedRest\TestFixtures\ResourceHandlers;
 
 use BedRest\Resource\Handler\Handler;
-use BedRest\Rest\Request;
-use BedRest\Rest\Response;
+use BedRest\Rest\Request\Request;
+use BedRest\Rest\Response\Response;
 
 /**
  * DefaultHandler

@@ -18,9 +18,9 @@ namespace BedRest\Rest;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Configuration;
-use BedRest\Rest\Request;
-use BedRest\Rest\RequestType;
-use BedRest\Rest\Response;
+use BedRest\Rest\Request\Request;
+use BedRest\Rest\Request\RequestType;
+use BedRest\Rest\Response\Response;
 use BedRest\Service\ServiceManager;
 
 /**
@@ -121,8 +121,8 @@ class RestManager
 
     /**
      * Creates and prepares a new Response object, using the supplied Request object where needed.
-     * @param  \BedRest\Rest\Request  $request
-     * @return \BedRest\Rest\Response
+     * @param  \BedRest\Rest\Request\Request  $request
+     * @return \BedRest\Rest\Response\Response
      */
     protected function createResponse(Request $request)
     {
@@ -143,9 +143,9 @@ class RestManager
 
     /**
      * Processes a REST request, returning a Response object.
-     * @param  \BedRest\Rest\Request   $request
+     * @param  \BedRest\Rest\Request\Request   $request
      * @throws \BedRest\Rest\Exception
-     * @return \BedRest\Rest\Response
+     * @return \BedRest\Rest\Response\Response
      */
     public function process(Request $request)
     {
