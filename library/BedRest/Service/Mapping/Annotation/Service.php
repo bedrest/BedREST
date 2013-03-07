@@ -32,4 +32,10 @@ class Service
      * @var string
      */
     public $type = ServiceMetadata::TYPE_BASIC;
+
+    /**
+     * Class name of the DataMapper to use for transforming request and response data for this service.
+     * @var string
+     */
+    public $dataMapper = '';
 }

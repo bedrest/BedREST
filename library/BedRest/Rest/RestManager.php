@@ -19,7 +19,6 @@ use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Configuration;
 use BedRest\Rest\Request\Request;
-use BedRest\Rest\Request\RequestType;
 use BedRest\Rest\Response\Response;
 use BedRest\Service\ServiceManager;
 
@@ -151,54 +150,33 @@ class RestManager
     {
         $response = $this->createResponse($request);
 
-        // get resource handler for the specified resource
+        // get information about the requested resource
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
-        $handler = $this->getResourceHandler($resourceMetadata);
+
+        // get the service and data mapper
+        $serviceManager = $this->getServiceManager();
+        $serviceMetadata = $serviceManager->getServiceMetadata($resourceMetadata->getService());
+        $service = $serviceManager->getService($resourceMetadata);
+        $dataMapper = $serviceManager->getDataMapper($resourceMetadata->getService());
 
         // handle the request
-        switch ($request->getMethod()) {
-            case RequestType::METHOD_GET:
-                $handler->handleGetResource($request, $response);
-                break;
-            case RequestType::METHOD_GET_COLLECTION:
-                $handler->handleGetCollection($request, $response);
-                break;
-            case RequestType::METHOD_POST:
-                $handler->handlePostResource($request, $response);
-                break;
-            case RequestType::METHOD_POST_COLLECTION:
-                $handler->handlePostCollection($request, $response);
-                break;
-            case RequestType::METHOD_PUT:
-                $handler->handlePutResource($request, $response);
-                break;
-            case RequestType::METHOD_PUT_COLLECTION:
-                $handler->handlePutCollection($request, $response);
-                break;
-            case RequestType::METHOD_DELETE:
-                $handler->handleDeleteResource($request, $response);
-                break;
-            case RequestType::METHOD_DELETE_COLLECTION:
-                $handler->handleDeleteCollection($request, $response);
-                break;
-            default:
-                throw Exception::methodNotAllowed();
-                break;
+        $listeners = $serviceMetadata->getListeners($request->getMethod());
+
+        $data = array();
+        foreach ($listeners as $listener) {
+            $data = $service->$listener($request);
         }
 
+        if (count($data) === 1) {
+            $data = reset($data);
+        }
+
+        // compose the response body to desired depth
+        $mapDepth = (int) $request->getParameter('depth', 1);
+        $response->setBody($dataMapper->reverse($data, $mapDepth));
+
+        // TODO: generate additional response information (ETag, Cache-Control etc)
+
         return $response;
-    }
-
-    /**
-     * Creates and returns the handler for a particular resource.
-     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
-     * @return \BedRest\Resource\Handler\Handler
-     */
-    protected function getResourceHandler(ResourceMetadata $resourceMetadata)
-    {
-        $handlerClass = $resourceMetadata->getHandler();
-        $handler = new $handlerClass($this);
-
-        return $handler;
     }
 }

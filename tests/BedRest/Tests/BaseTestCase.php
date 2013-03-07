@@ -2,8 +2,11 @@
 
 namespace BedRest\Tests;
 
-use \BedRest\Rest\Configuration as RestConfiguration;
-use \BedRest\Service\Configuration as ServiceConfiguration;
+use BedRest\Rest\Configuration as RestConfiguration;
+use BedRest\Service\Configuration as ServiceConfiguration;
+use BedRest\Service\Mapping\Driver\AnnotationDriver;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * BedRest\Tests\BaseTestCase
@@ -107,6 +110,20 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         if (!self::$serviceConfig) {
             $config = new ServiceConfiguration();
+
+            $namespaces = array(
+                'BedRest\TestFixtures\Services' => TESTS_BASEDIR . '/BedRest/TestFixtures/Services'
+            );
+
+            $driver = new AnnotationDriver(new AnnotationReader());
+            $driver->addPaths(array_values($namespaces));
+            $config->setServiceMetadataDriverImpl($driver);
+
+            $config->setServiceNamespaces($namespaces);
+
+            $container = new ContainerBuilder();
+            $container->setParameter('doctrine.entitymanager', self::getEntityManager());
+            $config->setServiceContainer($container);
 
             self::$serviceConfig = $config;
         }

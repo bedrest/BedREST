@@ -89,6 +89,40 @@ class ServiceManager
     }
 
     /**
+     * Returns the DataMapper to be used by a service.
+     * @param  string                       $service Class name of the service.
+     * @return \BedRest\Service\Data\Mapper
+     */
+    public function getDataMapper($service)
+    {
+        $serviceMetadata = $this->getServiceMetadata($service);
+
+        // check class exists and is denoted as a service
+        if (!class_exists($service)) {
+            throw new Exception("Service '$service' not found.");
+        }
+
+        if (!$this->serviceMetadataFactory->isService($service)) {
+            throw new Exception("The class '{$service}' is not a mapped service.");
+        }
+
+        // get the DI container for instantiating classes
+        $container = $this->configuration->getServiceContainer();
+
+        $className = $serviceMetadata->getDataMapper();
+        $id = "{$className}";
+
+        if (!$container->hasDefinition($id)) {
+            $container->register($id, $className)
+                ->addArgument($this->getConfiguration())
+                ->addArgument($this)
+                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
+        }
+
+        return $container->get($id);
+    }
+
+    /**
      * Returns an instance of the service for the specified resource.
      * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @throws \BedRest\Service\Exception
@@ -114,7 +148,7 @@ class ServiceManager
         if (!$container->hasDefinition($id)) {
             // TODO: detect if the service is a Doctrine service here, before adding the method call injection
             $container->register($id, $className)
-                ->addArgument($resourceMetadata)
+                ->addArgument($resourceMetadata, $this->getDataMapper($className))
                 ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
         }
 
