@@ -5,18 +5,16 @@ namespace BedRest\Tests\Rest;
 use BedRest\Rest\Request\Request;
 use BedRest\Rest\Request\Type;
 use BedRest\Rest\RestManager;
-use BedRest\Resource\Mapping\Driver\AnnotationDriver;
 use BedRest\Service\ServiceManager;
-use BedRest\Tests\BaseTestCase;
+use BedRest\Tests\RequiresModelTestCase;
 use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
-use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * RestManagerTest
  *
  * Author: Geoff Adams <geoff@dianode.net>
  */
-class RestManagerTest extends BaseTestCase
+class RestManagerTest extends RequiresModelTestCase
 {
     /**
      * RestManager instance under test.
@@ -26,22 +24,10 @@ class RestManagerTest extends BaseTestCase
 
     protected function setUp()
     {
-        $config = self::getConfiguration();
-
-        $reader = new AnnotationReader();
-        $driver = new AnnotationDriver($reader);
-        $driver->addPaths(
-            array(
-                TESTS_BASEDIR . '/BedRest/TestFixtures/Models',
-                TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company'
-            )
-        );
-
-        $config->setResourceMetadataDriverImpl($driver);
-
+        $config = static::getConfiguration();
         $this->restManager = new RestManager($config);
-        $serviceManager = new ServiceManager(self::getServiceConfiguration());
-        $this->restManager->setServiceManager($serviceManager);
+
+        $this->restManager->setServiceManager(static::getServiceManager());
     }
 
     public function testConfiguration()
@@ -51,9 +37,11 @@ class RestManagerTest extends BaseTestCase
 
     public function testServiceManager()
     {
+        // need to create a fresh instance as we create a ServiceManager
+        // instance and inject it into the RestManager in setUp()
         $serviceManager = new ServiceManager(self::getServiceConfiguration());
-        $this->restManager->setServiceManager($serviceManager);
 
+        $this->restManager->setServiceManager($serviceManager);
         $this->assertEquals($serviceManager, $this->restManager->getServiceManager());
     }
 

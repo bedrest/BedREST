@@ -8,7 +8,7 @@ use BedRest\Service\ServiceManager;
 use BedRest\TestFixtures\Models\Company\Asset as AssetEntity;
 use BedRest\TestFixtures\Models\Company\Department as DepartmentEntity;
 use BedRest\TestFixtures\Models\Company\Employee as EmployeeEntity;
-use BedRest\Tests\BaseTestCase;
+use BedRest\Tests\RequiresModelTestCase;
 
 /**
  * MapperTest
@@ -17,7 +17,7 @@ use BedRest\Tests\BaseTestCase;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class MapperTest extends BaseTestCase
+class MapperTest extends RequiresModelTestCase
 {
     /**
      * DataMapper under test.
