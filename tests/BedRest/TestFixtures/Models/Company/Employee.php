@@ -18,7 +18,6 @@ use BedRest\Resource\Mapping\Annotation as BedRest;
  * @ORM\Table(name="employee")
  * @BedRest\Resource
  * @BedRest\Handler(
- *      handler="BedRest\TestFixtures\ResourceHandlers\DefaultHandler",
  *      service="BedRest\TestFixtures\Services\Company\Employee"
  * )
  */

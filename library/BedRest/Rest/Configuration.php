@@ -40,12 +40,6 @@ class Configuration
     protected $resourceMetadataCacheImpl;
 
     /**
-     * Default resource handler class name.
-     * @var string
-     */
-    protected $defaultResourceHandler = 'BedRest\Model\Doctrine\Handler';
-
-    /**
      * Default service class name.
      * @var string
      */
@@ -99,24 +93,6 @@ class Configuration
     public function getResourceMetadataCacheImpl()
     {
         return $this->resourceMetadataCacheImpl;
-    }
-
-    /**
-     * Sets the default resource handler class name.
-     * @param string $resourceHandler
-     */
-    public function setDefaultResourceHandler($resourceHandler)
-    {
-        $this->defaultResourceHandler = $resourceHandler;
-    }
-
-    /**
-     * Returns the default resource handler class name.
-     * @return string
-     */
-    public function getDefaultResourceHandler()
-    {
-        return $this->defaultResourceHandler;
     }
 
     /**

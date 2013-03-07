@@ -13,9 +13,6 @@ use BedRest\Resource\Mapping\Annotation as BedRest;
  * @ORM\Entity
  * @ORM\Table(name="department")
  * @BedRest\Resource
- * @BedRest\Handler(
- *      handler="BedRest\TestFixtures\ResourceHandlers\DefaultHandler"
- * )
  */
 class Department
 {
