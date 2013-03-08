@@ -2,7 +2,6 @@
 
 namespace BedRest\TestFixtures\Services\Company;
 
-use BedRest\Rest\Request\Request;
 use BedRest\Service\Mapping\Annotation as BedRest;
 use Doctrine\ORM\EntityManager;
 
@@ -13,24 +12,8 @@ use Doctrine\ORM\EntityManager;
  *
  * @BedRest\Service(type="BASIC", dataMapper="BedRest\Model\Doctrine\Mapper")
  */
-class Employee
+class Employee extends Generic
 {
-    public static $handleGetResourceCalled = 0;
-
-    public static $handleGetCollectionCalled = 0;
-
-    public static $handlePostResourceCalled = 0;
-
-    public static $handlePostCollectionCalled = 0;
-
-    public static $handlePutResourceCalled = 0;
-
-    public static $handlePutCollectionCalled = 0;
-
-    public static $handleDeleteResourceCalled = 0;
-
-    public static $handleDeleteCollectionCalled = 0;
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -79,85 +62,5 @@ class Employee
      */
     public function get()
     {
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="GET")
-     */
-    public function handleGetResource(Request $request)
-    {
-        self::$handleGetResourceCalled++;
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="GET_COLLECTION")
-     */
-    public function handleGetCollection(Request $request)
-    {
-        self::$handleGetCollectionCalled++;
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="POST")
-     */
-    public function handlePostResource(Request $request)
-    {
-        self::$handlePostResourceCalled++;
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="POST_COLLECTION")
-     */
-    public function handlePostCollection(Request $request)
-    {
-        self::$handlePostCollectionCalled++;
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="PUT")
-     */
-    public function handlePutResource(Request $request)
-    {
-        self::$handlePutResourceCalled++;
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="PUT_COLLECTION")
-     */
-    public function handlePutCollection(Request $request)
-    {
-        self::$handlePutCollectionCalled++;
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="DELETE")
-     */
-    public function handleDeleteResource(Request $request)
-    {
-        self::$handleDeleteResourceCalled++;
-    }
-
-    /**
-     * @param \BedRest\Rest\Request\Request $request
-     *
-     * @BedRest\Listener(event="DELETE_COLLECTION")
-     */
-    public function handleDeleteCollection(Request $request)
-    {
-        self::$handleDeleteCollectionCalled++;
     }
 }

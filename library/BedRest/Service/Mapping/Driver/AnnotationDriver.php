@@ -109,7 +109,11 @@ class AnnotationDriver implements Driver
                 }
 
                 foreach ($methodAnnotations[self::ANNOTATION_LISTENER] as $listenerAnnotation) {
-                    $serviceMetadata->addListener($listenerAnnotation->event, $reflMethod->getName());
+                    // ensure we don't double-up listener entries
+                    $existingListeners = $serviceMetadata->getListeners($listenerAnnotation->event);
+                    if (!in_array($reflMethod->getName(), $existingListeners)) {
+                        $serviceMetadata->addListener($listenerAnnotation->event, $reflMethod->getName());
+                    }
                 }
             }
         }

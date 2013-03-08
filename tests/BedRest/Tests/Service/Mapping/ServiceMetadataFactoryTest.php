@@ -51,12 +51,12 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
     public function testGetMetadata()
     {
-        $entity = new EmployeeService;
+        $service = new EmployeeService;
 
-        $meta = $this->factory->getMetadataFor(get_class($entity));
+        $meta = $this->factory->getMetadataFor(get_class($service));
         $this->assertInstanceOf('BedRest\Service\Mapping\ServiceMetadata', $meta);
 
-        $expectedMeta = $entity->getMetadata();
+        $expectedMeta = $service->getMetadata();
         $this->assertEquals($expectedMeta['className'], $meta->getClassName());
         $this->assertEquals($expectedMeta['type'], $meta->getType());
         $this->assertEquals($expectedMeta['listeners']['eventOne'], $meta->getListeners('eventOne'));
@@ -76,6 +76,17 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
         $this->assertInternalType('array', $metaCollection);
         $this->assertGreaterThan(0, count($metaCollection));
+    }
+
+    public function testInheritance()
+    {
+        $service = new EmployeeService;
+
+        $meta = $this->factory->getMetadataFor(get_class($service));
+        $this->assertInstanceOf('BedRest\Service\Mapping\ServiceMetadata', $meta);
+        
+        $baseMeta = $service->getGenericMetadata();
+        $this->assertEquals($baseMeta['listeners']['GET'], $meta->getListeners('GET'));
     }
 
     public function testCache()
