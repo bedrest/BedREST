@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
- * @BedRest\Service(type="DOCTRINE", dataMapper="BedRest\Model\Doctrine\Mapper")
+ * @BedRest\Service(type="BASIC", dataMapper="BedRest\Model\Doctrine\Mapper")
  */
 class Employee
 {
@@ -44,7 +44,7 @@ class Employee
     {
         return array(
             'className' => __CLASS__,
-            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_DOCTRINE,
+            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_BASIC,
             'listeners' => array(
                 'eventOne' => array(
                     'listenerOne'
@@ -55,22 +55,6 @@ class Employee
                 )
             )
         );
-    }
-
-    /**
-     * @param \Doctrine\ORM\EntityManager $em
-     */
-    public function setEntityManager(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager()
-    {
-        return $this->em;
     }
 
     /**

@@ -95,11 +95,11 @@ class ResourceMetadataFactoryTest extends BaseTestCase
     public function testGetMetadataWithDefaultValues()
     {
         $config = self::getConfiguration();
-        $meta = $this->factory->getMetadataByResourceName('asset');
+        $meta = $this->factory->getMetadataByResourceName('defaults');
 
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
 
-        $this->assertEquals('asset', $meta->getName());
+        $this->assertEquals('defaults', $meta->getName());
         $this->assertEquals($config->getDefaultService(), $meta->getService());
     }
 

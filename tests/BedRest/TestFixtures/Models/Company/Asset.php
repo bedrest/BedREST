@@ -13,6 +13,9 @@ use BedRest\Resource\Mapping\Annotation as BedRest;
  * @ORM\Entity
  * @ORM\Table(name="asset")
  * @BedRest\Resource(name="asset")
+ * @BedRest\Handler(
+ *      service="BedRest\TestFixtures\Services\Company\Generic"
+ * )
  */
 class Asset
 {

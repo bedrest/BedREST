@@ -2,6 +2,7 @@
 
 namespace BedRest\Tests\Service;
 
+use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Service\ServiceManager;
 use BedRest\Tests\RequiresModelTestCase;
 
@@ -37,28 +38,35 @@ class ServiceManagerTest extends RequiresModelTestCase
 
     public function testGetServiceFresh()
     {
-        $rmf = new \BedRest\Resource\Mapping\ResourceMetadataFactory(self::getConfiguration());
+        $rmf = new ResourceMetadataFactory(self::getConfiguration());
 
         $service = $this->serviceManager->getService($rmf->getMetadataByResourceName('employee'));
-        $this->assertInstanceOf('BedRest\TestFixtures\Services\Company\Employee', $service);
-        $this->assertInstanceOf('Doctrine\ORM\EntityManager', $service->getEntityManager());
-
         $serviceDuplicate = $this->serviceManager->getService($rmf->getMetadataByResourceName('employee'));
-        $this->assertEquals($service, $serviceDuplicate);
+        
+        $this->assertInstanceOf('BedRest\TestFixtures\Services\Company\Employee', $service);
+        $this->assertEquals(spl_object_hash($service), spl_object_hash($serviceDuplicate));
     }
 
     public function testGetServiceExistingForDifferentResource()
     {
-
+        $rmf = new ResourceMetadataFactory(self::getConfiguration());
+        $rmAsset = $rmf->getMetadataByResourceName('asset');
+        $rmDepartment = $rmf->getMetadataByResourceName('department');
+        
+        $serviceAsset = $this->serviceManager->getService($rmAsset);
+        $serviceDepartment = $this->serviceManager->getService($rmDepartment);
+        
+        $this->assertInstanceOf('BedRest\TestFixtures\Services\Company\Generic', $serviceAsset);
+        $this->assertInstanceOf('BedRest\TestFixtures\Services\Company\Generic', $serviceDepartment);
+        $this->assertNotEquals(spl_object_hash($serviceAsset), spl_object_hash($serviceDepartment));
     }
 
     public function testGetMapperFresh()
     {
-
-    }
-
-    public function testGetMapperExisting()
-    {
-
+        $mapper = $this->serviceManager->getDataMapper('BedRest\TestFixtures\Services\Company\Employee');
+        $this->assertInstanceOf('BedRest\Model\Doctrine\Mapper', $mapper);
+        
+        $mapperDuplicate = $this->serviceManager->getDataMapper('BedRest\TestFixtures\Services\Company\Employee');
+        $this->assertEquals($mapper, $mapperDuplicate);
     }
 }
