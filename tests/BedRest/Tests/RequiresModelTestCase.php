@@ -5,7 +5,6 @@ namespace BedRest\Tests;
 use BedRest\Resource\Mapping\Driver\AnnotationDriver as ResourceAnnotationDriver;
 use BedRest\Rest\Configuration as RestConfiguration;
 use BedRest\Service\Configuration as ServiceConfiguration;
-use BedRest\Service\ServiceManager;
 use BedRest\Service\Mapping\Driver\AnnotationDriver as ServiceAnnotationDriver;
 use BedRest\TestFixtures\Mocks\EntityManagerMock;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -28,12 +27,6 @@ class RequiresModelTestCase extends BaseTestCase
      * @var \BedRest\TestFixtures\Mocks\EntityManagerMock
      */
     protected static $doctrineEntityManager;
-
-    /**
-     * ServiceManager used for tests.
-     * @var \BedRest\Service\ServiceManager
-     */
-    protected static $serviceManager;
 
     /**
      * Retrieves an entity manager to be used by tests requiring one.
@@ -143,18 +136,5 @@ class RequiresModelTestCase extends BaseTestCase
         }
 
         return self::$serviceConfig;
-    }
-
-    /**
-     * Returns a service manager instance.
-     * @return \BedRest\Service\ServiceManager
-     */
-    public static function getServiceManager()
-    {
-        if (!self::$serviceManager instanceof ServiceManager) {
-            self::$serviceManager = new ServiceManager(static::getServiceConfiguration());
-        }
-
-        return self::$serviceManager;
     }
 }

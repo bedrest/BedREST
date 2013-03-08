@@ -4,13 +4,14 @@ namespace BedRest\TestFixtures\Services\Company;
 
 use BedRest\Rest\Request\Request;
 use BedRest\Service\Mapping\Annotation as BedRest;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Employee
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
- * @BedRest\Service(dataMapper="BedRest\Model\Doctrine\Mapper")
+ * @BedRest\Service(type="DOCTRINE", dataMapper="BedRest\Model\Doctrine\Mapper")
  */
 class Employee
 {
@@ -31,6 +32,11 @@ class Employee
     public static $handleDeleteCollectionCalled = 0;
 
     /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $em;
+
+    /**
      * Returns values for metadata to be compared against in tests.
      * @return array
      */
@@ -38,7 +44,7 @@ class Employee
     {
         return array(
             'className' => __CLASS__,
-            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_BASIC,
+            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_DOCTRINE,
             'listeners' => array(
                 'eventOne' => array(
                     'listenerOne'
@@ -49,6 +55,22 @@ class Employee
                 )
             )
         );
+    }
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $em
+     */
+    public function setEntityManager(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->em;
     }
 
     /**

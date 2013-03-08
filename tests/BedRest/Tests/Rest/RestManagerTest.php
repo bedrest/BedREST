@@ -22,12 +22,31 @@ class RestManagerTest extends RequiresModelTestCase
      */
     protected $restManager;
 
+    /**
+     * ServiceManager used for tests.
+     * @var \BedRest\Service\ServiceManager
+     */
+    protected $serviceManager;
+
     protected function setUp()
     {
         $config = static::getConfiguration();
         $this->restManager = new RestManager($config);
 
-        $this->restManager->setServiceManager(static::getServiceManager());
+        $this->restManager->setServiceManager($this->getServiceManager());
+    }
+
+    /**
+     * Returns a service manager instance.
+     * @return \BedRest\Service\ServiceManager
+     */
+    public function getServiceManager()
+    {
+        if (!$this->serviceManager instanceof ServiceManager) {
+            $this->serviceManager = new ServiceManager(static::getServiceConfiguration());
+        }
+
+        return $this->serviceManager;
     }
 
     public function testConfiguration()

@@ -46,7 +46,6 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
         $configuration->setServiceMetadataDriverImpl($driver);
 
-
         return new ServiceMetadataFactory($configuration);
     }
 
