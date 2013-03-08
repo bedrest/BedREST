@@ -16,6 +16,7 @@
 namespace BedRest\Service;
 
 use BedRest\Service\Mapping\Driver\Driver as ServiceDriver;
+use Doctrine\Common\Cache\Cache;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -36,6 +37,12 @@ class Configuration
      * @var \BedRest\Service\Mapping\Driver\Driver
      */
     protected $serviceMetadataDriverImpl;
+
+    /**
+     * Resource cache implementation.
+     * @var \Doctrine\Common\Cache\Cache
+     */
+    protected $serviceMetadataCacheImpl;
 
     /**
      * Service container.
@@ -117,6 +124,24 @@ class Configuration
     public function getServiceMetadataDriverImpl()
     {
         return $this->serviceMetadataDriverImpl;
+    }
+
+    /**
+     * Sets the service metadata cache implementation.
+     * @param \Doctrine\Common\Cache\Cache $cache
+     */
+    public function setServiceMetadataCacheImpl(Cache $cache)
+    {
+        $this->serviceMetadataCacheImpl = $cache;
+    }
+
+    /**
+     * Returns the service metadata cache implementation.
+     * @return \Doctrine\Common\Cache\Cache
+     */
+    public function getServiceMetadataCacheImpl()
+    {
+        return $this->serviceMetadataCacheImpl;
     }
 
     /**

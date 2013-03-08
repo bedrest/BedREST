@@ -35,12 +35,6 @@ class ResourceMetadata
     protected $className;
 
     /**
-     * Class name of the handler for this resource.
-     * @var string
-     */
-    protected $handler;
-
-    /**
      * Class name of the service for this resource.
      * @var string
      */
@@ -78,24 +72,6 @@ class ResourceMetadata
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Sets the class name of the handler for this resource.
-     * @param string $handler
-     */
-    public function setHandler($handler)
-    {
-        $this->handler = $handler;
-    }
-
-    /**
-     * Returns the class name of the handler for this resource.
-     * @return string
-     */
-    public function getHandler()
-    {
-        return $this->handler;
     }
 
     /**

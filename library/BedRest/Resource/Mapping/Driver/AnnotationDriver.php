@@ -110,11 +110,6 @@ class AnnotationDriver implements Driver
         if (isset($classAnnotations['BedRest\Resource\Mapping\Annotation\Handler'])) {
             $handlerAnnotation = $classAnnotations['BedRest\Resource\Mapping\Annotation\Handler'];
 
-            // handler
-            if (!empty($handlerAnnotation->handler)) {
-                $resourceMetadata->setHandler($handlerAnnotation->handler);
-            }
-
             // service
             if (!empty($handlerAnnotation->service)) {
                 $resourceMetadata->setService($handlerAnnotation->service);

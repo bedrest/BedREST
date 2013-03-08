@@ -18,10 +18,9 @@ namespace BedRest\Rest;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Configuration;
-use BedRest\Rest\Request;
-use BedRest\Rest\RequestType;
-use BedRest\Rest\Response;
-use BedRest\Service\Configuration as ServiceConfiguration;
+use BedRest\Rest\Request\Request;
+use BedRest\Rest\Response\Response;
+use BedRest\Service\ServiceManager;
 
 /**
  * RestManager
@@ -39,10 +38,10 @@ class RestManager
     protected $configuration;
 
     /**
-     * Service configuration.
-     * @var \BedRest\Service\Configuration
+     * Service manager instance.
+     * @var \BedRest\Service\ServiceManager
      */
-    protected $serviceConfiguration;
+    protected $serviceManager;
 
     /**
      * The resource metadata factory.
@@ -73,21 +72,21 @@ class RestManager
     }
 
     /**
-     * Sets the Service\Configuration object.
-     * @param \BedRest\Service\Configuration $serviceConfiguration
+     * Sets the ServiceManager instance to use for service instantiation and configuration.
+     * @param \BedRest\Service\ServiceManager $serviceManager
      */
-    public function setServiceConfiguration(ServiceConfiguration $serviceConfiguration)
+    public function setServiceManager(ServiceManager $serviceManager)
     {
-        $this->serviceConfiguration = $serviceConfiguration;
+        $this->serviceManager = $serviceManager;
     }
 
     /**
-     * Returns the Service\Configuration object.
-     * @return \BedRest\Service\Configuration
+     * Returns the ServiceManager instance.
+     * @return \BedRest\Service\ServiceManager
      */
-    public function getServiceConfiguration()
+    public function getServiceManager()
     {
-        return $this->serviceConfiguration;
+        return $this->serviceManager;
     }
 
     /**
@@ -121,8 +120,8 @@ class RestManager
 
     /**
      * Creates and prepares a new Response object, using the supplied Request object where needed.
-     * @param  \BedRest\Rest\Request  $request
-     * @return \BedRest\Rest\Response
+     * @param  \BedRest\Rest\Request\Request   $request
+     * @return \BedRest\Rest\Response\Response
      */
     protected function createResponse(Request $request)
     {
@@ -143,62 +142,40 @@ class RestManager
 
     /**
      * Processes a REST request, returning a Response object.
-     * @param  \BedRest\Rest\Request   $request
+     * @param  \BedRest\Rest\Request\Request   $request
      * @throws \BedRest\Rest\Exception
-     * @return \BedRest\Rest\Response
+     * @return \BedRest\Rest\Response\Response
      */
     public function process(Request $request)
     {
         $response = $this->createResponse($request);
 
-        // get resource handler for the specified resource
+        // get information about the requested resource
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
-        $handler = $this->getResourceHandler($resourceMetadata);
+
+        // get the service and data mapper
+        $serviceManager = $this->getServiceManager();
+        $serviceMetadata = $serviceManager->getServiceMetadata($resourceMetadata->getService());
+        $service = $serviceManager->getService($resourceMetadata);
+        $dataMapper = $serviceManager->getDataMapper($resourceMetadata->getService());
 
         // handle the request
-        switch ($request->getMethod()) {
-            case RequestType::METHOD_GET:
-                $handler->handleGetResource($request, $response);
-                break;
-            case RequestType::METHOD_GET_COLLECTION:
-                $handler->handleGetCollection($request, $response);
-                break;
-            case RequestType::METHOD_POST:
-                $handler->handlePostResource($request, $response);
-                break;
-            case RequestType::METHOD_POST_COLLECTION:
-                $handler->handlePostCollection($request, $response);
-                break;
-            case RequestType::METHOD_PUT:
-                $handler->handlePutResource($request, $response);
-                break;
-            case RequestType::METHOD_PUT_COLLECTION:
-                $handler->handlePutCollection($request, $response);
-                break;
-            case RequestType::METHOD_DELETE:
-                $handler->handleDeleteResource($request, $response);
-                break;
-            case RequestType::METHOD_DELETE_COLLECTION:
-                $handler->handleDeleteCollection($request, $response);
-                break;
-            default:
-                throw Exception::methodNotAllowed();
-                break;
+        $listeners = $serviceMetadata->getListeners($request->getMethod());
+
+        $data = array();
+        foreach ($listeners as $listener) {
+            $data = $service->$listener($request);
         }
 
+        if (count($data) === 1) {
+            $data = reset($data);
+        }
+
+        // compose the response body to desired depth
+        $mapDepth = (int) $request->getParameter('depth', 1);
+        $response->setBody($dataMapper->reverse($data, $mapDepth));
+
+        // TODO: generate additional response information (ETag, Cache-Control etc)
         return $response;
-    }
-
-    /**
-     * Creates and returns the handler for a particular resource.
-     * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
-     * @return \BedRest\Resource\Handler\Handler
-     */
-    protected function getResourceHandler(ResourceMetadata $resourceMetadata)
-    {
-        $handlerClass = $resourceMetadata->getHandler();
-        $handler = new $handlerClass($this);
-
-        return $handler;
     }
 }

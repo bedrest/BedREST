@@ -92,6 +92,7 @@ class AnnotationDriver implements Driver
         // load headline service information
         if (isset($classAnnotations[self::ANNOTATION_SERVICE])) {
             $serviceAnnotation = $classAnnotations[self::ANNOTATION_SERVICE];
+            $serviceMetadata->setDataMapper($serviceAnnotation->dataMapper);
             $serviceMetadata->setType($serviceAnnotation->type);
         }
 

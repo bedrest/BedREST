@@ -1,8 +1,8 @@
 <?php
 
-namespace BedRest\Tests\Rest;
+namespace BedRest\Tests\Rest\Response;
 
-use BedRest\Rest\Response;
+use BedRest\Rest\Response\Response;
 use BedRest\Tests\BaseTestCase;
 
 /**
@@ -14,7 +14,7 @@ class ResponseTest extends BaseTestCase
 {
     /**
      * Response object in test.
-     * @var \BedRest\Rest\Response
+     * @var \BedRest\Rest\Response\Response
      */
     protected $response;
 

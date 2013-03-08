@@ -27,14 +27,6 @@ class ConfigurationTest extends BaseTestCase
         $this->assertEquals($contentTypes, $config->getContentTypes());
     }
 
-    public function testDefaultResourceHandler()
-    {
-        $config = new Configuration();
-        $config->setDefaultResourceHandler('ResourceHandlers\DefaultHandler');
-
-        $this->assertEquals('ResourceHandlers\DefaultHandler', $config->getDefaultResourceHandler());
-    }
-
     public function testDefaultService()
     {
         $config = new Configuration();

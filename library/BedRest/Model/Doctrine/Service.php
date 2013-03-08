@@ -16,6 +16,9 @@
 namespace BedRest\Model\Doctrine;
 
 use BedRest\Resource\Mapping\ResourceMetadata;
+use BedRest\Rest\ResourceNotFoundException;
+use BedRest\Rest\Request\Request;
+use BedRest\Service\Data\Mapper as MapperInterface;
 use BedRest\Service\Mapping\Annotation as BedRest;
 use Doctrine\ORM\EntityManager;
 
@@ -47,13 +50,20 @@ class Service
     protected $resourceClassName;
 
     /**
+     * DataMapper instance.
+     * @var \BedRest\Service\Data\Mapper
+     */
+    protected $dataMapper;
+
+    /**
      * Constructor.
      * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      */
-    public function __construct(ResourceMetadata $resourceMetadata)
+    public function __construct(ResourceMetadata $resourceMetadata, MapperInterface $dataMapper)
     {
         $this->resourceMetadata = $resourceMetadata;
         $this->resourceClassName = $resourceMetadata->getClassName();
+        $this->dataMapper = $dataMapper;
     }
 
     /**
@@ -66,19 +76,45 @@ class Service
     }
 
     /**
-     * Retrieves a collection of resource entities.
-     * @param  array $filters
-     * @param  array $order
-     * @param  int   $limit
-     * @param  int   $offset
-     * @return array
+     * Retrieves a single resource entity.
+     * @param  \BedRest\Rest\Request\Request $request
+     * @return object
+     *
+     * @BedRest\Listener(event="GET")
      */
-    public function getCollection($filters = array(), $order = array(), $limit = 10, $offset = 0)
+    public function get(Request $request)
     {
+        $identifier = $request->getRouteComponent('identifier');
+
+        $resource = $this->entityManager->find($this->resourceClassName, $identifier);
+
+        if ($resource === null) {
+            throw new ResourceNotFoundException;
+        }
+
+        return $resource;
+    }
+
+    /**
+     * Retrieves a collection of resource entities.
+     * @param  \BedRest\Rest\Request\Request $request
+     * @return array
+     *
+     * @BedRest\Listener(event="GET_COLLECTION")
+     */
+    public function getCollection(Request $request)
+    {
+        // get the parameters
+        $limit = (int) $request->getParameter('maxResults', 10);
+        $offset = 0;
+        $depth = (int) $request->getParameter('depth', 1);
+
+        // compose a Query object
         $query = $this->entityManager->createQuery("SELECT r FROM {$this->resourceClassName} r");
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
+        // get the data and some metadata
         $collection = $query->execute();
 
         $total = $this->getCollectionSize();
@@ -106,54 +142,77 @@ class Service
     }
 
     /**
-     * Retrieves a single resource entity.
-     * @param  mixed  $identifier
-     * @return object
-     */
-    public function get($identifier)
-    {
-        $entity = $this->entityManager->find($this->resourceClassName, $identifier);
-
-        return $entity;
-    }
-
-    /**
      * Creates a single resource entity.
-     * @param  object $entity
+     * @param  \BedRest\Rest\Request\Request $request
      * @return object
+     *
+     * @BedRest\Listener(event="POST")
      */
-    public function create($entity)
+    public function create(Request $request)
     {
-        $this->entityManager->persist($entity);
+        $resource = new $this->resourceClassName;
+
+        // populate the resource with data from the request using a DataMapper
+        $requestData = (array) $request->getBody();
+
+        $this->dataMapper->map($resource, $requestData);
+
+        // persist
+        $this->entityManager->persist($resource);
         $this->entityManager->flush();
 
-        return $entity;
+        return $resource;
     }
 
     /**
      * Updates a single resource entity.
-     * @param  object $entity
+     * @param  \BedRest\Rest\Request\Request $request
      * @return object
+     *
+     * @BedRest\Listener(event="PUT")
      */
-    public function update($entity)
+    public function update(Request $request)
     {
-        $this->entityManager->persist($entity);
+        // get the existing resource
+        $identifier = $request->getRouteComponent('identifier');
+        $resource = $this->entityManager->find($this->resourceClassName, $identifier);
+
+        // populate the resource with data from the request using a DataMapper
+        $requestData = (array) $request->getBody();
+
+        $this->dataMapper->map($resource, $requestData);
+
+        // persist
+        $this->entityManager->persist($resource);
         $this->entityManager->flush();
 
-        return $entity;
+        return $resource;
     }
 
     /**
      * Deletes an entity, referenced by an identifier.
-     * @param string $entity
+     * @param  \BedRest\Rest\Request\Request $request
+     * @return array
+     *
+     * @BedRest\Listener(event="DELETE")
      */
-    public function delete($entity)
+    public function delete(Request $request)
     {
-        if (!is_object($entity)) {
-            $entity = $this->entityManager->find($this->resourceClassName, $entity);
+        // retrieve the resource and check it exists
+        $identifier = $request->getRouteComponent('identifier');
+        $resource = $this->get($identifier);
+
+        if ($resource === null) {
+            throw new ResourceNotFoundException;
         }
 
-        $this->entityManager->remove($entity);
+        // remove
+        $this->entityManager->remove($resource);
         $this->entityManager->flush();
+
+        // populate the response
+        return array(
+            'deleted' => true
+        );
     }
 }

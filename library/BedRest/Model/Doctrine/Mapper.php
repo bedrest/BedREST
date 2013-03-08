@@ -26,7 +26,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
- * SimpleEntityMapper
+ * Mapper
  *
  * @author Geoff Adams <geoff@dianode.net>
  */

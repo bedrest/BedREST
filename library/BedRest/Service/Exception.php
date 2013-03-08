@@ -22,4 +22,13 @@ namespace BedRest\Service;
  */
 class Exception extends \Exception
 {
+    public static function serviceNotFound($className)
+    {
+        return new self("Service '{$className}' not found.");
+    }
+
+    public static function classNotMappedService($className)
+    {
+        return new self("The class '{$className}' is not a mapped service.");
+    }
 }

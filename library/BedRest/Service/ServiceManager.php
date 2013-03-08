@@ -19,6 +19,7 @@ use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Service\Configuration;
 use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * ServiceManager
@@ -89,6 +90,69 @@ class ServiceManager
     }
 
     /**
+     * Returns the DataMapper to be used by a service.
+     * @param  string                          $service Class name of the service.
+     * @throws \BedRest\Service\Exception
+     * @throws \BedRest\Service\Data\Exception
+     * @return \BedRest\Service\Data\Mapper
+     */
+    public function getDataMapper($service)
+    {
+        $serviceMetadata = $this->getServiceMetadata($service);
+
+        // check the service exists
+        if (!class_exists($service)) {
+            throw Exception::serviceNotFound($service);
+        }
+
+        if (!$this->serviceMetadataFactory->isService($service)) {
+            throw Exception::classNotMappedService($service);
+        }
+
+        // check the mapper exists
+        $className = $serviceMetadata->getDataMapper();
+        if (!class_exists($className)) {
+            throw Data\Exception::dataMapperNotFound($className);
+        }
+
+        // use a DI container to instantiate the mapper
+        $container = $this->configuration->getServiceContainer();
+
+        $id = "{$className}";
+        if (!$container->hasDefinition($id)) {
+            $this->buildDataMapperDefinition($container, $serviceMetadata, $id, $className);
+        }
+
+        return $container->get($id);
+    }
+
+    /**
+     * Builds a definition in a ContainerBuilder instance for the specified DataMapper class.
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param Mapping\ServiceMetadata                                 $metadata
+     * @param string                                                  $id
+     * @param string                                                  $className
+     */
+    protected function buildDataMapperDefinition(
+        ContainerBuilder $container,
+        ServiceMetadata $metadata,
+        $id,
+        $className
+    ) {
+        $definition = $container->register($id, $className);
+
+        $definition
+            ->addArgument($this->getConfiguration())
+            ->addArgument($this);
+
+        // TODO: this should be drawn from the DataMapper itself perhaps?
+        if ($metadata->getType() == ServiceMetadata::TYPE_DOCTRINE) {
+            $definition
+                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
+        }
+    }
+
+    /**
      * Returns an instance of the service for the specified resource.
      * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @throws \BedRest\Service\Exception
@@ -107,17 +171,41 @@ class ServiceManager
             throw new Exception("The class '{$className}' is not a mapped service.");
         }
 
-        // get the DI container for instantiating classes
+        // use a DI container to instantiate the service
         $container = $this->configuration->getServiceContainer();
 
         $id = "{$className}#{$resourceMetadata->getName()}";
         if (!$container->hasDefinition($id)) {
-            // TODO: detect if the service is a Doctrine service here, before adding the method call injection
-            $container->register($id, $className)
-                ->addArgument($resourceMetadata)
-                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
+            $serviceMetadata = $this->getServiceMetadata($className);
+            $this->buildServiceDefinition($container, $serviceMetadata, $resourceMetadata, $id, $className);
         }
 
         return $container->get($id);
+    }
+
+    /**
+     * Builds a definition in a ContainerBuilder instance for the specified service class.
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param \BedRest\Resource\Mapping\ResourceMetadata              $resourceMetadata
+     * @param string                                                  $id
+     * @param string                                                  $className
+     * @param \BedRest\Service\Mapping\ServiceMetadata                $metadata
+     */
+    protected function buildServiceDefinition(
+        ContainerBuilder $container,
+        ServiceMetadata $metadata,
+        ResourceMetadata $resourceMetadata,
+        $id,
+        $className
+    ) {
+        $definition = $container->register($id, $className);
+
+        $definition
+            ->addArgument($resourceMetadata, $this->getDataMapper($className));
+
+        if ($metadata->getType() == ServiceMetadata::TYPE_DOCTRINE) {
+            $definition
+                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
+        }
     }
 }

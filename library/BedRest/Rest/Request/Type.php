@@ -13,14 +13,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Rest;
+namespace BedRest\Rest\Request;
 
 /**
- * RequestType
+ * Type
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class RequestType
+class Type
 {
     const METHOD_HEAD = 'HEAD';
     const METHOD_GET = 'GET';

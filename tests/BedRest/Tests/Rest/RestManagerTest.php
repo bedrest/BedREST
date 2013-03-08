@@ -2,20 +2,19 @@
 
 namespace BedRest\Tests\Rest;
 
-use BedRest\Rest\Request;
-use BedRest\Rest\RequestType;
+use BedRest\Rest\Request\Request;
+use BedRest\Rest\Request\Type;
 use BedRest\Rest\RestManager;
-use BedRest\Resource\Mapping\Driver\AnnotationDriver;
-use BedRest\Tests\BaseTestCase;
-use BedRest\TestFixtures\ResourceHandlers\DefaultHandler;
-use Doctrine\Common\Annotations\AnnotationReader;
+use BedRest\Service\ServiceManager;
+use BedRest\Tests\RequiresModelTestCase;
+use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
 
 /**
  * RestManagerTest
  *
  * Author: Geoff Adams <geoff@dianode.net>
  */
-class RestManagerTest extends BaseTestCase
+class RestManagerTest extends RequiresModelTestCase
 {
     /**
      * RestManager instance under test.
@@ -23,22 +22,31 @@ class RestManagerTest extends BaseTestCase
      */
     protected $restManager;
 
+    /**
+     * ServiceManager used for tests.
+     * @var \BedRest\Service\ServiceManager
+     */
+    protected $serviceManager;
+
     protected function setUp()
     {
-        $config = self::getConfiguration();
-
-        $reader = new AnnotationReader();
-        $driver = new AnnotationDriver($reader);
-        $driver->addPaths(
-            array(
-                TESTS_BASEDIR . '/BedRest/TestFixtures/Models',
-                TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company'
-            )
-        );
-
-        $config->setResourceMetadataDriverImpl($driver);
-
+        $config = static::getConfiguration();
         $this->restManager = new RestManager($config);
+
+        $this->restManager->setServiceManager($this->getServiceManager());
+    }
+
+    /**
+     * Returns a service manager instance.
+     * @return \BedRest\Service\ServiceManager
+     */
+    public function getServiceManager()
+    {
+        if (!$this->serviceManager instanceof ServiceManager) {
+            $this->serviceManager = new ServiceManager(static::getServiceConfiguration());
+        }
+
+        return $this->serviceManager;
     }
 
     public function testConfiguration()
@@ -46,11 +54,14 @@ class RestManagerTest extends BaseTestCase
         $this->assertEquals(self::getConfiguration(), $this->restManager->getConfiguration());
     }
 
-    public function testServiceConfiguration()
+    public function testServiceManager()
     {
-        $this->restManager->setServiceConfiguration(self::getServiceConfiguration());
+        // need to create a fresh instance as we create a ServiceManager
+        // instance and inject it into the RestManager in setUp()
+        $serviceManager = new ServiceManager(self::getServiceConfiguration());
 
-        $this->assertEquals(self::getServiceConfiguration(), $this->restManager->getServiceConfiguration());
+        $this->restManager->setServiceManager($serviceManager);
+        $this->assertEquals($serviceManager, $this->restManager->getServiceManager());
     }
 
     public function testResourceMetadata()
@@ -80,66 +91,66 @@ class RestManagerTest extends BaseTestCase
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadataFactory', $factory);
     }
 
-    public function testAppropriateHandlerMethodCalled()
+    public function testAppropriateServiceListenerCalled()
     {
         $request = new Request(self::getConfiguration());
         $request->setAccept('application/json');
         $request->setResource('employee');
 
         // test GET resource
-        $request->setMethod(RequestType::METHOD_GET);
+        $request->setMethod(Type::METHOD_GET);
 
-        $this->assertEquals(0, DefaultHandler::$handleGetResourceCalled);
+        $this->assertEquals(0, EmployeeService::$handleGetResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handleGetResourceCalled);
+        $this->assertEquals(1, EmployeeService::$handleGetResourceCalled);
 
         // test GET collection
-        $request->setMethod(RequestType::METHOD_GET_COLLECTION);
+        $request->setMethod(Type::METHOD_GET_COLLECTION);
 
-        $this->assertEquals(0, DefaultHandler::$handleGetCollectionCalled);
+        $this->assertEquals(0, EmployeeService::$handleGetCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handleGetCollectionCalled);
+        $this->assertEquals(1, EmployeeService::$handleGetCollectionCalled);
 
         // test POST resource
-        $request->setMethod(RequestType::METHOD_POST);
+        $request->setMethod(Type::METHOD_POST);
 
-        $this->assertEquals(0, DefaultHandler::$handlePostResourceCalled);
+        $this->assertEquals(0, EmployeeService::$handlePostResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handlePostResourceCalled);
+        $this->assertEquals(1, EmployeeService::$handlePostResourceCalled);
 
         // test POST collection
-        $request->setMethod(RequestType::METHOD_POST_COLLECTION);
+        $request->setMethod(Type::METHOD_POST_COLLECTION);
 
-        $this->assertEquals(0, DefaultHandler::$handlePostCollectionCalled);
+        $this->assertEquals(0, EmployeeService::$handlePostCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handlePostCollectionCalled);
+        $this->assertEquals(1, EmployeeService::$handlePostCollectionCalled);
 
         // test PUT resource
-        $request->setMethod(RequestType::METHOD_PUT);
+        $request->setMethod(Type::METHOD_PUT);
 
-        $this->assertEquals(0, DefaultHandler::$handlePutResourceCalled);
+        $this->assertEquals(0, EmployeeService::$handlePutResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handlePutResourceCalled);
+        $this->assertEquals(1, EmployeeService::$handlePutResourceCalled);
 
         // test PUT collection
-        $request->setMethod(RequestType::METHOD_PUT_COLLECTION);
+        $request->setMethod(Type::METHOD_PUT_COLLECTION);
 
-        $this->assertEquals(0, DefaultHandler::$handlePutCollectionCalled);
+        $this->assertEquals(0, EmployeeService::$handlePutCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handlePutCollectionCalled);
+        $this->assertEquals(1, EmployeeService::$handlePutCollectionCalled);
 
         // test DELETE resource
-        $request->setMethod(RequestType::METHOD_DELETE);
+        $request->setMethod(Type::METHOD_DELETE);
 
-        $this->assertEquals(0, DefaultHandler::$handleDeleteResourceCalled);
+        $this->assertEquals(0, EmployeeService::$handleDeleteResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handleDeleteResourceCalled);
+        $this->assertEquals(1, EmployeeService::$handleDeleteResourceCalled);
 
         // test DELETE collection
-        $request->setMethod(RequestType::METHOD_DELETE_COLLECTION);
+        $request->setMethod(Type::METHOD_DELETE_COLLECTION);
 
-        $this->assertEquals(0, DefaultHandler::$handleDeleteCollectionCalled);
+        $this->assertEquals(0, EmployeeService::$handleDeleteCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, DefaultHandler::$handleDeleteCollectionCalled);
+        $this->assertEquals(1, EmployeeService::$handleDeleteCollectionCalled);
     }
 }

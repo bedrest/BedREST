@@ -6,6 +6,7 @@ use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver;
 use BedRest\Tests\BaseTestCase;
+use BedRest\TestFixtures\Mocks\TestCache;
 use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
 use Doctrine\Common\Annotations\AnnotationReader;
 
@@ -17,12 +18,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 class ServiceMetadataFactoryTest extends BaseTestCase
 {
     /**
-     * Driver for the factory.
-     * @var \BedRest\Service\Mapping\Driver\AnnotationDriver
-     */
-    protected $driver;
-
-    /**
      * Class under test.
      * @var \BedRest\Service\Mapping\ServiceMetadataFactory
      */
@@ -30,14 +25,28 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
     protected function setUp()
     {
+        $this->factory = $this->createFactory();
+    }
+
+    /**
+     * Creates a fresh instance of the ServiceMetadataFactory
+     * @return \BedRest\Service\Mapping\ServiceMetadataFactory
+     */
+    protected function createFactory()
+    {
         $configuration = self::getServiceConfiguration();
 
         $reader = new AnnotationReader();
-        $this->driver = new AnnotationDriver($reader);
+        $driver = new AnnotationDriver($reader);
+        $driver->addPaths(
+            array(
+                TESTS_BASEDIR . '/BedRest/TestFixtures/Services/Company'
+            )
+        );
 
-        $configuration->setServiceMetadataDriverImpl($this->driver);
+        $configuration->setServiceMetadataDriverImpl($driver);
 
-        $this->factory = new ServiceMetadataFactory($configuration);
+        return new ServiceMetadataFactory($configuration);
     }
 
     public function testGetMetadata()
@@ -63,11 +72,45 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
     public function testGetAllMetadata()
     {
-        $this->driver->addPath(TESTS_BASEDIR . '/BedRest/TestFixtures/Services/Company');
-
         $metaCollection = $this->factory->getAllMetadata();
 
         $this->assertInternalType('array', $metaCollection);
         $this->assertGreaterThan(0, count($metaCollection));
+    }
+
+    public function testCache()
+    {
+        $factory1 = $this->factory;
+        $factory2 = $this->createFactory();
+
+        $cache = new TestCache();
+        $factory1->setCache($cache);
+        $factory2->setCache($cache);
+
+        // test the getter/setter works
+        $this->assertEquals($cache, $factory1->getCache());
+
+        // make sure our cache is clean
+        $cacheStats = $cache->getStats();
+        $this->assertEquals(0, $cacheStats['hits']);
+        $this->assertEquals(0, $cacheStats['misses']);
+
+        // get some metadata with the first factory, which should perform a cache miss then store
+        // the the new metadata item in the cache
+        $factory1->getMetadataFor('BedRest\TestFixtures\Services\Company\Employee');
+
+        $cacheStats = $cache->getStats();
+        $this->assertEquals(0, $cacheStats['hits']);
+        $this->assertEquals(1, $cacheStats['misses']);
+
+        // now try getting the same metadata with the second factory - it should be cached already
+        $factory2->getMetadataFor('BedRest\TestFixtures\Services\Company\Employee');
+
+        $cacheStats = $cache->getStats();
+        $this->assertEquals(1, $cacheStats['hits']);
+        $this->assertEquals(1, $cacheStats['misses']);
+
+        // make sure we only have one item in the cache
+        $this->assertCount(1, $cache->getCacheData());
     }
 }
