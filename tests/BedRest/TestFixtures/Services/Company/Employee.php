@@ -30,9 +30,25 @@ class Employee
 
     public static $handleDeleteCollectionCalled = 0;
 
-    public function setEntityManager()
+    /**
+     * Returns values for metadata to be compared against in tests.
+     * @return array
+     */
+    public function getMetadata()
     {
-
+        return array(
+            'className' => __CLASS__,
+            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_BASIC,
+            'listeners' => array(
+                'eventOne' => array(
+                    'listenerOne'
+                ),
+                'eventTwo' => array(
+                    'listenerOne',
+                    'listenerTwo'
+                )
+            )
+        );
     }
 
     /**
@@ -57,27 +73,6 @@ class Employee
      */
     public function get()
     {
-    }
-
-    /**
-     * Returns values for metadata to be compared against in tests.
-     * @return array
-     */
-    public function getMetadata()
-    {
-        return array(
-            'className' => __CLASS__,
-            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_BASIC,
-            'listeners' => array(
-                'eventOne' => array(
-                    'listenerOne'
-                ),
-                'eventTwo' => array(
-                    'listenerOne',
-                    'listenerTwo'
-                )
-            )
-        );
     }
 
     /**
