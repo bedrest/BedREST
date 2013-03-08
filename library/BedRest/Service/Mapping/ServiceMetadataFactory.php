@@ -17,6 +17,7 @@ namespace BedRest\Service\Mapping;
 
 use BedRest\Service\Configuration;
 use BedRest\Service\Mapping\Exception;
+use Doctrine\Common\Cache\Cache;
 
 /**
  * ServiceMetadataFactory
@@ -26,10 +27,28 @@ use BedRest\Service\Mapping\Exception;
 class ServiceMetadataFactory
 {
     /**
+     * Prefix for cache IDs.
+     * @var string
+     */
+    protected $cachePrefix = 'BEDREST::';
+
+    /**
+     * Suffix for cache IDs.
+     * @var string
+     */
+    protected $cacheSuffix = '\$SERVICEMETADATA';
+
+    /**
      * Configuration object.
      * @var \BedRest\Service\Configuration
      */
     protected $configuration;
+
+    /**
+     * Cache driver to use.
+     * @var \Doctrine\Common\Cache\Cache
+     */
+    protected $cache;
 
     /**
      * Mapping metadata driver.
@@ -53,6 +72,25 @@ class ServiceMetadataFactory
         $this->configuration = $configuration;
 
         $this->driver = $configuration->getServiceMetadataDriverImpl();
+        $this->cache = $configuration->getServiceMetadataCacheImpl();
+    }
+
+    /**
+     * Sets the cache driver for this factory instance.
+     * @param \Doctrine\Common\Cache\Cache $cache
+     */
+    public function setCache(Cache $cache = null)
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * Returns the cache driver in use by this factory instance.
+     * @return \Doctrine\Common\Cache\Cache
+     */
+    public function getCache()
+    {
+        return $this->cache;
     }
 
     /**
@@ -68,6 +106,19 @@ class ServiceMetadataFactory
         }
 
         if (!isset($this->loadedMetadata[$className])) {
+            $this->loadMetadata($className);
+        }
+
+        if ($this->cache) {
+            $cacheId = $this->cachePrefix . $className . $this->cacheSuffix;
+
+            if (($cached = $this->cache->fetch($cacheId)) !== false) {
+                $this->loadedMetadata[$className] = $cached;
+            } else {
+                $this->loadMetadata($className);
+                $this->cache->save($cacheId, $this->loadedMetadata[$className], null);
+            }
+        } else {
             $this->loadMetadata($className);
         }
 
