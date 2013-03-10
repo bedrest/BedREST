@@ -33,12 +33,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class Mapper implements MapperInterface
 {
     /**
-     * Service configuration.
-     * @var \BedRest\Service\Configuration
-     */
-    protected $configuration;
-
-    /**
      * ServiceManager instance.
      * @var \BedRest\Service\ServiceManager
      */
@@ -53,12 +47,10 @@ class Mapper implements MapperInterface
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
-     * @param \BedRest\Service\Configuration  $configuration
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
-    public function __construct(Configuration $configuration = null, ServiceManager $serviceManager = null)
+    public function __construct(ServiceManager $serviceManager = null)
     {
-        $this->configuration = $configuration;
         $this->serviceManager = $serviceManager;
     }
 
@@ -252,7 +244,7 @@ class Mapper implements MapperInterface
             } elseif ($classMetaInfo->isCollectionValuedAssociation($name)) {
                 $value = $this->castCollectionValuedAssociation($data[$name], $mapping);
             } else {
-                throw Exception::invalidAssociationType($classMetaInfo->getName(), $name);
+                throw DataException::invalidAssociationType($classMetaInfo->getName(), $name);
             }
 
             $output[$name] = $value;
@@ -273,7 +265,7 @@ class Mapper implements MapperInterface
             if (isset($data['id'])) {
                 $data = $data['id'];
             } else {
-                throw Exception::invalidAssociationData();
+                throw DataException::invalidAssociationData();
             }
         }
 
@@ -297,7 +289,7 @@ class Mapper implements MapperInterface
                 if (isset($item['id'])) {
                     $item = $item['id'];
                 } else {
-                    throw Exception::invalidAssociationData();
+                    throw DataException::invalidAssociationData();
                 }
             }
 

@@ -140,10 +140,7 @@ class ServiceManager
         $className
     ) {
         $definition = $container->register($id, $className);
-
-        $definition
-            ->addArgument($this->getConfiguration())
-            ->addArgument($this);
+        $definition->addArgument($this);
 
         // TODO: this should be drawn from the DataMapper itself perhaps?
         if ($metadata->getType() == ServiceMetadata::TYPE_DOCTRINE) {
@@ -199,9 +196,9 @@ class ServiceManager
         $className
     ) {
         $definition = $container->register($id, $className);
-
         $definition
-            ->addArgument($resourceMetadata, $this->getDataMapper($className));
+            ->addArgument($resourceMetadata)
+            ->addArgument($this->getDataMapper($className));
 
         if ($metadata->getType() == ServiceMetadata::TYPE_DOCTRINE) {
             $definition

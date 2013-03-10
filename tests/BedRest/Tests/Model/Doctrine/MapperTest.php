@@ -39,7 +39,6 @@ class MapperTest extends RequiresModelTestCase
     protected function setUp()
     {
         $this->mapper = new Mapper(
-            self::getServiceConfiguration(),
             new ServiceManager(self::getServiceConfiguration())
         );
 
@@ -273,6 +272,7 @@ class MapperTest extends RequiresModelTestCase
      *
      * @param string $entity
      * @param mixed  $id
+     * @param string $resource
      */
     public function testAssociationReverse($entity, $id, $resource)
     {
