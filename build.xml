@@ -58,24 +58,6 @@
                        format="frames"
                        todir="${tests.reports.report}" />
 
-        <adhoc-task name="autoload">
-            <![CDATA[
-                class BedRestAutoload extends Task {
-                    protected $file;
-
-                    function setFile($file) {
-                        $this->file = $file;
-                    }
-
-                    function main() {
-                        include $this->file;
-                    }
-                }
-            ]]>
-        </adhoc-task>
-
-        <autoload file="${tests.dir}bootstrap.php" />
-
         <coverage-report outfile="${tests.reports.logs}coverage.xml">
             <report todir="${tests.reports.coverage}" usesorttable="true" />
         </coverage-report>
