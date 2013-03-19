@@ -13,9 +13,6 @@ use Doctrine\ORM\Tools\SchemaTool;
  * FunctionalModelTestCase
  *
  * @author Geoff Adams <geoff@dianode.net>
- *
- * @todo Implement a shallow comparison for entities to avoid relying on Doctrine's object caching for
- *       equality comparisons to succeed. This will make the tests more robust.
  */
 class FunctionalModelTestCase extends BaseTestCase
 {
@@ -52,6 +49,8 @@ class FunctionalModelTestCase extends BaseTestCase
     public static function tearDownAfterClass()
     {
         self::$schemaTool->dropDatabase();
+
+        self::$doctrineEntityManager = null;
     }
 
     /**
@@ -69,7 +68,9 @@ class FunctionalModelTestCase extends BaseTestCase
      */
     protected static function getEntityManager()
     {
-        self::createEntityManager();
+        if (!self::$doctrineEntityManager) {
+            self::createEntityManager();
+        }
 
         return self::$doctrineEntityManager;
     }
