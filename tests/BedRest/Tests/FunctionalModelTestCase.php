@@ -34,6 +34,12 @@ class FunctionalModelTestCase extends BaseTestCase
         $this->createServiceConfiguration();
     }
 
+    protected function tearDown()
+    {
+        $this->config = null;
+        $this->serviceConfig = null;
+    }
+
     public static function setUpBeforeClass()
     {
         $em = self::getEntityManager();
@@ -49,6 +55,7 @@ class FunctionalModelTestCase extends BaseTestCase
     public static function tearDownAfterClass()
     {
         self::$schemaTool->dropDatabase();
+        self::$schemaTool = null;
 
         self::$doctrineEntityManager = null;
     }
