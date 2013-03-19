@@ -33,12 +33,14 @@ class Mapper implements MapperInterface
 {
     /**
      * ServiceManager instance.
+     *
      * @var \BedRest\Service\ServiceManager
      */
     protected $serviceManager;
 
     /**
      * EntityManager instance.
+     *
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
@@ -46,6 +48,7 @@ class Mapper implements MapperInterface
     /**
      * Constructor.
      * Initialises the data mapper with the supplied options.
+     *
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
     public function __construct(ServiceManager $serviceManager = null)
@@ -55,6 +58,7 @@ class Mapper implements MapperInterface
 
     /**
      * Sets the EntityManager instance.
+     *
      * @param \Doctrine\ORM\EntityManager $entityManager
      */
     public function setEntityManager(EntityManager $entityManager)
@@ -64,7 +68,9 @@ class Mapper implements MapperInterface
 
     /**
      * Returns the EntityManager instance.
+     *
      * @throws \BedRest\Service\Data\Exception
+     *
      * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
@@ -74,8 +80,10 @@ class Mapper implements MapperInterface
 
     /**
      * Maps an input array into a resource or set of resources.
-     * @param  mixed                           $resource Resource to map data into.
-     * @param  array                           $data     Array of data.
+     *
+     * @param mixed $resource Resource to map data into.
+     * @param array $data     Array of data.
+     *
      * @throws \BedRest\Service\Data\Exception
      */
     public function map($resource, $data)
@@ -99,9 +107,12 @@ class Mapper implements MapperInterface
      * Takes an input array of data and a resource, then proceeds to process each
      * property of the resource by finding data and casting it to the appropriate
      * format.
-     * @param  object                          $resource
-     * @param  array                           $data
+     *
+     * @param object $resource
+     * @param array  $data
+     *
      * @throws \BedRest\Service\Data\Exception
+     *
      * @return array
      */
     protected function castFields($resource, array $data)
@@ -128,9 +139,13 @@ class Mapper implements MapperInterface
     }
 
     /**
-     * @param  mixed                           $value
-     * @param  array                           $fieldMapping
+     * Casts an individual field value using the field mapping provided.
+     *
+     * @param mixed $value
+     * @param array $fieldMapping
+     *
      * @throws \BedRest\Service\Data\Exception
+     *
      * @return mixed
      */
     protected function castField($value, array $fieldMapping)
@@ -177,8 +192,11 @@ class Mapper implements MapperInterface
 
     /**
      * Casts Date, DateTime and Time fields, handling a variety of formats.
-     * @param  mixed                           $value
+     *
+     * @param mixed $value
+     *
      * @throws \BedRest\Service\Data\Exception
+     *
      * @return \DateTime
      */
     protected function castDateField($value)
@@ -216,9 +234,12 @@ class Mapper implements MapperInterface
     /**
      * Casts raw association data into entities or collections using the Doctrine ClassMetadata object
      * for a particular entity.
-     * @param  string                          $resource
-     * @param  array                           $data
+     *
+     * @param string $resource
+     * @param array  $data
+     *
      * @return array
+     *
      * @throws \BedRest\Service\Data\Exception
      */
     protected function castAssociations($resource, array $data)
@@ -254,8 +275,12 @@ class Mapper implements MapperInterface
 
     /**
      * Casts raw association data for a single valued association (e.g. a to-one mapping).
-     * @param  mixed  $data
-     * @param  array  $mapping
+     *
+     * @param mixed $data
+     * @param array $mapping
+     *
+     * @throws \BedRest\Service\Data\Exception
+     *
      * @return object
      */
     protected function castSingleValuedAssociation($data, array $mapping)
@@ -275,8 +300,12 @@ class Mapper implements MapperInterface
 
     /**
      * Casts raw association data for a multi-valued association (e.g. a to-many mapping).
-     * @param  mixed $data
-     * @param  array $mapping
+     *
+     * @param mixed $data
+     * @param array $mapping
+     *
+     * @throws \BedRest\Service\Data\Exception
+     *
      * @return array
      */
     protected function castCollectionValuedAssociation($data, array $mapping)
@@ -300,8 +329,10 @@ class Mapper implements MapperInterface
 
     /**
      * Reverse maps a data set into an array.
-     * @param  mixed $data  Data to reverse map.
-     * @param  mixed $depth Depth to reverse map associations.
+     *
+     * @param mixed $data  Data to reverse map.
+     * @param mixed $depth Depth to reverse map associations.
+     *
      * @return array
      */
     public function reverse($data, $depth)
@@ -311,9 +342,11 @@ class Mapper implements MapperInterface
 
     /**
      * Reverse maps a single item from a data set.
-     * @param  mixed        $data
-     * @param  integer      $depth
-     * @param  integer      $currentDepth
+     *
+     * @param mixed   $data
+     * @param integer $depth
+     * @param integer $currentDepth
+     *
      * @return array|object
      */
     protected function reverseItem($data, $depth, $currentDepth)
@@ -349,9 +382,11 @@ class Mapper implements MapperInterface
 
     /**
      * Reverse maps a single resource entity.
-     * @param  object  $resource
-     * @param  integer $maxDepth
-     * @param  integer $currentDepth
+     *
+     * @param object  $resource
+     * @param integer $maxDepth
+     * @param integer $currentDepth
+     *
      * @return array
      */
     protected function reverseEntity($resource, $maxDepth, $currentDepth)
@@ -374,8 +409,10 @@ class Mapper implements MapperInterface
 
     /**
      * Reverse maps entity fields using the class metadata to perform any casting.
-     * @param  mixed                               $resource
-     * @param  \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     *
+     * @param mixed                               $resource
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     *
      * @return array
      */
     protected function reverseEntityFields($resource, ClassMetadata $classMetadata)
@@ -393,10 +430,12 @@ class Mapper implements MapperInterface
 
     /**
      * Reverse maps entity associations, using the class metadata to determine those associations.
-     * @param  mixed                               $resource
-     * @param  \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
-     * @param  integer                             $maxDepth
-     * @param  integer                             $currentDepth
+     *
+     * @param mixed                               $resource
+     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
+     * @param integer                             $maxDepth
+     * @param integer                             $currentDepth
+     *
      * @return array
      */
     protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata, $maxDepth, $currentDepth)

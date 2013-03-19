@@ -28,13 +28,6 @@ class MapperTest extends FunctionalModelTestCase
     protected $mapper;
 
     /**
-     * Mock entity store.
-     *
-     * @var array
-     */
-    protected static $mockEntities = array();
-
-    /**
      * Bootstrapping set up phase for each test.
      */
     protected function setUp()
@@ -93,13 +86,14 @@ class MapperTest extends FunctionalModelTestCase
     /**
      * Returns a mock entity instance.
      *
-     * @param  string  $entity
-     * @param  integer $id
+     * @param string  $entityType
+     * @param integer $id
+     *
      * @return object
      */
-    protected static function getMockEntity($entity, $id)
+    protected static function getMockEntity($entityType, $id)
     {
-        $class = 'BedRest\TestFixtures\Models\Company\\' . $entity;
+        $class = 'BedRest\TestFixtures\Models\Company\\' . $entityType;
 
         return self::getEntityManager()->find($class, $id);
     }
@@ -119,7 +113,7 @@ class MapperTest extends FunctionalModelTestCase
      *
      * @return array
      */
-    public function sampleFieldData()
+    public static function sampleFieldData()
     {
         $dob = new \DateTime('1st May 2012 00:00:00 +00:00');
 
@@ -214,7 +208,7 @@ class MapperTest extends FunctionalModelTestCase
      *
      * @return array
      */
-    public function sampleAssociationData()
+    public static function sampleAssociationData()
     {
         return array(
             'manyToOne' => array(
@@ -336,7 +330,7 @@ class MapperTest extends FunctionalModelTestCase
         foreach ($reversedCollection as $reversedCollectionItem) {
             $this->assertInternalType('array', $reversedCollectionItem);
 
-            $collectionItemResource = $this->getMockEntity('Asset', $reversedCollectionItem['id']);
+            $collectionItemResource = self::getMockEntity('Asset', $reversedCollectionItem['id']);
             $collectionItemResourceReversed = $this->mapper->reverse($collectionItemResource, 1);
 
             $this->assertEquals($collectionItemResourceReversed, $reversedCollectionItem);
@@ -384,7 +378,7 @@ class MapperTest extends FunctionalModelTestCase
         $reversedItem = $reversed['Department'];
         $this->assertInternalType('array', $reversedItem);
 
-        $itemResource = $this->getMockEntity('Department', $reversedItem['id']);
+        $itemResource = self::getMockEntity('Department', $reversedItem['id']);
         $itemResourceReversed = $this->mapper->reverse($itemResource, 1);
 
         $this->assertEquals($itemResourceReversed, $reversedItem);
