@@ -15,7 +15,6 @@
 
 namespace BedRest\Model\Doctrine;
 
-use BedRest\Service\Configuration;
 use BedRest\Service\ServiceManager;
 use BedRest\Service\Data\Mapper as MapperInterface;
 use BedRest\Service\Data\Exception as DataException;

@@ -44,25 +44,25 @@ class ConfigurationTest extends BaseTestCase
     {
         $config = new Configuration();
         $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-        
+
         $config->setServiceContainer($container);
         $this->assertEquals($container, $config->getServiceContainer());
     }
-    
+
     public function testMetadataDriver()
     {
         $config = new Configuration();
         $driver = $this->getMock('BedRest\Service\Mapping\Driver\Driver');
-        
+
         $config->setServiceMetadataDriverImpl($driver);
         $this->assertEquals($driver, $config->getServiceMetadataDriverImpl());
     }
-    
+
     public function testMetadataCache()
     {
         $config = new Configuration();
         $cache = $this->getMock('Doctrine\Common\Cache\Cache');
-        
+
         $config->setServiceMetadataCacheImpl($cache);
         $this->assertEquals($cache, $config->getServiceMetadataCacheImpl());
     }

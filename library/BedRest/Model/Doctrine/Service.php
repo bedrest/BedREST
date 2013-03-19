@@ -21,6 +21,7 @@ use BedRest\Rest\Request\Request;
 use BedRest\Service\Data\Mapper as MapperInterface;
 use BedRest\Service\Mapping\Annotation as BedRest;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 
 /**
  * Service
@@ -57,7 +58,9 @@ class Service
 
     /**
      * Constructor.
+     *
      * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
+     * @param \BedRest\Service\Data\Mapper               $dataMapper
      */
     public function __construct(ResourceMetadata $resourceMetadata, MapperInterface $dataMapper)
     {
@@ -68,6 +71,7 @@ class Service
 
     /**
      * Sets the EntityManager instance.
+     *
      * @param \Doctrine\ORM\EntityManager $entityManager
      */
     public function setEntityManager(EntityManager $entityManager)
@@ -77,7 +81,9 @@ class Service
 
     /**
      * Retrieves a single resource entity.
-     * @param  \BedRest\Rest\Request\Request $request
+     *
+     * @param  \BedRest\Rest\Request\Request           $request
+     * @throws \BedRest\Rest\ResourceNotFoundException
      * @return object
      *
      * @BedRest\Listener(event="GET")
@@ -97,6 +103,7 @@ class Service
 
     /**
      * Retrieves a collection of resource entities.
+     *
      * @param  \BedRest\Rest\Request\Request $request
      * @return array
      *
@@ -131,18 +138,20 @@ class Service
 
     /**
      * Retrieves the size of a collection.
+     *
      * @return int
      */
     public function getCollectionSize()
     {
         $query = $this->entityManager->createQuery("SELECT COUNT(r) FROM {$this->resourceClassName} r");
-        $result = $query->execute(array(), \Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
+        $result = $query->execute(array(), Query::HYDRATE_SINGLE_SCALAR);
 
         return (int) $result;
     }
 
     /**
      * Creates a single resource entity.
+     *
      * @param  \BedRest\Rest\Request\Request $request
      * @return object
      *
@@ -166,6 +175,7 @@ class Service
 
     /**
      * Updates a single resource entity.
+     *
      * @param  \BedRest\Rest\Request\Request $request
      * @return object
      *
@@ -191,7 +201,9 @@ class Service
 
     /**
      * Deletes an entity, referenced by an identifier.
-     * @param  \BedRest\Rest\Request\Request $request
+     *
+     * @param  \BedRest\Rest\Request\Request           $request
+     * @throws \BedRest\Rest\ResourceNotFoundException
      * @return array
      *
      * @BedRest\Listener(event="DELETE")
