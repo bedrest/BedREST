@@ -34,7 +34,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
      */
     protected function createFactory()
     {
-        $configuration = self::getConfiguration();
+        $configuration = $this->getConfiguration();
 
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
@@ -94,7 +94,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
 
     public function testGetMetadataWithDefaultValues()
     {
-        $config = self::getConfiguration();
+        $config = $this->getConfiguration();
         $meta = $this->factory->getMetadataByResourceName('defaults');
 
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);

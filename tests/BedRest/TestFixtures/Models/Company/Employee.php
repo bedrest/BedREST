@@ -42,21 +42,21 @@ class Employee
     /**
      * Date of birth of the employee.
      * @var \DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $dob;
 
     /**
      * Whether the employee is active or not.
      * @var boolean
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $active;
 
     /**
      * Employee salary.
      * @var float
-     * @ORM\Column(type="decimal")
+     * @ORM\Column(type="decimal", nullable=true)
      */
     protected $salary;
 

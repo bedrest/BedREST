@@ -2,8 +2,12 @@
 
 namespace BedRest\Tests;
 
+use BedRest\Resource\Mapping\Driver\AnnotationDriver as ResourceAnnotationDriver;
 use BedRest\Rest\Configuration as RestConfiguration;
 use BedRest\Service\Configuration as ServiceConfiguration;
+use BedRest\Service\Mapping\Driver\AnnotationDriver as ServiceAnnotationDriver;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * BedRest\Tests\BaseTestCase
@@ -16,41 +20,82 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * Configuration used for tests.
      * @var \BedRest\Rest\Configuration
      */
-    protected static $config;
+    protected $config;
 
     /**
      * Service configuration used for tests.
      * @var \BedRest\Service\Configuration
      */
-    protected static $serviceConfig;
+    protected $serviceConfig;
 
     /**
-     * Returns a configuration object for use in tests.
+     * Returns a Configuration object for use in tests.
      * @return \BedRest\Rest\Configuration
      */
-    public static function getConfiguration()
+    protected function getConfiguration()
     {
-        if (!self::$config) {
-            $config = new RestConfiguration();
-
-            self::$config = $config;
+        if (!$this->config) {
+            $this->createConfiguration();
         }
 
-        return self::$config;
+        return $this->config;
     }
 
     /**
-     * Returns a service configuration object for use in tests.
+     * Creates a configuration object, pre-configured for tests which require a model to work with.
+     */
+    protected function createConfiguration()
+    {
+        $config = new RestConfiguration();
+
+        // create metadata driver
+        $reader = new AnnotationReader();
+        $driver = new ResourceAnnotationDriver($reader);
+        $driver->addPaths(
+            array(
+                TESTS_BASEDIR . '/BedRest/TestFixtures/Models',
+                TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company'
+            )
+        );
+
+        $config->setResourceMetadataDriverImpl($driver);
+
+        $this->config = $config;
+    }
+
+    /**
+     * Returns a Service Configuration object for use in tests.
      * @return \BedRest\Service\Configuration
      */
-    public static function getServiceConfiguration()
+    protected function getServiceConfiguration()
     {
-        if (!self::$serviceConfig) {
-            $config = new ServiceConfiguration();
-
-            self::$serviceConfig = $config;
+        if (!$this->serviceConfig) {
+            $this->createServiceConfiguration();
         }
 
-        return self::$serviceConfig;
+        return $this->serviceConfig;
+    }
+
+    /**
+     * Creates a service configuration object, pre-configured for tests which require a model to work with.
+     */
+    protected function createServiceConfiguration()
+    {
+        $config = new ServiceConfiguration();
+
+        // create metadata driver
+        $driver = new ServiceAnnotationDriver(new AnnotationReader());
+        $driver->addPaths(
+            array(
+                'BedRest\TestFixtures\Services' => TESTS_BASEDIR . '/BedRest/TestFixtures/Services'
+            )
+        );
+        $config->setServiceMetadataDriverImpl($driver);
+
+        // create DI container
+        $container = new ContainerBuilder();
+        $config->setServiceContainer($container);
+
+        $this->serviceConfig = $config;
     }
 }

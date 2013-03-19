@@ -4,16 +4,22 @@ namespace BedRest\TestFixtures\Services\Company;
 
 use BedRest\Rest\Request\Request;
 use BedRest\Service\Mapping\Annotation as BedRest;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Generic
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
- * @BedRest\Service(type="BASIC", dataMapper="BedRest\Model\Doctrine\Mapper")
+ * @BedRest\Service(type="DOCTRINE", dataMapper="BedRest\Model\Doctrine\Mapper")
  */
 class Generic
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $em;
+
     public static $handleGetResourceCalled = 0;
 
     public static $handleGetCollectionCalled = 0;
@@ -29,6 +35,15 @@ class Generic
     public static $handleDeleteResourceCalled = 0;
 
     public static $handleDeleteCollectionCalled = 0;
+
+    /**
+     * Sets the EntityManager instance.
+     * @param \Doctrine\ORM\EntityManager $entityManager
+     */
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->em = $entityManager;
+    }
 
     /**
      * Returns values for metadata to be compared against in tests.

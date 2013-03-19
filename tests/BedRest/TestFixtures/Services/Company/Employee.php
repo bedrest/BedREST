@@ -3,7 +3,6 @@
 namespace BedRest\TestFixtures\Services\Company;
 
 use BedRest\Service\Mapping\Annotation as BedRest;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Employee
@@ -14,11 +13,6 @@ use Doctrine\ORM\EntityManager;
  */
 class Employee extends Generic
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $em;
-
     /**
      * Returns values for metadata to be compared against in tests.
      * @return array

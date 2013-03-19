@@ -34,7 +34,7 @@ class ServiceMetadataFactoryTest extends BaseTestCase
      */
     protected function createFactory()
     {
-        $configuration = self::getServiceConfiguration();
+        $configuration = $this->getServiceConfiguration();
 
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
@@ -84,7 +84,7 @@ class ServiceMetadataFactoryTest extends BaseTestCase
 
         $meta = $this->factory->getMetadataFor(get_class($service));
         $this->assertInstanceOf('BedRest\Service\Mapping\ServiceMetadata', $meta);
-        
+
         $baseMeta = $service->getGenericMetadata();
         $this->assertEquals($baseMeta['listeners']['GET'], $meta->getListeners('GET'));
     }

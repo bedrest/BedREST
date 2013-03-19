@@ -40,7 +40,7 @@ class RequestTest extends BaseTestCase
         $this->defaultServerEnvironment = $_SERVER;
         $_SERVER = $this->serverEnvironment;
 
-        $this->request = new Request(self::getConfiguration());
+        $this->request = new Request($this->getConfiguration());
     }
 
     protected function tearDown()

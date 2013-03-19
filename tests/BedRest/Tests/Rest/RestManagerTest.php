@@ -6,7 +6,7 @@ use BedRest\Rest\Request\Request;
 use BedRest\Rest\Request\Type;
 use BedRest\Rest\RestManager;
 use BedRest\Service\ServiceManager;
-use BedRest\Tests\RequiresModelTestCase;
+use BedRest\Tests\BaseTestCase;
 use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
 
 /**
@@ -14,7 +14,7 @@ use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
  *
  * Author: Geoff Adams <geoff@dianode.net>
  */
-class RestManagerTest extends RequiresModelTestCase
+class RestManagerTest extends BaseTestCase
 {
     /**
      * RestManager instance under test.
@@ -22,43 +22,27 @@ class RestManagerTest extends RequiresModelTestCase
      */
     protected $restManager;
 
-    /**
-     * ServiceManager used for tests.
-     * @var \BedRest\Service\ServiceManager
-     */
-    protected $serviceManager;
-
     protected function setUp()
     {
-        $config = static::getConfiguration();
+        parent::setUp();
+
+        $config = $this->getConfiguration();
         $this->restManager = new RestManager($config);
 
-        $this->restManager->setServiceManager($this->getServiceManager());
-    }
-
-    /**
-     * Returns a service manager instance.
-     * @return \BedRest\Service\ServiceManager
-     */
-    public function getServiceManager()
-    {
-        if (!$this->serviceManager instanceof ServiceManager) {
-            $this->serviceManager = new ServiceManager(static::getServiceConfiguration());
-        }
-
-        return $this->serviceManager;
+        $serviceManager = new ServiceManager($this->getServiceConfiguration());
+        $this->restManager->setServiceManager($serviceManager);
     }
 
     public function testConfiguration()
     {
-        $this->assertEquals(self::getConfiguration(), $this->restManager->getConfiguration());
+        $this->assertEquals($this->getConfiguration(), $this->restManager->getConfiguration());
     }
 
     public function testServiceManager()
     {
         // need to create a fresh instance as we create a ServiceManager
         // instance and inject it into the RestManager in setUp()
-        $serviceManager = new ServiceManager(self::getServiceConfiguration());
+        $serviceManager = new ServiceManager($this->getServiceConfiguration());
 
         $this->restManager->setServiceManager($serviceManager);
         $this->assertEquals($serviceManager, $this->restManager->getServiceManager());
@@ -93,7 +77,7 @@ class RestManagerTest extends RequiresModelTestCase
 
     public function testAppropriateServiceListenerCalled()
     {
-        $request = new Request(self::getConfiguration());
+        $request = new Request($this->getConfiguration());
         $request->setAccept('application/json');
         $request->setResource('employee');
 
