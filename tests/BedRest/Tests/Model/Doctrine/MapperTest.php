@@ -50,6 +50,10 @@ class MapperTest extends FunctionalModelTestCase
         $employee1->id = 1;
         $employee1->name = 'Jane Doe';
 
+        $employee2 = new EmployeeEntity();
+        $employee2->id = 2;
+        $employee2->name = 'John Doe';
+
         $department1 = new DepartmentEntity();
         $department1->id = 1;
         $department1->name = 'Department #1';
@@ -75,6 +79,7 @@ class MapperTest extends FunctionalModelTestCase
         $asset3->LoanedTo = $employee1;
 
         $em->persist($employee1);
+        $em->persist($employee2);
         $em->persist($department1);
         $em->persist($asset1);
         $em->persist($asset2);
@@ -363,6 +368,55 @@ class MapperTest extends FunctionalModelTestCase
     }
 
     /**
+     * Tests reverse mapping collection-valued associations with no members.
+     */
+    public function testAssociationReverseCollectionEmpty()
+    {
+        // get the test resource and reverse it
+        $resource = self::getMockEntity('Employee', 2);
+        $reversed = $this->mapper->reverse($resource, 1);
+
+        // check we get an array back, firstly
+        $this->assertInternalType('array', $reversed);
+
+        // check the collection association itself
+        $reversedCollection = $reversed['Assets'];
+        $this->assertInternalType('array', $reversedCollection);
+        $this->assertEmpty($reversedCollection);
+    }
+
+    /**
+     * Tests reverse mapping collection-valued associations with proxies in place to ensure the proxies are loaded.
+     */
+    public function testAssociationReverseCollectionWithProxy()
+    {
+        // force-clear the result caches to ensure we get proxies back
+        self::getEntityManager()->clear();
+
+        // get the test resource and reverse it
+        $resource = self::getMockEntity('Employee', 1);
+        $reversed = $this->mapper->reverse($resource, 2);
+
+        // check we get an array back, firstly
+        $this->assertInternalType('array', $reversed);
+
+        // check the collection association itself
+        $reversedCollection = $reversed['Assets'];
+        $this->assertInternalType('array', $reversedCollection);
+        $this->assertNotEmpty($reversedCollection);
+
+        // check each item is equivalent to when it is reversed individually
+        foreach ($reversedCollection as $reversedCollectionItem) {
+            $this->assertInternalType('array', $reversedCollectionItem);
+
+            $collectionItemResource = self::getMockEntity('Asset', $reversedCollectionItem['id']);
+            $collectionItemResourceReversed = $this->mapper->reverse($collectionItemResource, 1);
+
+            $this->assertEquals($collectionItemResourceReversed, $reversedCollectionItem);
+        }
+    }
+
+    /**
      * Tests reverse mapping single-valued associations with a depth of > 1.
      */
     public function testAssociationReverseSingleDeep()
@@ -401,5 +455,47 @@ class MapperTest extends FunctionalModelTestCase
         $this->assertInternalType('array', $reversedItem);
         $this->assertCount(1, $reversedItem);
         $this->assertArrayHasKey('id', $reversedItem);
+    }
+
+    /**
+     * Tests reverse mapping single-valued associations with no value.
+     */
+    public function testAssociationReverseSingleEmpty()
+    {
+        // get the test resource and reverse it
+        $resource = self::getMockEntity('Employee', 2);
+        $reversed = $this->mapper->reverse($resource, 1);
+
+        // check we get an array back, firstly
+        $this->assertInternalType('array', $reversed);
+
+        // check the item is equivalent to when it is reversed individually
+        $reversedItem = $reversed['Department'];
+        $this->assertNull($reversedItem);
+    }
+
+    /**
+     * Tests reverse mapping single-valued associations with proxies in place to ensure the proxies are loaded.
+     */
+    public function testAssociationReverseSingleWithProxy()
+    {
+        // force-clear the result caches to ensure we get proxies back
+        self::getEntityManager()->clear();
+
+        // get the test resource and reverse it
+        $resource = self::getMockEntity('Employee', 1);
+        $reversed = $this->mapper->reverse($resource, 2);
+
+        // check we get an array back, firstly
+        $this->assertInternalType('array', $reversed);
+
+        // check the item is equivalent to when it is reversed individually
+        $reversedItem = $reversed['Department'];
+        $this->assertInternalType('array', $reversedItem);
+
+        $itemResource = self::getMockEntity('Department', $reversedItem['id']);
+        $itemResourceReversed = $this->mapper->reverse($itemResource, 1);
+
+        $this->assertEquals($itemResourceReversed, $reversedItem);
     }
 }

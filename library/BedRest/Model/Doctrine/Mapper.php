@@ -92,50 +92,24 @@ class Mapper implements MapperInterface
             throw new DataException('Supplied data is not an array.');
         }
 
-        // cast data
-        $fields = $this->castFields($resource, $data);
-        $associations = $this->castAssociations($resource, $data);
-
-        $data = array_merge($fields, $associations);
-
-        foreach ($data as $property => $value) {
-            $resource->$property = $value;
-        }
-    }
-
-    /**
-     * Takes an input array of data and a resource, then proceeds to process each
-     * property of the resource by finding data and casting it to the appropriate
-     * format.
-     *
-     * @param object $resource
-     * @param array  $data
-     *
-     * @throws \BedRest\Service\Data\Exception
-     *
-     * @return array
-     */
-    protected function castFields($resource, array $data)
-    {
-        // get the class meta data for the entity
         $em = $this->getEntityManager();
-
         $classMetaInfo = $em->getClassMetadata(get_class($resource));
 
-        // process basic fields
-        $castData = array();
-
-        foreach ($classMetaInfo->fieldMappings as $fieldName => $fieldMapping) {
-            // skip fields not included in the data
-            if (!array_key_exists($fieldName, $data)) {
+        foreach ($classMetaInfo->fieldMappings as $name => $mapping) {
+            if (!array_key_exists($name, $data)) {
                 continue;
             }
 
-            // enter into the final cast data array
-            $castData[$fieldName] = $this->castField($data[$fieldName], $fieldMapping);
+            $resource->$name = $this->castField($data[$name], $mapping);
         }
 
-        return $castData;
+        foreach ($classMetaInfo->associationMappings as $name => $mapping) {
+            if (!array_key_exists($name, $data)) {
+                continue;
+            }
+
+            $resource->$name = $this->castAssociation($data[$name], $mapping);
+        }
     }
 
     /**
@@ -150,6 +124,10 @@ class Mapper implements MapperInterface
      */
     protected function castField($value, array $fieldMapping)
     {
+        if ($value === null) {
+            return null;
+        }
+
         switch ($fieldMapping['type']) {
             case Type::INTEGER:
             case Type::BIGINT:
@@ -176,14 +154,8 @@ class Mapper implements MapperInterface
             case Type::TARRAY:
                 $value = (array) $value;
                 break;
-            case Type::OBJECT:
-                throw new DataException('"object" type mapping is not currently supported');
-                break;
-            case TYPE::BLOB:
-                throw new DataException('"blob" type mapping is not currently supported');
-                break;
             default:
-                throw new DataException("Unknown type \"{$fieldMapping['type']}\"");
+                throw new DataException("\"{$fieldMapping['type']}\" type mapping is not currently supported");
                 break;
         }
 
@@ -202,11 +174,12 @@ class Mapper implements MapperInterface
     protected function castDateField($value)
     {
         if ($value instanceof \DateTime) {
-            // do nothing
-        } elseif (empty($value)) {
-            // force empty values to NULL
-            $value = null;
-        } elseif (is_array($value)) {
+            return $value;
+        } elseif (is_integer($value)) {
+            return \DateTime::createFromFormat('U', $value);
+        }
+
+        if (is_array($value)) {
             // interpret the value as an array-cast DateTime object
             if (!isset($value['date'])) {
                 throw new DataException(
@@ -219,112 +192,35 @@ class Mapper implements MapperInterface
                 $dateString .= ' ' . $value['timezone'];
             }
 
-            $value = new \DateTime($dateString);
-        } elseif (is_string($value)) {
-            // treat it as a DateTime string
-            $value = new \DateTime($value);
-        } elseif (is_integer($value)) {
-            // treat it as a UTC timestamp
-            $value = \DateTime::createFromFormat('U', $value);
+            $value = $dateString;
         }
 
-        return $value;
+        return new \DateTime($value);
     }
 
     /**
-     * Casts raw association data into entities or collections using the Doctrine ClassMetadata object
-     * for a particular entity.
+     * Casts an individual association using the association mapping provided.
      *
-     * @param string $resource
-     * @param array  $data
-     *
-     * @return array
-     *
-     * @throws \BedRest\Service\Data\Exception
-     */
-    protected function castAssociations($resource, array $data)
-    {
-        // get the class meta data for the entity
-        $em = $this->getEntityManager();
-
-        $classMetaInfo = $em->getClassMetadata(get_class($resource));
-
-        // process all associations
-        $output = array();
-
-        foreach ($classMetaInfo->associationMappings as $name => $mapping) {
-            // skip associations not included in the data
-            if (!isset($data[$name])) {
-                continue;
-            }
-
-            // detect the value of the association
-            if ($classMetaInfo->isSingleValuedAssociation($name)) {
-                $value = $this->castSingleValuedAssociation($data[$name], $mapping);
-            } elseif ($classMetaInfo->isCollectionValuedAssociation($name)) {
-                $value = $this->castCollectionValuedAssociation($data[$name], $mapping);
-            } else {
-                throw DataException::invalidAssociationType($classMetaInfo->getName(), $name);
-            }
-
-            $output[$name] = $value;
-        }
-
-        return $output;
-    }
-
-    /**
-     * Casts raw association data for a single valued association (e.g. a to-one mapping).
-     *
-     * @param mixed $data
+     * @param mixed $value
      * @param array $mapping
-     *
-     * @throws \BedRest\Service\Data\Exception
-     *
-     * @return object
-     */
-    protected function castSingleValuedAssociation($data, array $mapping)
-    {
-        if (is_array($data)) {
-            if (isset($data['id'])) {
-                $data = $data['id'];
-            } else {
-                throw DataException::invalidAssociationData();
-            }
-        }
-
-        $output = $this->getEntityManager()->find($mapping['targetEntity'], $data);
-
-        return $output;
-    }
-
-    /**
-     * Casts raw association data for a multi-valued association (e.g. a to-many mapping).
-     *
-     * @param mixed $data
-     * @param array $mapping
-     *
-     * @throws \BedRest\Service\Data\Exception
      *
      * @return array
      */
-    protected function castCollectionValuedAssociation($data, array $mapping)
+    protected function castAssociation($value, array $mapping)
     {
-        $output = array();
+        $castValue = null;
 
-        foreach ($data as $item) {
-            if (is_array($item)) {
-                if (isset($item['id'])) {
-                    $item = $item['id'];
-                } else {
-                    throw DataException::invalidAssociationData();
-                }
+        if ($mapping['type'] & ClassMetadata::TO_MANY) {
+            $castValue = array();
+
+            foreach ($value as $item) {
+                $castValue[] = $this->getEntityManager()->find($mapping['targetEntity'], $item);
             }
-
-            $output[] = $this->getEntityManager()->find($mapping['targetEntity'], $item);
+        } else {
+            $castValue = $this->getEntityManager()->find($mapping['targetEntity'], $value);
         }
 
-        return $output;
+        return $castValue;
     }
 
     /**
@@ -360,18 +256,20 @@ class Mapper implements MapperInterface
                 $return[$key] = $this->reverseItem($value, $depth, $currentDepth);
             }
         } elseif (is_object($data)) {
-            $class = get_class($data);
-            $parentClass = get_parent_class($data);
-
+            // force proxies to load their data
+            $isEntity = !$this->getEntityManager()->getMetadataFactory()->isTransient(get_class($data));
             $isProxy = ($data instanceof DoctrineProxy);
 
-            if (!$this->getEntityManager()->getMetadataFactory()->isTransient($class) ||
-                ($isProxy && !$this->getEntityManager()->getMetadataFactory()->isTransient($parentClass))
-            ) {
-                $currentDepth++;
-                $return = $this->reverseEntity($data, $depth, $currentDepth);
+            if ($isProxy) {
+                $data->__load();
+            }
+
+            if ($isEntity || $isProxy) {
+                $return = $this->reverseEntity($data, $depth, ++$currentDepth);
             } elseif (method_exists($data, '__sleep')) {
                 $return = $data->__sleep();
+            } else {
+                $return = (array) $data;
             }
         } else {
             $return = $data;
@@ -392,81 +290,31 @@ class Mapper implements MapperInterface
     protected function reverseEntity($resource, $maxDepth, $currentDepth)
     {
         if ($currentDepth > $maxDepth) {
-            $output = array(
+            return array(
                 'id' => $resource->id
             );
-        } else {
-            $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
-
-            $fieldData = $this->reverseEntityFields($resource, $classMetadata);
-            $associationData = $this->reverseEntityAssociations($resource, $classMetadata, $maxDepth, $currentDepth);
-
-            $output = array_merge($fieldData, $associationData);
         }
 
-        return $output;
-    }
-
-    /**
-     * Reverse maps entity fields using the class metadata to perform any casting.
-     *
-     * @param mixed                               $resource
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
-     *
-     * @return array
-     */
-    protected function reverseEntityFields($resource, ClassMetadata $classMetadata)
-    {
-        $data = array();
+        $output = array();
+        $classMetadata = $this->getEntityManager()->getClassMetadata(get_class($resource));
 
         foreach ($classMetadata->fieldMappings as $property => $mapping) {
-            $value = $resource->$property;
-
-            $data[$property] = $value;
+            $output[$property] = $resource->$property;
         }
-
-        return $data;
-    }
-
-    /**
-     * Reverse maps entity associations, using the class metadata to determine those associations.
-     *
-     * @param mixed                               $resource
-     * @param \Doctrine\ORM\Mapping\ClassMetadata $classMetadata
-     * @param integer                             $maxDepth
-     * @param integer                             $currentDepth
-     *
-     * @return array
-     */
-    protected function reverseEntityAssociations($resource, ClassMetadata $classMetadata, $maxDepth, $currentDepth)
-    {
-        $data = array();
 
         foreach ($classMetadata->associationMappings as $association => $mapping) {
             $value = $resource->$association;
 
-            // force proxies to load data
-            if ($value instanceof DoctrineProxy) {
-                $value->__load();
-            }
-
-            if ($mapping['type'] & ClassMetadata::TO_ONE) {
-                // single entity
-                $data[$association] = $this->reverseItem($resource->$association, $maxDepth, $currentDepth);
-            } else {
-                // collections must be looped through, assume each item within is an entity
-                $data[$association] = array();
-
+            // ensure that collections are always returned as arrays, not NULL
+            if ($mapping['type'] & ClassMetadata::TO_MANY) {
                 if ($value === null) {
                     $value = array();
                 }
-
-                foreach ($value as $item) {
-                    $data[$association][] = $this->reverseItem($item, $maxDepth, $currentDepth);
-                }
             }
+
+            $output[$association] = $this->reverseItem($value, $maxDepth, $currentDepth);
         }
 
-        return $data;
+        return $output;
     }
 }
