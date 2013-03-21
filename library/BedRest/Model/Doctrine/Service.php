@@ -111,19 +111,14 @@ class Service
      */
     public function getCollection(Request $request)
     {
-        // get the parameters
         $limit = (int) $request->getParameter('maxResults', 10);
         $offset = 0;
-        $depth = (int) $request->getParameter('depth', 1);
 
-        // compose a Query object
         $query = $this->entityManager->createQuery("SELECT r FROM {$this->resourceClassName} r");
         $query->setFirstResult($offset);
         $query->setMaxResults($limit);
 
-        // get the data and some metadata
         $collection = $query->execute();
-
         $total = $this->getCollectionSize();
 
         $data = array(
@@ -163,10 +158,8 @@ class Service
 
         // populate the resource with data from the request using a DataMapper
         $requestData = (array) $request->getBody();
-
         $this->dataMapper->map($resource, $requestData);
 
-        // persist
         $this->entityManager->persist($resource);
         $this->entityManager->flush();
 
@@ -183,16 +176,13 @@ class Service
      */
     public function update(Request $request)
     {
-        // get the existing resource
         $identifier = $request->getRouteComponent('identifier');
         $resource = $this->entityManager->find($this->resourceClassName, $identifier);
 
         // populate the resource with data from the request using a DataMapper
         $requestData = (array) $request->getBody();
-
         $this->dataMapper->map($resource, $requestData);
 
-        // persist
         $this->entityManager->persist($resource);
         $this->entityManager->flush();
 
@@ -210,19 +200,16 @@ class Service
      */
     public function delete(Request $request)
     {
-        // retrieve the resource and check it exists
         $identifier = $request->getRouteComponent('identifier');
-        $resource = $this->get($identifier);
+        $resource = $this->entityManager->find($this->resourceClassName, $identifier);
 
         if ($resource === null) {
             throw new ResourceNotFoundException;
         }
 
-        // remove
         $this->entityManager->remove($resource);
         $this->entityManager->flush();
 
-        // populate the response
         return array(
             'deleted' => true
         );
