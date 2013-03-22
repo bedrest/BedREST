@@ -73,4 +73,16 @@ class ServiceManagerTest extends FunctionalModelTestCase
         $mapperDuplicate = $this->serviceManager->getDataMapper('BedRest\TestFixtures\Services\Company\Employee');
         $this->assertEquals($mapper, $mapperDuplicate);
     }
+
+    public function testGetMapperForNonExistentService()
+    {
+        $this->setExpectedException('BedRest\Service\Exception');
+        $this->serviceManager->getDataMapper('NonExistentServiceClass');
+    }
+
+    public function testGetMapperForNonService()
+    {
+        $this->setExpectedException('BedRest\Service\Exception');
+        $this->serviceManager->getDataMapper('BedRest\TestFixtures\Services\InvalidService');
+    }
 }

@@ -98,8 +98,6 @@ class ServiceManager
      */
     public function getDataMapper($service)
     {
-        $serviceMetadata = $this->getServiceMetadata($service);
-
         // check the service exists
         if (!class_exists($service)) {
             throw Exception::serviceNotFound($service);
@@ -110,6 +108,7 @@ class ServiceManager
         }
 
         // check the mapper exists
+        $serviceMetadata = $this->getServiceMetadata($service);
         $className = $serviceMetadata->getDataMapper();
         if (!class_exists($className)) {
             throw Data\Exception::dataMapperNotFound($className);
@@ -161,11 +160,11 @@ class ServiceManager
 
         // check class exists and is denoted as a service
         if (!class_exists($className)) {
-            throw new Exception("Service '$className' not found.");
+            throw Exception::serviceNotFound($className);
         }
 
         if (!$this->serviceMetadataFactory->isService($className)) {
-            throw new Exception("The class '{$className}' is not a mapped service.");
+            throw Exception::classNotMappedService($className);
         }
 
         // use a DI container to instantiate the service
