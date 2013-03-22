@@ -22,21 +22,6 @@ namespace BedRest\Service\Mapping;
  */
 class Exception extends \Exception
 {
-    public static function serviceClassNotProvided($className)
-    {
-        return new self("Class '{$className}' does not have a specified service class.");
-    }
-
-    public static function classIsNotMappedResource($className)
-    {
-        return new self("Class '{$className}' is not a mapped resource.");
-    }
-
-    public static function resourceNotFound($resourceName)
-    {
-        return new self("Resource '{$resourceName}' not found.");
-    }
-
     public static function classIsNotMappedService($className)
     {
         return new self("Class '{$className}' is not a mapped service.");

@@ -8,7 +8,7 @@ use BedRest\Resource\Mapping\Annotation as BedRest;
 /**
  * Asset
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  *
  * @ORM\Entity
  * @ORM\Table(name="asset")

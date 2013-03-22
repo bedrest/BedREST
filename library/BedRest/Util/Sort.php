@@ -28,8 +28,10 @@ class Sort
      *
      * All of this code has been taken from http://www.php.net/manual/en/function.usort.php#38827, some changes made
      * are purely for readability and code style.
-     * @param  array  $array
-     * @param  string $comparator
+     *
+     * @param array  $array
+     * @param string $comparator
+     *
      * @return null
      */
     public static function mergeSort(array &$array, $comparator = 'strcmp')

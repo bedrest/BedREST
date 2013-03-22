@@ -35,20 +35,20 @@ class JsonConverter implements Converter
                     $errorMessage = 'Maximum stack depth exceeded';
                     break;
                 case JSON_ERROR_STATE_MISMATCH:
-                    $errorMessage = 'Invalid or malformed JSON';
-                    break;
-                case JSON_ERROR_CTRL_CHAR:
-                    $errorMessage = 'Unexpected control character found';
-                    break;
                 case JSON_ERROR_SYNTAX:
-                    $errorMessage = 'Syntax error, malformed JSON';
+                    $errorMessage = 'Syntax error';
                     break;
+                case JSON_ERROR_UTF8:
+                case JSON_ERROR_CTRL_CHAR:
+                    $errorMessage = 'Encoding error';
+                    break;
+                case JSON_ERROR_NONE:
                 default:
                     $errorMessage = '';
                     break;
             }
 
-            throw new Exception("Error during JSON deocding: $errorMessage");
+            throw new Exception("Error during JSON decoding: $errorMessage");
         }
 
         return $decoded;

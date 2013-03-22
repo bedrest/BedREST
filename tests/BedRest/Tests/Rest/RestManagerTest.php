@@ -12,7 +12,9 @@ use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
 /**
  * RestManagerTest
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo Re-work these tests into true unit tests.
  */
 class RestManagerTest extends BaseTestCase
 {

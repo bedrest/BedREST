@@ -8,7 +8,7 @@ use BedRest\Tests\BaseTestCase;
 /**
  * ResponseTest
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  */
 class ResponseTest extends BaseTestCase
 {

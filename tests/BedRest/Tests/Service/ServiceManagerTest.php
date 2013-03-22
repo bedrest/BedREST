@@ -10,6 +10,8 @@ use BedRest\Tests\FunctionalModelTestCase;
  * ServiceManagerTest
  *
  * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo Re-work these tests into true unit tests.
  */
 class ServiceManagerTest extends FunctionalModelTestCase
 {

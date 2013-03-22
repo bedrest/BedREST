@@ -42,15 +42,11 @@ abstract class QualityFactorList
 
     /**
      * Parses an array of items out into a normalised structure.
-     * Should be overridden by subclasses.
      *
      * @param  array $data
      * @return array
      */
-    protected function parse(array $data)
-    {
-        return $data;
-    }
+    abstract protected function parse(array $data);
 
     /**
      * Sorts a list by the quality comparator.

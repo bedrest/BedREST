@@ -8,7 +8,7 @@ use BedRest\Tests\BaseTestCase;
 /**
  * ServiceMetadataTest
  *
- * Author: Geoff Adams <geoff@dianode.net>
+ * @author Geoff Adams <geoff@dianode.net>
  */
 class ServiceMetadataTest extends BaseTestCase
 {
