@@ -20,7 +20,7 @@ class ResponseTest extends BaseTestCase
 
     protected function setUp()
     {
-        $this->response = new Response($this->getConfiguration());
+        $this->response = new Response();
     }
 
     public function testResponseCode()
