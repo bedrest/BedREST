@@ -15,30 +15,18 @@
 
 namespace BedRest\Rest;
 
-use BedRest\Resource\Mapping\Driver\Driver as ResourceDriver;
-use Doctrine\Common\Cache\Cache;
-
 /**
  * Configuration
  *
  * Configuration container for BedRest.
  *
  * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo Can we remove the need for a 'Configuration' object altogether?
+ * @todo This seems to hold config for different areas of the system, not a good separation of concerns.
  */
 class Configuration
 {
-    /**
-     * Resource metadata driver.
-     * @var \BedRest\Resource\Mapping\Driver\Driver
-     */
-    protected $resourceMetadataDriverImpl;
-
-    /**
-     * Resource cache implementation.
-     * @var \Doctrine\Common\Cache\Cache
-     */
-    protected $resourceMetadataCacheImpl;
-
     /**
      * Default service class name.
      * @var string
@@ -58,42 +46,6 @@ class Configuration
      * @var array
      */
     protected $resourcePaths = array();
-
-    /**
-     * Sets the resource metadata driver implementation.
-     * @param \BedRest\Resource\Mapping\Driver\Driver $driver
-     */
-    public function setResourceMetadataDriverImpl(ResourceDriver $driver)
-    {
-        $this->resourceMetadataDriverImpl = $driver;
-    }
-
-    /**
-     * Returns the resource metadata driver implementation.
-     * @return \BedRest\Resource\Mapping\Driver\Driver
-     */
-    public function getResourceMetadataDriverImpl()
-    {
-        return $this->resourceMetadataDriverImpl;
-    }
-
-    /**
-     * Sets the resource metadata cache implementation.
-     * @param \Doctrine\Common\Cache\Cache $cache
-     */
-    public function setResourceMetadataCacheImpl(Cache $cache)
-    {
-        $this->resourceMetadataCacheImpl = $cache;
-    }
-
-    /**
-     * Returns the resource metadata cache implementation.
-     * @return \Doctrine\Common\Cache\Cache
-     */
-    public function getResourceMetadataCacheImpl()
-    {
-        return $this->resourceMetadataCacheImpl;
-    }
 
     /**
      * Sets the default service class name.

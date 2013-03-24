@@ -2,6 +2,8 @@
 
 namespace BedRest\Tests;
 
+use BedRest\Resource\Mapping\ResourceMetadataFactory;
+use BedRest\Resource\Mapping\Driver\AnnotationDriver as ResourceAnnotationDriver;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Configuration as DoctrineConfiguration;
@@ -18,12 +20,14 @@ class FunctionalModelTestCase extends BaseTestCase
 {
     /**
      * Doctrine EntityManager used for tests.
+     *
      * @var \Doctrine\ORM\EntityManager
      */
     protected static $doctrineEntityManager;
 
     /**
      * Doctrine SchemaTool for managing the test schema.
+     *
      * @var \Doctrine\ORM\Tools\SchemaTool
      */
     protected static $schemaTool;
@@ -62,6 +66,7 @@ class FunctionalModelTestCase extends BaseTestCase
 
     /**
      * Should be overridden by inheriting test cases.
+     *
      * @param \Doctrine\ORM\EntityManager $em
      */
     protected static function prepareTestData(EntityManager $em)
@@ -70,7 +75,30 @@ class FunctionalModelTestCase extends BaseTestCase
     }
 
     /**
+     * Returns a ResourceMetadataFactory instance, pre-configured to use the BedRest\TestFixtures\Models classes.
+     *
+     * @return \BedRest\Resource\Mapping\ResourceMetadataFactory
+     */
+    protected function getResourceMetadataFactory()
+    {
+        // create metadata driver
+        $reader = new AnnotationReader();
+        $driver = new ResourceAnnotationDriver($reader);
+        $driver->addPaths(
+            array(
+                TESTS_BASEDIR . '/BedRest/TestFixtures/Models',
+                TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company'
+            )
+        );
+
+        $factory = new ResourceMetadataFactory($this->getConfiguration(), $driver);
+
+        return $factory;
+    }
+
+    /**
      * Retrieves an EntityManager connected to an SQLite database.
+     *
      * @return \Doctrine\ORM\EntityManager
      */
     protected static function getEntityManager()
@@ -84,6 +112,7 @@ class FunctionalModelTestCase extends BaseTestCase
 
     /**
      * Creates the EntityManager instance.
+     *
      * @return \Doctrine\ORM\EntityManager
      */
     protected static function createEntityManager()
@@ -131,6 +160,7 @@ class FunctionalModelTestCase extends BaseTestCase
 
     /**
      * Asserts that the two Doctrine entities are the same item.
+     *
      * @param object  $expected
      * @param object  $actual
      * @param integer $maxDepth

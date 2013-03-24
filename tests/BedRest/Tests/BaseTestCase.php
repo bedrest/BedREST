@@ -2,7 +2,6 @@
 
 namespace BedRest\Tests;
 
-use BedRest\Resource\Mapping\Driver\AnnotationDriver as ResourceAnnotationDriver;
 use BedRest\Rest\Configuration as RestConfiguration;
 use BedRest\Service\Configuration as ServiceConfiguration;
 use BedRest\Service\Mapping\Driver\AnnotationDriver as ServiceAnnotationDriver;
@@ -47,18 +46,6 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     protected function createConfiguration()
     {
         $config = new RestConfiguration();
-
-        // create metadata driver
-        $reader = new AnnotationReader();
-        $driver = new ResourceAnnotationDriver($reader);
-        $driver->addPaths(
-            array(
-                TESTS_BASEDIR . '/BedRest/TestFixtures/Models',
-                TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company'
-            )
-        );
-
-        $config->setResourceMetadataDriverImpl($driver);
 
         $this->config = $config;
     }

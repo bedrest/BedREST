@@ -2,7 +2,6 @@
 
 namespace BedRest\Tests\Service;
 
-use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Service\ServiceManager;
 use BedRest\Tests\FunctionalModelTestCase;
 
@@ -42,7 +41,7 @@ class ServiceManagerTest extends FunctionalModelTestCase
 
     public function testGetServiceFresh()
     {
-        $rmf = new ResourceMetadataFactory($this->getConfiguration());
+        $rmf = $this->getResourceMetadataFactory();
 
         $service = $this->serviceManager->getService($rmf->getMetadataByResourceName('employee'));
         $serviceDuplicate = $this->serviceManager->getService($rmf->getMetadataByResourceName('employee'));
@@ -53,7 +52,7 @@ class ServiceManagerTest extends FunctionalModelTestCase
 
     public function testGetServiceExistingForDifferentResource()
     {
-        $rmf = new ResourceMetadataFactory($this->getConfiguration());
+        $rmf = $this->getResourceMetadataFactory();
         $rmAsset = $rmf->getMetadataByResourceName('asset');
         $rmDepartment = $rmf->getMetadataByResourceName('department');
 

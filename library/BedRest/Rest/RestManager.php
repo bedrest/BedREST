@@ -28,42 +28,48 @@ use BedRest\Service\ServiceManager;
  * Responsible for dispatching REST actions to the correct services. Sits between controllers and the service layer.
  *
  * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo Should this be called a 'RequestHandler' since that is actually what it does?
  */
 class RestManager
 {
     /**
      * Configuration instance.
+     *
      * @var \BedRest\Rest\Configuration
      */
     protected $configuration;
 
     /**
      * Service manager instance.
+     *
      * @var \BedRest\Service\ServiceManager
      */
     protected $serviceManager;
 
     /**
      * The resource metadata factory.
+     *
      * @var \BedRest\Resource\Mapping\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
 
     /**
      * Constructor.
-     * @param  \BedRest\Rest\Configuration $configuration
+     *
+     * @param \BedRest\Rest\Configuration $configuration
+     *
      * @return \BedRest\Rest\RestManager
      */
     public function __construct(
         Configuration $configuration
     ) {
         $this->configuration = $configuration;
-
-        $this->resourceMetadataFactory = new ResourceMetadataFactory($configuration);
     }
 
     /**
      * Returns the configuration object.
+     *
      * @return \BedRest\Rest\Configuration
      */
     public function getConfiguration()
@@ -73,6 +79,7 @@ class RestManager
 
     /**
      * Sets the ServiceManager instance to use for service instantiation and configuration.
+     *
      * @param \BedRest\Service\ServiceManager $serviceManager
      */
     public function setServiceManager(ServiceManager $serviceManager)
@@ -82,6 +89,7 @@ class RestManager
 
     /**
      * Returns the ServiceManager instance.
+     *
      * @return \BedRest\Service\ServiceManager
      */
     public function getServiceManager()
@@ -90,7 +98,28 @@ class RestManager
     }
 
     /**
+     * Sets the ResourceMetadataFactory used for retrieving resource metadata.
+     *
+     * @param \BedRest\Resource\Mapping\ResourceMetadataFactory $factory
+     */
+    public function setResourceMetadataFactory(ResourceMetadataFactory $factory)
+    {
+        $this->resourceMetadataFactory = $factory;
+    }
+
+    /**
+     * Returns the ResourceMetadataFactory used for retrieving resource metadata.
+     *
+     * @return \BedRest\Resource\Mapping\ResourceMetadataFactory
+     */
+    public function getResourceMetadataFactory()
+    {
+        return $this->resourceMetadataFactory;
+    }
+
+    /**
      * Returns resource metadata for a class.
+     *
      * @param  string                                     $className
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
@@ -101,6 +130,7 @@ class RestManager
 
     /**
      * Returns resource metadata by resource name.
+     *
      * @param  string                                     $name
      * @return \BedRest\Resource\Mapping\ResourceMetadata
      */
@@ -110,16 +140,8 @@ class RestManager
     }
 
     /**
-     * Returns the resource metadata factory.
-     * @return \BedRest\Resource\Mapping\ResourceMetadataFactory
-     */
-    public function getResourceMetadataFactory()
-    {
-        return $this->resourceMetadataFactory;
-    }
-
-    /**
      * Creates and prepares a new Response object, using the supplied Request object where needed.
+     *
      * @param  \BedRest\Rest\Request\Request   $request
      * @return \BedRest\Rest\Response\Response
      */
@@ -142,6 +164,7 @@ class RestManager
 
     /**
      * Processes a REST request, returning a Response object.
+     *
      * @param  \BedRest\Rest\Request\Request   $request
      * @throws \BedRest\Rest\Exception
      * @return \BedRest\Rest\Response\Response
