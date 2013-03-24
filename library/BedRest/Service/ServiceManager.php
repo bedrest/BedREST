@@ -16,7 +16,6 @@
 namespace BedRest\Service;
 
 use BedRest\Resource\Mapping\ResourceMetadata;
-use BedRest\Service\Configuration;
 use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,13 +31,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ServiceManager
 {
     /**
-     * BedRest configuration.
-     * 
-     * @var \BedRest\Service\Configuration
-     */
-    protected $configuration;
-
-    /**
      * Stores all loaded service instances.
      * 
      * @var array
@@ -51,16 +43,21 @@ class ServiceManager
      * @var \BedRest\Service\Mapping\ServiceMetadataFactory
      */
     protected $serviceMetadataFactory;
+    
+    /**
+     * Service container.
+     * 
+     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    protected $serviceContainer;
 
     /**
      * Constructor.
      * 
-     * @param  \BedRest\Service\Configuration  $configuration
      * @return \BedRest\Service\ServiceManager
      */
-    public function __construct(Configuration $configuration)
+    public function __construct()
     {
-        $this->configuration = $configuration;
     }
 
     /**
@@ -84,13 +81,23 @@ class ServiceManager
     }
 
     /**
-     * Returns the configuration object.
+     * Sets the service container.
      * 
-     * @return \BedRest\Service\Configuration
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      */
-    public function getConfiguration()
+    public function setServiceContainer(ContainerBuilder $container)
     {
-        return $this->configuration;
+        $this->serviceContainer = $container;
+    }
+
+    /**
+     * Returns the service container.
+     * 
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    public function getServiceContainer()
+    {
+        return $this->serviceContainer;
     }
 
     /**
@@ -131,31 +138,27 @@ class ServiceManager
         }
 
         // use a DI container to instantiate the mapper
-        $container = $this->configuration->getServiceContainer();
-
         $id = "{$className}";
-        if (!$container->hasDefinition($id)) {
-            $this->buildDataMapperDefinition($container, $serviceMetadata, $id, $className);
+        if (!$this->serviceContainer->hasDefinition($id)) {
+            $this->buildDataMapperDefinition($serviceMetadata, $id, $className);
         }
 
-        return $container->get($id);
+        return $this->serviceContainer->get($id);
     }
 
     /**
      * Builds a definition in a ContainerBuilder instance for the specified DataMapper class.
      * 
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param Mapping\ServiceMetadata                                 $metadata
      * @param string                                                  $id
      * @param string                                                  $className
      */
     protected function buildDataMapperDefinition(
-        ContainerBuilder $container,
         ServiceMetadata $metadata,
         $id,
         $className
     ) {
-        $definition = $container->register($id, $className);
+        $definition = $this->serviceContainer->register($id, $className);
         $definition->addArgument($this);
 
         // TODO: this should be drawn from the DataMapper itself perhaps?
@@ -186,34 +189,35 @@ class ServiceManager
         }
 
         // use a DI container to instantiate the service
-        $container = $this->configuration->getServiceContainer();
-
         $id = "{$className}#{$resourceMetadata->getName()}";
-        if (!$container->hasDefinition($id)) {
+        if (!$this->serviceContainer->hasDefinition($id)) {
             $serviceMetadata = $this->getServiceMetadata($className);
-            $this->buildServiceDefinition($container, $serviceMetadata, $resourceMetadata, $id, $className);
+            $this->buildServiceDefinition(
+                $serviceMetadata,
+                $resourceMetadata,
+                $id,
+                $className
+            );
         }
 
-        return $container->get($id);
+        return $this->serviceContainer->get($id);
     }
 
     /**
      * Builds a definition in a ContainerBuilder instance for the specified service class.
      * 
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param \BedRest\Resource\Mapping\ResourceMetadata              $resourceMetadata
      * @param string                                                  $id
      * @param string                                                  $className
      * @param \BedRest\Service\Mapping\ServiceMetadata                $metadata
      */
     protected function buildServiceDefinition(
-        ContainerBuilder $container,
         ServiceMetadata $metadata,
         ResourceMetadata $resourceMetadata,
         $id,
         $className
     ) {
-        $definition = $container->register($id, $className);
+        $definition = $this->serviceContainer->register($id, $className);
         $definition
             ->addArgument($resourceMetadata)
             ->addArgument($this->getDataMapper($className));

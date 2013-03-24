@@ -15,7 +15,6 @@
 
 namespace BedRest\Service\Mapping;
 
-use BedRest\Service\Configuration;
 use BedRest\Service\Mapping\Exception;
 use BedRest\Service\Mapping\Driver\Driver;
 use Doctrine\Common\Cache\Cache;
@@ -42,13 +41,6 @@ class ServiceMetadataFactory
     protected $cacheSuffix = '\$SERVICEMETADATA';
 
     /**
-     * Configuration object.
-     * 
-     * @var \BedRest\Service\Configuration
-     */
-    protected $configuration;
-
-    /**
      * Cache driver to use.
      * 
      * @var \Doctrine\Common\Cache\Cache
@@ -73,14 +65,11 @@ class ServiceMetadataFactory
      * Constructor.
      * Initialises the factory with the set configuration.
      * 
-     * @param \BedRest\Service\Configuration $configuration
      * @param \BedRest\Service\Mapping\Driver\Driver $driver
      * @param \Doctrine\Common\Cache\Cache $cache
      */
-    public function __construct(Configuration $configuration, Driver $driver, Cache $cache = null)
+    public function __construct(Driver $driver, Cache $cache = null)
     {
-        $this->configuration = $configuration;
-
         $this->driver = $driver;
         $this->cache = $cache;
     }

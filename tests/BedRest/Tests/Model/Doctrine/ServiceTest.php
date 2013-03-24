@@ -29,8 +29,9 @@ class ServiceTest extends FunctionalModelTestCase
         parent::setUp();
 
         // create a ServiceManager so we can get a DataMapper instance with all the functionality we need
-        $serviceManager = new ServiceManager($this->getServiceConfiguration());
+        $serviceManager = new ServiceManager();
         $serviceManager->setServiceMetadataFactory($this->getServiceMetadataFactory());
+        $serviceManager->setServiceContainer($this->getServiceContainer());
 
         // create a RestManager
         $restManager = new RestManager($this->getConfiguration());
