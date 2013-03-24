@@ -33,18 +33,6 @@ class Configuration
     protected $serviceNamespaces = array();
 
     /**
-     * Service metadata driver.
-     * @var \BedRest\Service\Mapping\Driver\Driver
-     */
-    protected $serviceMetadataDriverImpl;
-
-    /**
-     * Resource cache implementation.
-     * @var \Doctrine\Common\Cache\Cache
-     */
-    protected $serviceMetadataCacheImpl;
-
-    /**
      * Service container.
      * @var \Symfony\Component\DependencyInjection\ContainerBuilder
      */
