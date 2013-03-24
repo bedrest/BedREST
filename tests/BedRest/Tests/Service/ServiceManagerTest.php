@@ -9,8 +9,6 @@ use BedRest\Tests\FunctionalModelTestCase;
  * ServiceManagerTest
  *
  * @author Geoff Adams <geoff@dianode.net>
- *
- * @todo Re-work these tests into true unit tests.
  */
 class ServiceManagerTest extends FunctionalModelTestCase
 {
@@ -19,32 +17,57 @@ class ServiceManagerTest extends FunctionalModelTestCase
      */
     protected $serviceManager;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $configuration;
+
     protected function setUp()
     {
         parent::setUp();
+        
+        $this->configuration = $this->getServiceConfiguration();
 
-        $this->serviceManager = new ServiceManager($this->getServiceConfiguration());
+        $this->serviceManager = new ServiceManager($this->configuration);
+        $this->serviceManager->setServiceMetadataFactory($this->getServiceMetadataFactory());
+    }
+    
+    protected function getMockServiceMetadataFactory()
+    {
+        $factory = $this->getMock(
+            'BedRest\Service\Mapping\ServiceMetadataFactory',
+            array(),
+            array(),
+            '',
+            false
+        );
+        
+        return $factory;
     }
 
     public function testConfiguration()
     {
-        $this->assertEquals($this->getServiceConfiguration(), $this->serviceManager->getConfiguration());
+        $config = $this->getMock('BedRest\Service\Configuration');
+        $serviceManager = new ServiceManager($config);
+        
+        $this->assertEquals($config, $serviceManager->getConfiguration());
     }
 
     public function testServiceMetadataFactory()
     {
-        $this->assertInstanceOf(
-            'BedRest\Service\Mapping\ServiceMetadataFactory',
-            $this->serviceManager->getServiceMetadataFactory()
-        );
+        $factory = $this->getMockServiceMetadataFactory();
+        $this->serviceManager->setServiceMetadataFactory($factory);
+        
+        $this->assertEquals($factory, $this->serviceManager->getServiceMetadataFactory());
     }
 
     public function testGetServiceFresh()
     {
         $rmf = $this->getResourceMetadataFactory();
+        $resourceMeta = $rmf->getMetadataByResourceName('employee');
 
-        $service = $this->serviceManager->getService($rmf->getMetadataByResourceName('employee'));
-        $serviceDuplicate = $this->serviceManager->getService($rmf->getMetadataByResourceName('employee'));
+        $service = $this->serviceManager->getService($resourceMeta);
+        $serviceDuplicate = $this->serviceManager->getService($resourceMeta);
 
         $this->assertInstanceOf('BedRest\TestFixtures\Services\Company\Employee', $service);
         $this->assertEquals(spl_object_hash($service), spl_object_hash($serviceDuplicate));

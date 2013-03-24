@@ -34,8 +34,6 @@ class ServiceMetadataFactoryTest extends BaseTestCase
      */
     protected function createFactory()
     {
-        $configuration = $this->getServiceConfiguration();
-
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
         $driver->addPaths(
@@ -44,9 +42,7 @@ class ServiceMetadataFactoryTest extends BaseTestCase
             )
         );
 
-        $configuration->setServiceMetadataDriverImpl($driver);
-
-        return new ServiceMetadataFactory($configuration);
+        return new ServiceMetadataFactory($this->getServiceConfiguration(), $driver);
     }
 
     public function testGetMetadata()

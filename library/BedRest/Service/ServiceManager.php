@@ -33,36 +33,59 @@ class ServiceManager
 {
     /**
      * BedRest configuration.
+     * 
      * @var \BedRest\Service\Configuration
      */
     protected $configuration;
 
     /**
      * Stores all loaded service instances.
+     * 
      * @var array
      */
     protected $loadedServices;
 
     /**
      * Service metadata factory.
+     * 
      * @var \BedRest\Service\Mapping\ServiceMetadataFactory
      */
     protected $serviceMetadataFactory;
 
     /**
      * Constructor.
+     * 
      * @param  \BedRest\Service\Configuration  $configuration
      * @return \BedRest\Service\ServiceManager
      */
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
+    }
 
-        $this->serviceMetadataFactory = new ServiceMetadataFactory($configuration);
+    /**
+     * Sets the ServiceMetadataFactory instance.
+     *
+     * @param \BedRest\Service\Mapping\ServiceMetadataFactory $factory
+     */
+    public function setServiceMetadataFactory(ServiceMetadataFactory $factory)
+    {
+        $this->serviceMetadataFactory = $factory;
+    }
+
+    /**
+     * Returns the service metadata factory.
+     *
+     * @return \BedRest\Service\Mapping\ServiceMetadataFactory
+     */
+    public function getServiceMetadataFactory()
+    {
+        return $this->serviceMetadataFactory;
     }
 
     /**
      * Returns the configuration object.
+     * 
      * @return \BedRest\Service\Configuration
      */
     public function getConfiguration()
@@ -72,6 +95,7 @@ class ServiceManager
 
     /**
      * Returns service metadata for a class.
+     * 
      * @param  string                                   $className
      * @return \BedRest\Service\Mapping\ServiceMetadata
      */
@@ -81,16 +105,8 @@ class ServiceManager
     }
 
     /**
-     * Returns the service metadata factory.
-     * @return \BedRest\Service\Mapping\ServiceMetadataFactory
-     */
-    public function getServiceMetadataFactory()
-    {
-        return $this->serviceMetadataFactory;
-    }
-
-    /**
      * Returns the DataMapper to be used by a service.
+     * 
      * @param  string                          $service Class name of the service.
      * @throws \BedRest\Service\Exception
      * @throws \BedRest\Service\Data\Exception
@@ -127,6 +143,7 @@ class ServiceManager
 
     /**
      * Builds a definition in a ContainerBuilder instance for the specified DataMapper class.
+     * 
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param Mapping\ServiceMetadata                                 $metadata
      * @param string                                                  $id
@@ -150,6 +167,7 @@ class ServiceManager
 
     /**
      * Returns an instance of the service for the specified resource.
+     * 
      * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @throws \BedRest\Service\Exception
      * @return object
@@ -181,6 +199,7 @@ class ServiceManager
 
     /**
      * Builds a definition in a ContainerBuilder instance for the specified service class.
+     * 
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      * @param \BedRest\Resource\Mapping\ResourceMetadata              $resourceMetadata
      * @param string                                                  $id
