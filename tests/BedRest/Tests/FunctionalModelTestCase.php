@@ -4,6 +4,8 @@ namespace BedRest\Tests;
 
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Resource\Mapping\Driver\AnnotationDriver as ResourceAnnotationDriver;
+use BedRest\Rest\Configuration as RestConfiguration;
+use BedRest\Service\Configuration as ServiceConfiguration;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver as ServiceAnnotationDriver;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -21,6 +23,20 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class FunctionalModelTestCase extends BaseTestCase
 {
+    /**
+     * Configuration used for tests.
+     *
+     * @var \BedRest\Rest\Configuration
+     */
+    protected $config;
+
+    /**
+     * Service configuration used for tests.
+     *
+     * @var \BedRest\Service\Configuration
+     */
+    protected $serviceConfig;
+    
     /**
      * Doctrine EntityManager used for tests.
      *
@@ -117,18 +133,57 @@ class FunctionalModelTestCase extends BaseTestCase
     }
 
     /**
+     * Returns a Configuration object for use in tests.
+     *
+     * @return \BedRest\Rest\Configuration
+     * @todo Move this method to FunctionalModelTestCase.
+     */
+    protected function getConfiguration()
+    {
+        if (!$this->config) {
+            $this->createConfiguration();
+        }
+
+        return $this->config;
+    }
+
+    /**
+     * Creates a configuration object, pre-configured for tests which require a model to work with.
+     */
+    protected function createConfiguration()
+    {
+        $config = new RestConfiguration();
+
+        $this->config = $config;
+    }
+
+    /**
      * Returns a Service Configuration object for use in tests.
      *
      * @return \BedRest\Service\Configuration
      */
+    protected function getServiceConfiguration()
+    {
+        if (!$this->serviceConfig) {
+            $this->createServiceConfiguration();
+        }
+
+        return $this->serviceConfig;
+    }
+
+    /**
+     * Creates a service configuration object, pre-configured for tests which require a model to work with.
+     */
     protected function createServiceConfiguration()
     {
-        parent::createServiceConfiguration();
+        $config = new ServiceConfiguration();
         
         $container = new ContainerBuilder();
         $container->setParameter('doctrine.entitymanager', self::getEntityManager());
         
-        $this->serviceConfig->setServiceContainer($container);
+        $config->setServiceContainer($container);
+
+        $this->serviceConfig = $config;
     }
 
     /**

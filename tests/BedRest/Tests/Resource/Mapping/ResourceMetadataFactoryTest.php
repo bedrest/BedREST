@@ -4,16 +4,19 @@ namespace BedRest\Tests\Resource\Mapping;
 
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Resource\Mapping\Driver\AnnotationDriver;
-use BedRest\Tests\BaseTestCase;
 use BedRest\TestFixtures\Mocks\TestCache;
+use BedRest\Tests\FunctionalModelTestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * ResourceMetadataFactoryTest
  *
  * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo This is a functional test suite, can be refactored to be a true unit test.
+ * @todo Remove references to $this->getConfiguration()
  */
-class ResourceMetadataFactoryTest extends BaseTestCase
+class ResourceMetadataFactoryTest extends FunctionalModelTestCase
 {
     /**
      * Class under test.
