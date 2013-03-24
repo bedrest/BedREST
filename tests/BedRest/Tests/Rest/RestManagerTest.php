@@ -34,14 +34,12 @@ class RestManagerTest extends BaseTestCase
     {
         parent::setUp();
 
-        // config
         $this->configuration = $this->getMock('BedRest\Rest\Configuration');
         $this->configuration
             ->expects($this->any())
             ->method('getContentTypes')
             ->will($this->returnValue(array('application/json')));
 
-        // object under test
         $this->restManager = new RestManager($this->configuration);
     }
 
@@ -52,12 +50,10 @@ class RestManagerTest extends BaseTestCase
      */
     protected function getMockResourceMetadataFactory()
     {
-        // resource meta
         $testResourceMetadata = new ResourceMetadata('testResource');
         $testResourceMetadata->setName('testResource');
         $testResourceMetadata->setService('testService');
 
-        // resource metadata factory
         $resourceMetadataFactory = $this->getMock(
             'BedRest\Resource\Mapping\ResourceMetadataFactory',
             array(),
@@ -88,7 +84,6 @@ class RestManagerTest extends BaseTestCase
      */
     protected function getMockServiceManager()
     {
-        // service manager
         $serviceManager = $this->getMock('BedRest\Service\ServiceManager', array(), array(), '', false);
 
         return $serviceManager;
@@ -96,7 +91,10 @@ class RestManagerTest extends BaseTestCase
 
     public function testConfiguration()
     {
-        $this->assertEquals($this->configuration, $this->restManager->getConfiguration());
+        $config = $this->getMock('BedRest\Rest\Configuration');
+        $restManager = new RestManager($config);
+
+        $this->assertEquals($config, $restManager->getConfiguration());
     }
 
     public function testServiceManager()

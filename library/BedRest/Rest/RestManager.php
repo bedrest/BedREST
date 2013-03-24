@@ -28,6 +28,8 @@ use BedRest\Service\ServiceManager;
  * Responsible for dispatching REST actions to the correct services. Sits between controllers and the service layer.
  *
  * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo Should this be called a 'RequestHandler' since that is actually what it does?
  */
 class RestManager
 {

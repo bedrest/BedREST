@@ -21,6 +21,9 @@ namespace BedRest\Rest;
  * Configuration container for BedRest.
  *
  * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo Can we remove the need for a 'Configuration' object altogether?
+ * @todo This seems to hold config for different areas of the system, not a good separation of concerns.
  */
 class Configuration
 {

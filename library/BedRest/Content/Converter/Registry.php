@@ -19,6 +19,8 @@ namespace BedRest\Content\Converter;
  * Registry
  *
  * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @todo This use of a Registry pattern is really just a global. Alternatives?
  */
 class Registry
 {
