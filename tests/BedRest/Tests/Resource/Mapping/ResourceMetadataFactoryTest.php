@@ -45,9 +45,7 @@ class ResourceMetadataFactoryTest extends BaseTestCase
             )
         );
 
-        $configuration->setResourceMetadataDriverImpl($driver);
-
-        return new ResourceMetadataFactory($configuration);
+        return new ResourceMetadataFactory($configuration, $driver);
     }
 
     public function testGetMetadata()

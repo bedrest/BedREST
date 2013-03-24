@@ -15,6 +15,7 @@
 
 namespace BedRest\Resource\Mapping;
 
+use BedRest\Resource\Mapping\Driver\Driver;
 use BedRest\Rest\Configuration;
 use BedRest\Resource\Mapping\Exception;
 use Doctrine\Common\Cache\Cache;
@@ -28,42 +29,49 @@ class ResourceMetadataFactory
 {
     /**
      * Prefix for cache IDs.
+     *
      * @var string
      */
     protected $cachePrefix = 'BEDREST::';
 
     /**
      * Suffix for cache IDs.
+     *
      * @var string
      */
     protected $cacheSuffix = '\$RESOURCEMETADATA';
 
     /**
      * Configuration object.
+     *
      * @var \BedRest\Rest\Configuration
      */
     protected $configuration;
 
     /**
      * Cache driver to use.
+     *
      * @var \Doctrine\Common\Cache\Cache
      */
     protected $cache;
 
     /**
      * Mapping metadata driver.
+     *
      * @var \BedRest\Resource\Mapping\Driver\Driver
      */
     protected $driver;
 
     /**
      * Stores all loaded ResourceMetadata instances.
+     *
      * @var array
      */
     protected $loadedMetadata = array();
 
     /**
      * Stores a map of resource names to class names.
+     *
      * @var array
      */
     protected $resourceClassMap = array();
@@ -71,18 +79,21 @@ class ResourceMetadataFactory
     /**
      * Constructor.
      * Initialises the factory with the set configuration.
-     * @param \BedRest\Rest\Configuration $configuration
+     *
+     * @param \BedRest\Rest\Configuration             $configuration
+     * @param \BedRest\Resource\Mapping\Driver\Driver $driver
+     * @param \Doctrine\Common\Cache\Cache            $cache
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Configuration $configuration, Driver $driver, Cache $cache = null)
     {
         $this->configuration = $configuration;
-
-        $this->driver = $configuration->getResourceMetadataDriverImpl();
-        $this->cache = $configuration->getResourceMetadataCacheImpl();
+        $this->driver = $driver;
+        $this->cache = $cache;
     }
 
     /**
      * Sets the cache driver for this factory instance.
+     *
      * @param \Doctrine\Common\Cache\Cache $cache
      */
     public function setCache(Cache $cache = null)
@@ -92,6 +103,7 @@ class ResourceMetadataFactory
 
     /**
      * Returns the cache driver in use by this factory instance.
+     *
      * @return \Doctrine\Common\Cache\Cache
      */
     public function getCache()
@@ -101,6 +113,7 @@ class ResourceMetadataFactory
 
     /**
      * Returns ResourceMetadata for the specified class.
+     *
      * @param  string                                     $className
      * @throws \BedRest\Resource\Mapping\Exception
      * @return \BedRest\Resource\Mapping\ResourceMetadata
@@ -133,6 +146,7 @@ class ResourceMetadataFactory
 
     /**
      * Returns ResourceMetadata for the specified resource.
+     *
      * @param  string                                     $resourceName
      * @throws \BedRest\Resource\Mapping\Exception
      * @return \BedRest\Resource\Mapping\ResourceMetadata
@@ -151,6 +165,7 @@ class ResourceMetadataFactory
     /**
      * Returns the entire collection of ResourceMetadata objects for all mapped resources. Entities not marked as
      * resources are not included.
+     *
      * @return array
      */
     public function getAllMetadata()
@@ -166,6 +181,7 @@ class ResourceMetadataFactory
 
     /**
      * Loads the ResourceMetadata for the specified class.
+     *
      * @param string $className
      */
     protected function loadMetadata($className)
@@ -183,6 +199,7 @@ class ResourceMetadataFactory
 
     /**
      * Whether the specified class is a mapped resource.
+     *
      * @param  string  $className
      * @return boolean
      */

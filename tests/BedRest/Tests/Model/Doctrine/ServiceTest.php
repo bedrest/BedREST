@@ -34,6 +34,7 @@ class ServiceTest extends FunctionalModelTestCase
         // create a RestManager
         $restManager = new RestManager($this->getConfiguration());
         $restManager->setServiceManager($serviceManager);
+        $restManager->setResourceMetadataFactory($this->getResourceMetadataFactory());
 
         // get the metadata and mapper required by the service
         $resourceMetadata = $restManager->getResourceMetadataByName('asset');

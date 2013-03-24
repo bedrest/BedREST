@@ -49,22 +49,4 @@ class ConfigurationTest extends BaseTestCase
 
         $this->assertEquals($paths, $config->getResourcePaths());
     }
-
-    public function testMetadataDriver()
-    {
-        $config = new Configuration();
-        $driver = $this->getMock('BedRest\Resource\Mapping\Driver\Driver');
-
-        $config->setResourceMetadataDriverImpl($driver);
-        $this->assertEquals($driver, $config->getResourceMetadataDriverImpl());
-    }
-
-    public function testMetadataCache()
-    {
-        $config = new Configuration();
-        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
-
-        $config->setResourceMetadataCacheImpl($cache);
-        $this->assertEquals($cache, $config->getResourceMetadataCacheImpl());
-    }
 }

@@ -6,8 +6,8 @@ use BedRest\Rest\Request\Request;
 use BedRest\Rest\Request\Type;
 use BedRest\Rest\RestManager;
 use BedRest\Service\ServiceManager;
-use BedRest\Tests\BaseTestCase;
 use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
+use BedRest\Tests\FunctionalModelTestCase;
 
 /**
  * RestManagerTest
@@ -16,7 +16,7 @@ use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
  *
  * @todo Re-work these tests into true unit tests.
  */
-class RestManagerTest extends BaseTestCase
+class RestManagerTest extends FunctionalModelTestCase
 {
     /**
      * RestManager instance under test.
@@ -33,6 +33,7 @@ class RestManagerTest extends BaseTestCase
 
         $serviceManager = new ServiceManager($this->getServiceConfiguration());
         $this->restManager->setServiceManager($serviceManager);
+        $this->restManager->setResourceMetadataFactory($this->getResourceMetadataFactory());
     }
 
     public function testConfiguration()
