@@ -28,7 +28,7 @@ class FunctionalModelTestCase extends BaseTestCase
      * @var \BedRest\Rest\Configuration
      */
     protected $config;
-    
+
     /**
      * Doctrine EntityManager used for tests.
      *
@@ -106,7 +106,7 @@ class FunctionalModelTestCase extends BaseTestCase
 
     /**
      * Returns a ServiceMetadataFactory instance, pre-configured to use the BedRest\TestFixtures\Services classes.
-     * 
+     *
      * @return \BedRest\Service\Mapping\ServiceMetadataFactory
      */
     protected function getServiceMetadataFactory()
@@ -117,13 +117,13 @@ class FunctionalModelTestCase extends BaseTestCase
                 'BedRest\TestFixtures\Services' => TESTS_BASEDIR . '/BedRest/TestFixtures/Services'
             )
         );
-        
+
         return new ServiceMetadataFactory($driver);
     }
 
     /**
      * Returns a ContainerBuilder instance, pre-configured with the Doctrine EntityManager.
-     * 
+     *
      * @return \Symfony\Component\DependencyInjection\ContainerBuilder
      */
     protected function getServiceContainer()

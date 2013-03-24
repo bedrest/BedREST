@@ -14,7 +14,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
  * ServiceMetadataFactoryTest
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @todo This is a functional test suite, can be refactored to be a true unit test.
  */
 class ServiceMetadataFactoryTest extends FunctionalModelTestCase

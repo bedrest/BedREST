@@ -25,12 +25,12 @@ class ServiceManagerTest extends FunctionalModelTestCase
     protected function setUp()
     {
         parent::setUp();
-        
+
         $this->serviceManager = new ServiceManager();
         $this->serviceManager->setServiceMetadataFactory($this->getServiceMetadataFactory());
         $this->serviceManager->setServiceContainer($this->getServiceContainer());
     }
-    
+
     protected function getMockServiceMetadataFactory()
     {
         $factory = $this->getMock(
@@ -40,7 +40,7 @@ class ServiceManagerTest extends FunctionalModelTestCase
             '',
             false
         );
-        
+
         return $factory;
     }
 
@@ -48,15 +48,15 @@ class ServiceManagerTest extends FunctionalModelTestCase
     {
         $factory = $this->getMockServiceMetadataFactory();
         $this->serviceManager->setServiceMetadataFactory($factory);
-        
+
         $this->assertEquals($factory, $this->serviceManager->getServiceMetadataFactory());
     }
-    
+
     public function testServiceContainer()
     {
         $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
         $this->serviceManager->setServiceContainer($container);
-        
+
         $this->assertEquals($container, $this->serviceManager->getServiceContainer());
     }
 

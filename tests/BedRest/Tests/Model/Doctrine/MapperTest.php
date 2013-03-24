@@ -36,7 +36,7 @@ class MapperTest extends FunctionalModelTestCase
         $serviceManager = new ServiceManager();
         $serviceManager->setServiceMetadataFactory($this->getServiceMetadataFactory());
         $serviceManager->setServiceContainer($this->getServiceContainer());
-        
+
         $this->mapper = new Mapper($serviceManager);
         $this->mapper->setEntityManager(self::getEntityManager());
     }

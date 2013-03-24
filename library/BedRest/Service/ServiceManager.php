@@ -32,28 +32,28 @@ class ServiceManager
 {
     /**
      * Stores all loaded service instances.
-     * 
+     *
      * @var array
      */
     protected $loadedServices;
 
     /**
      * Service metadata factory.
-     * 
+     *
      * @var \BedRest\Service\Mapping\ServiceMetadataFactory
      */
     protected $serviceMetadataFactory;
-    
+
     /**
      * Service container.
-     * 
+     *
      * @var \Symfony\Component\DependencyInjection\ContainerBuilder
      */
     protected $serviceContainer;
 
     /**
      * Constructor.
-     * 
+     *
      * @return \BedRest\Service\ServiceManager
      */
     public function __construct()
@@ -82,7 +82,7 @@ class ServiceManager
 
     /**
      * Sets the service container.
-     * 
+     *
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      */
     public function setServiceContainer(ContainerBuilder $container)
@@ -92,7 +92,7 @@ class ServiceManager
 
     /**
      * Returns the service container.
-     * 
+     *
      * @return \Symfony\Component\DependencyInjection\ContainerBuilder
      */
     public function getServiceContainer()
@@ -102,7 +102,7 @@ class ServiceManager
 
     /**
      * Returns service metadata for a class.
-     * 
+     *
      * @param  string                                   $className
      * @return \BedRest\Service\Mapping\ServiceMetadata
      */
@@ -113,7 +113,7 @@ class ServiceManager
 
     /**
      * Returns the DataMapper to be used by a service.
-     * 
+     *
      * @param  string                          $service Class name of the service.
      * @throws \BedRest\Service\Exception
      * @throws \BedRest\Service\Data\Exception
@@ -148,10 +148,10 @@ class ServiceManager
 
     /**
      * Builds a definition in a ContainerBuilder instance for the specified DataMapper class.
-     * 
-     * @param Mapping\ServiceMetadata                                 $metadata
-     * @param string                                                  $id
-     * @param string                                                  $className
+     *
+     * @param Mapping\ServiceMetadata $metadata
+     * @param string                  $id
+     * @param string                  $className
      */
     protected function buildDataMapperDefinition(
         ServiceMetadata $metadata,
@@ -170,7 +170,7 @@ class ServiceManager
 
     /**
      * Returns an instance of the service for the specified resource.
-     * 
+     *
      * @param  \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
      * @throws \BedRest\Service\Exception
      * @return object
@@ -205,11 +205,11 @@ class ServiceManager
 
     /**
      * Builds a definition in a ContainerBuilder instance for the specified service class.
-     * 
-     * @param \BedRest\Resource\Mapping\ResourceMetadata              $resourceMetadata
-     * @param string                                                  $id
-     * @param string                                                  $className
-     * @param \BedRest\Service\Mapping\ServiceMetadata                $metadata
+     *
+     * @param \BedRest\Resource\Mapping\ResourceMetadata $resourceMetadata
+     * @param string                                     $id
+     * @param string                                     $className
+     * @param \BedRest\Service\Mapping\ServiceMetadata   $metadata
      */
     protected function buildServiceDefinition(
         ServiceMetadata $metadata,

@@ -28,35 +28,35 @@ class ServiceMetadataFactory
 {
     /**
      * Prefix for cache IDs.
-     * 
+     *
      * @var string
      */
     protected $cachePrefix = 'BEDREST::';
 
     /**
      * Suffix for cache IDs.
-     * 
+     *
      * @var string
      */
     protected $cacheSuffix = '\$SERVICEMETADATA';
 
     /**
      * Cache driver to use.
-     * 
+     *
      * @var \Doctrine\Common\Cache\Cache
      */
     protected $cache;
 
     /**
      * Mapping metadata driver.
-     * 
+     *
      * @var \BedRest\Service\Mapping\Driver\Driver
      */
     protected $driver;
 
     /**
      * Stores all loaded ServiceMetadata instances.
-     * 
+     *
      * @var array
      */
     protected $loadedMetadata = array();
@@ -64,9 +64,9 @@ class ServiceMetadataFactory
     /**
      * Constructor.
      * Initialises the factory with the set configuration.
-     * 
+     *
      * @param \BedRest\Service\Mapping\Driver\Driver $driver
-     * @param \Doctrine\Common\Cache\Cache $cache
+     * @param \Doctrine\Common\Cache\Cache           $cache
      */
     public function __construct(Driver $driver, Cache $cache = null)
     {
@@ -76,7 +76,7 @@ class ServiceMetadataFactory
 
     /**
      * Sets the cache driver for this factory instance.
-     * 
+     *
      * @param \Doctrine\Common\Cache\Cache $cache
      */
     public function setCache(Cache $cache = null)
@@ -86,7 +86,7 @@ class ServiceMetadataFactory
 
     /**
      * Returns the cache driver in use by this factory instance.
-     * 
+     *
      * @return \Doctrine\Common\Cache\Cache
      */
     public function getCache()
@@ -96,7 +96,7 @@ class ServiceMetadataFactory
 
     /**
      * Returns ServiceMetadata for the specified class.
-     * 
+     *
      * @param  string                                   $className
      * @throws \BedRest\Service\Mapping\Exception
      * @return \BedRest\Service\Mapping\ServiceMetadata
@@ -129,7 +129,7 @@ class ServiceMetadataFactory
 
     /**
      * Returns the entire collection of ServiceMetadata objects for all mapped services.
-     * 
+     *
      * @return array
      */
     public function getAllMetadata()
@@ -145,7 +145,7 @@ class ServiceMetadataFactory
 
     /**
      * Loads the ServiceMetadata for the supplied class.
-     * 
+     *
      * @param string $class
      */
     protected function loadMetadata($class)
@@ -181,7 +181,7 @@ class ServiceMetadataFactory
 
     /**
      * Whether the specified class is a mapped service.
-     * 
+     *
      * @param  string  $className
      * @return boolean
      */
@@ -192,7 +192,7 @@ class ServiceMetadataFactory
 
     /**
      * Returns the list of parent service classes for the specified class.
-     * 
+     *
      * @param  string $className
      * @return array
      */
