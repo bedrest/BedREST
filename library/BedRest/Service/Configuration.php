@@ -109,42 +109,6 @@ class Configuration
     }
 
     /**
-     * Sets the service metadata driver implementation.
-     * @param \BedRest\Service\Mapping\Driver\Driver $driver
-     */
-    public function setServiceMetadataDriverImpl(ServiceDriver $driver)
-    {
-        $this->serviceMetadataDriverImpl = $driver;
-    }
-
-    /**
-     * Returns the service metadata driver implementation.
-     * @return \BedRest\Service\Mapping\Driver\Driver
-     */
-    public function getServiceMetadataDriverImpl()
-    {
-        return $this->serviceMetadataDriverImpl;
-    }
-
-    /**
-     * Sets the service metadata cache implementation.
-     * @param \Doctrine\Common\Cache\Cache $cache
-     */
-    public function setServiceMetadataCacheImpl(Cache $cache)
-    {
-        $this->serviceMetadataCacheImpl = $cache;
-    }
-
-    /**
-     * Returns the service metadata cache implementation.
-     * @return \Doctrine\Common\Cache\Cache
-     */
-    public function getServiceMetadataCacheImpl()
-    {
-        return $this->serviceMetadataCacheImpl;
-    }
-
-    /**
      * Sets the service container.
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      */

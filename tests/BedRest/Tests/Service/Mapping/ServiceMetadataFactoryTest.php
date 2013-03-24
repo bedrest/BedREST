@@ -5,17 +5,20 @@ namespace BedRest\Tests\Service\Mapping;
 use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver;
-use BedRest\Tests\BaseTestCase;
 use BedRest\TestFixtures\Mocks\TestCache;
 use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
+use BedRest\Tests\FunctionalModelTestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * ServiceMetadataFactoryTest
  *
  * @author Geoff Adams <geoff@dianode.net>
+ * 
+ * @todo This is a functional test suite, can be refactored to be a true unit test.
+ * @todo Remove references to $this->getServiceConfiguration()
  */
-class ServiceMetadataFactoryTest extends BaseTestCase
+class ServiceMetadataFactoryTest extends FunctionalModelTestCase
 {
     /**
      * Class under test.
@@ -34,8 +37,6 @@ class ServiceMetadataFactoryTest extends BaseTestCase
      */
     protected function createFactory()
     {
-        $configuration = $this->getServiceConfiguration();
-
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
         $driver->addPaths(
@@ -44,9 +45,7 @@ class ServiceMetadataFactoryTest extends BaseTestCase
             )
         );
 
-        $configuration->setServiceMetadataDriverImpl($driver);
-
-        return new ServiceMetadataFactory($configuration);
+        return new ServiceMetadataFactory($this->getServiceConfiguration(), $driver);
     }
 
     public function testGetMetadata()

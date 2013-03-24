@@ -47,6 +47,7 @@ class RestManagerTest extends BaseTestCase
      * Gets a mock BedRest\Resource\Mapping\ResourceMetadataFactory object.
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
+     * @todo Remove usage of non-mock classes (ResourceMetadata for instance).
      */
     protected function getMockResourceMetadataFactory()
     {
