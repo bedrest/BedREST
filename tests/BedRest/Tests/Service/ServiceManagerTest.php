@@ -25,13 +25,12 @@ class ServiceManagerTest extends FunctionalModelTestCase
     protected function setUp()
     {
         parent::setUp();
-        
-        $this->configuration = $this->getServiceConfiguration();
 
-        $this->serviceManager = new ServiceManager($this->configuration);
+        $this->serviceManager = new ServiceManager();
         $this->serviceManager->setServiceMetadataFactory($this->getServiceMetadataFactory());
+        $this->serviceManager->setServiceContainer($this->getServiceContainer());
     }
-    
+
     protected function getMockServiceMetadataFactory()
     {
         $factory = $this->getMock(
@@ -41,24 +40,24 @@ class ServiceManagerTest extends FunctionalModelTestCase
             '',
             false
         );
-        
-        return $factory;
-    }
 
-    public function testConfiguration()
-    {
-        $config = $this->getMock('BedRest\Service\Configuration');
-        $serviceManager = new ServiceManager($config);
-        
-        $this->assertEquals($config, $serviceManager->getConfiguration());
+        return $factory;
     }
 
     public function testServiceMetadataFactory()
     {
         $factory = $this->getMockServiceMetadataFactory();
         $this->serviceManager->setServiceMetadataFactory($factory);
-        
+
         $this->assertEquals($factory, $this->serviceManager->getServiceMetadataFactory());
+    }
+
+    public function testServiceContainer()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $this->serviceManager->setServiceContainer($container);
+
+        $this->assertEquals($container, $this->serviceManager->getServiceContainer());
     }
 
     public function testGetServiceFresh()

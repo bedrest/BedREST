@@ -5,7 +5,6 @@ namespace BedRest\Tests;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Resource\Mapping\Driver\AnnotationDriver as ResourceAnnotationDriver;
 use BedRest\Rest\Configuration as RestConfiguration;
-use BedRest\Service\Configuration as ServiceConfiguration;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver as ServiceAnnotationDriver;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -31,13 +30,6 @@ class FunctionalModelTestCase extends BaseTestCase
     protected $config;
 
     /**
-     * Service configuration used for tests.
-     *
-     * @var \BedRest\Service\Configuration
-     */
-    protected $serviceConfig;
-    
-    /**
      * Doctrine EntityManager used for tests.
      *
      * @var \Doctrine\ORM\EntityManager
@@ -54,7 +46,6 @@ class FunctionalModelTestCase extends BaseTestCase
     protected function setUp()
     {
         $this->createConfiguration();
-        $this->createServiceConfiguration();
     }
 
     protected function tearDown()
@@ -115,7 +106,7 @@ class FunctionalModelTestCase extends BaseTestCase
 
     /**
      * Returns a ServiceMetadataFactory instance, pre-configured to use the BedRest\TestFixtures\Services classes.
-     * 
+     *
      * @return \BedRest\Service\Mapping\ServiceMetadataFactory
      */
     protected function getServiceMetadataFactory()
@@ -126,17 +117,27 @@ class FunctionalModelTestCase extends BaseTestCase
                 'BedRest\TestFixtures\Services' => TESTS_BASEDIR . '/BedRest/TestFixtures/Services'
             )
         );
-        
-        $factory = new ServiceMetadataFactory($this->getServiceConfiguration(), $driver);
-    
-        return $factory;
+
+        return new ServiceMetadataFactory($driver);
+    }
+
+    /**
+     * Returns a ContainerBuilder instance, pre-configured with the Doctrine EntityManager.
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    protected function getServiceContainer()
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('doctrine.entitymanager', self::getEntityManager());
+
+        return $container;
     }
 
     /**
      * Returns a Configuration object for use in tests.
      *
      * @return \BedRest\Rest\Configuration
-     * @todo Move this method to FunctionalModelTestCase.
      */
     protected function getConfiguration()
     {
@@ -155,35 +156,6 @@ class FunctionalModelTestCase extends BaseTestCase
         $config = new RestConfiguration();
 
         $this->config = $config;
-    }
-
-    /**
-     * Returns a Service Configuration object for use in tests.
-     *
-     * @return \BedRest\Service\Configuration
-     */
-    protected function getServiceConfiguration()
-    {
-        if (!$this->serviceConfig) {
-            $this->createServiceConfiguration();
-        }
-
-        return $this->serviceConfig;
-    }
-
-    /**
-     * Creates a service configuration object, pre-configured for tests which require a model to work with.
-     */
-    protected function createServiceConfiguration()
-    {
-        $config = new ServiceConfiguration();
-        
-        $container = new ContainerBuilder();
-        $container->setParameter('doctrine.entitymanager', self::getEntityManager());
-        
-        $config->setServiceContainer($container);
-
-        $this->serviceConfig = $config;
     }
 
     /**

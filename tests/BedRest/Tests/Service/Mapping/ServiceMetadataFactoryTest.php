@@ -14,9 +14,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
  * ServiceMetadataFactoryTest
  *
  * @author Geoff Adams <geoff@dianode.net>
- * 
+ *
  * @todo This is a functional test suite, can be refactored to be a true unit test.
- * @todo Remove references to $this->getServiceConfiguration()
  */
 class ServiceMetadataFactoryTest extends FunctionalModelTestCase
 {
@@ -45,7 +44,7 @@ class ServiceMetadataFactoryTest extends FunctionalModelTestCase
             )
         );
 
-        return new ServiceMetadataFactory($this->getServiceConfiguration(), $driver);
+        return new ServiceMetadataFactory($driver);
     }
 
     public function testGetMetadata()
