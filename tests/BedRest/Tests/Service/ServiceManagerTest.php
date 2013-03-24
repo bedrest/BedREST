@@ -2,7 +2,6 @@
 
 namespace BedRest\Tests\Service;
 
-use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Service\ServiceManager;
 use BedRest\Tests\FunctionalModelTestCase;
 

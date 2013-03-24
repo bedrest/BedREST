@@ -54,7 +54,7 @@ class Employee extends Generic
     /**
      * Not an event listener.
      */
-    public function get()
+    public function notAListener()
     {
     }
 }

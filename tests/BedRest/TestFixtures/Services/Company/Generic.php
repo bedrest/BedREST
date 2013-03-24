@@ -20,22 +20,6 @@ class Generic
      */
     protected $em;
 
-    public static $handleGetResourceCalled = 0;
-
-    public static $handleGetCollectionCalled = 0;
-
-    public static $handlePostResourceCalled = 0;
-
-    public static $handlePostCollectionCalled = 0;
-
-    public static $handlePutResourceCalled = 0;
-
-    public static $handlePutCollectionCalled = 0;
-
-    public static $handleDeleteResourceCalled = 0;
-
-    public static $handleDeleteCollectionCalled = 0;
-
     /**
      * Sets the EntityManager instance.
      * @param \Doctrine\ORM\EntityManager $entityManager
@@ -56,28 +40,28 @@ class Generic
             'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_BASIC,
             'listeners' => array(
                 'GET' => array(
-                    'handleGetResource'
+                    'get'
                 ),
                 'GET_COLLECTION' => array(
-                    'handleGetCollectionResource'
+                    'getCollection'
                 ),
                 'POST' => array(
-                    'handlePostResource'
+                    'post'
                 ),
                 'POST_COLLECTION' => array(
-                    'handlePostCollectionResource'
+                    'postCollection'
                 ),
                 'PUT' => array(
-                    'handlePutResource'
+                    'put'
                 ),
                 'PUT_COLLECTION' => array(
-                    'handlePutCollectionResource'
+                    'putCollection'
                 ),
                 'DELETE' => array(
-                    'handleDeleteResource'
+                    'delete'
                 ),
                 'DELETE_COLLECTION' => array(
-                    'handleDeleteCollectionResource'
+                    'deleteCollection'
                 ),
             )
         );
@@ -88,9 +72,8 @@ class Generic
      *
      * @BedRest\Listener(event="GET")
      */
-    public function handleGetResource(Request $request)
+    public function get(Request $request)
     {
-        self::$handleGetResourceCalled++;
     }
 
     /**
@@ -98,9 +81,8 @@ class Generic
      *
      * @BedRest\Listener(event="GET_COLLECTION")
      */
-    public function handleGetCollection(Request $request)
+    public function getCollection(Request $request)
     {
-        self::$handleGetCollectionCalled++;
     }
 
     /**
@@ -108,9 +90,8 @@ class Generic
      *
      * @BedRest\Listener(event="POST")
      */
-    public function handlePostResource(Request $request)
+    public function post(Request $request)
     {
-        self::$handlePostResourceCalled++;
     }
 
     /**
@@ -118,9 +99,8 @@ class Generic
      *
      * @BedRest\Listener(event="POST_COLLECTION")
      */
-    public function handlePostCollection(Request $request)
+    public function postCollection(Request $request)
     {
-        self::$handlePostCollectionCalled++;
     }
 
     /**
@@ -128,9 +108,8 @@ class Generic
      *
      * @BedRest\Listener(event="PUT")
      */
-    public function handlePutResource(Request $request)
+    public function put(Request $request)
     {
-        self::$handlePutResourceCalled++;
     }
 
     /**
@@ -138,9 +117,8 @@ class Generic
      *
      * @BedRest\Listener(event="PUT_COLLECTION")
      */
-    public function handlePutCollection(Request $request)
+    public function putCollection(Request $request)
     {
-        self::$handlePutCollectionCalled++;
     }
 
     /**
@@ -148,9 +126,8 @@ class Generic
      *
      * @BedRest\Listener(event="DELETE")
      */
-    public function handleDeleteResource(Request $request)
+    public function delete(Request $request)
     {
-        self::$handleDeleteResourceCalled++;
     }
 
     /**
@@ -158,8 +135,7 @@ class Generic
      *
      * @BedRest\Listener(event="DELETE_COLLECTION")
      */
-    public function handleDeleteCollection(Request $request)
+    public function deleteCollection(Request $request)
     {
-        self::$handleDeleteCollectionCalled++;
     }
 }

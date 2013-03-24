@@ -2,142 +2,240 @@
 
 namespace BedRest\Tests\Rest;
 
+use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Rest\Request\Request;
 use BedRest\Rest\Request\Type;
 use BedRest\Rest\RestManager;
-use BedRest\Service\ServiceManager;
-use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
-use BedRest\Tests\FunctionalModelTestCase;
+use BedRest\Service\Mapping\ServiceMetadata;
+use BedRest\Tests\BaseTestCase;
 
 /**
  * RestManagerTest
  *
  * @author Geoff Adams <geoff@dianode.net>
- *
- * @todo Re-work these tests into true unit tests.
  */
-class RestManagerTest extends FunctionalModelTestCase
+class RestManagerTest extends BaseTestCase
 {
     /**
      * RestManager instance under test.
+     *
      * @var \BedRest\Rest\RestManager
      */
     protected $restManager;
+
+    /**
+     * Mock BedRest\Rest\Configuration object.
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $configuration;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $config = $this->getConfiguration();
-        $this->restManager = new RestManager($config);
+        // config
+        $this->configuration = $this->getMock('BedRest\Rest\Configuration');
+        $this->configuration
+            ->expects($this->any())
+            ->method('getContentTypes')
+            ->will($this->returnValue(array('application/json')));
 
-        $serviceManager = new ServiceManager($this->getServiceConfiguration());
-        $this->restManager->setServiceManager($serviceManager);
-        $this->restManager->setResourceMetadataFactory($this->getResourceMetadataFactory());
+        // object under test
+        $this->restManager = new RestManager($this->configuration);
+    }
+
+    /**
+     * Gets a mock BedRest\Resource\Mapping\ResourceMetadataFactory object.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMockResourceMetadataFactory()
+    {
+        // resource meta
+        $testResourceMetadata = new ResourceMetadata('testResource');
+        $testResourceMetadata->setName('testResource');
+        $testResourceMetadata->setService('testService');
+
+        // resource metadata factory
+        $resourceMetadataFactory = $this->getMock(
+            'BedRest\Resource\Mapping\ResourceMetadataFactory',
+            array(),
+            array(),
+            '',
+            false
+        );
+
+        $resourceMetadataFactory
+            ->expects($this->any())
+            ->method('getMetadataByResourceName')
+            ->with($this->equalTo('testResource'))
+            ->will($this->returnValue($testResourceMetadata));
+
+        $resourceMetadataFactory
+            ->expects($this->any())
+            ->method('getMetadataFor')
+            ->with($this->equalTo('testResource'))
+            ->will($this->returnValue($testResourceMetadata));
+
+        return $resourceMetadataFactory;
+    }
+
+    /**
+     * Gets a mock BedRest\Service\ServiceManager object.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMockServiceManager()
+    {
+        // service manager
+        $serviceManager = $this->getMock('BedRest\Service\ServiceManager', array(), array(), '', false);
+
+        return $serviceManager;
     }
 
     public function testConfiguration()
     {
-        $this->assertEquals($this->getConfiguration(), $this->restManager->getConfiguration());
+        $this->assertEquals($this->configuration, $this->restManager->getConfiguration());
     }
 
     public function testServiceManager()
     {
-        // need to create a fresh instance as we create a ServiceManager
-        // instance and inject it into the RestManager in setUp()
-        $serviceManager = new ServiceManager($this->getServiceConfiguration());
-
+        $serviceManager = $this->getMockServiceManager();
         $this->restManager->setServiceManager($serviceManager);
+
         $this->assertEquals($serviceManager, $this->restManager->getServiceManager());
     }
 
     public function testResourceMetadata()
     {
-        $resourceName = 'employee';
-        $resourceClass = 'BedRest\TestFixtures\Models\Company\Employee';
+        $factory = $this->getMockResourceMetadataFactory();
+        $this->restManager->setResourceMetadataFactory($factory);
 
-        // retrieval by class name
-        $meta = $this->restManager->getResourceMetadata($resourceClass);
+        $meta = $factory->getMetadataFor('testResource');
 
-        $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
-        $this->assertEquals($resourceClass, $meta->getClassName());
-        $this->assertEquals($resourceName, $meta->getName());
-
-        // retrieval by name
-        $meta = $this->restManager->getResourceMetadataByName('employee');
-
-        $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
-        $this->assertEquals($resourceClass, $meta->getClassName());
-        $this->assertEquals($resourceName, $meta->getName());
+        $this->assertEquals($meta, $this->restManager->getResourceMetadata($meta->getClassName()));
+        $this->assertEquals($meta, $this->restManager->getResourceMetadataByName($meta->getName()));
     }
 
     public function testResourceMetadataFactory()
     {
-        $factory = $this->restManager->getResourceMetadataFactory();
+        $factory = $this->getMockResourceMetadataFactory();
+        $this->restManager->setResourceMetadataFactory($factory);
 
-        $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadataFactory', $factory);
+        $this->assertEquals($factory, $this->restManager->getResourceMetadataFactory());
     }
 
     public function testAppropriateServiceListenerCalled()
     {
-        $request = new Request($this->getConfiguration());
+        $this->restManager->setResourceMetadataFactory($this->getMockResourceMetadataFactory());
+
+        // service metadata
+        $serviceMetadata = new ServiceMetadata('testService');
+        $serviceMetadata->setAllListeners(
+            array(
+                'GET'               => array('get'),
+                'GET_COLLECTION'    => array('getCollection'),
+                'POST'              => array('post'),
+                'POST_COLLECTION'   => array('postCollection'),
+                'PUT'               => array('put'),
+                'PUT_COLLECTION'    => array('putCollection'),
+                'DELETE'            => array('delete'),
+                'DELETE_COLLECTION' => array('deleteCollection')
+            )
+        );
+
+        // service
+        $service = $this->getMock('BedRest\TestFixtures\Services\Company\Generic');
+        $service
+            ->expects($this->once())
+            ->method('get');
+
+        $service
+            ->expects($this->once())
+            ->method('getCollection');
+
+        $service
+            ->expects($this->once())
+            ->method('put');
+
+        $service
+            ->expects($this->once())
+            ->method('putCollection');
+
+        $service
+            ->expects($this->once())
+            ->method('post');
+
+        $service
+            ->expects($this->once())
+            ->method('postCollection');
+
+        $service
+            ->expects($this->once())
+            ->method('delete');
+
+        $service
+            ->expects($this->once())
+            ->method('deleteCollection');
+
+        // data mapper
+        $dataMapper = $this->getMock('BedRest\Service\Data\Mapper');
+
+        $serviceManager = $this->getMockServiceManager();
+        $serviceManager
+            ->expects($this->any())
+            ->method('getServiceMetadata')
+            ->with('testService')
+            ->will($this->returnValue($serviceMetadata));
+
+        $serviceManager
+            ->expects($this->any())
+            ->method('getService')
+            ->will($this->returnValue($service));
+
+        $serviceManager
+            ->expects($this->any())
+            ->method('getDataMapper')
+            ->will($this->returnValue($dataMapper));
+
+        $this->restManager->setServiceManager($serviceManager);
+
+        // form a basic request object, enough to get RestManager to process it correctly
+        $request = new Request();
         $request->setAccept('application/json');
-        $request->setResource('employee');
+        $request->setResource('testResource');
 
         // test GET resource
         $request->setMethod(Type::METHOD_GET);
-
-        $this->assertEquals(0, EmployeeService::$handleGetResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handleGetResourceCalled);
 
         // test GET collection
         $request->setMethod(Type::METHOD_GET_COLLECTION);
-
-        $this->assertEquals(0, EmployeeService::$handleGetCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handleGetCollectionCalled);
 
         // test POST resource
         $request->setMethod(Type::METHOD_POST);
-
-        $this->assertEquals(0, EmployeeService::$handlePostResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handlePostResourceCalled);
 
         // test POST collection
         $request->setMethod(Type::METHOD_POST_COLLECTION);
-
-        $this->assertEquals(0, EmployeeService::$handlePostCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handlePostCollectionCalled);
 
         // test PUT resource
         $request->setMethod(Type::METHOD_PUT);
-
-        $this->assertEquals(0, EmployeeService::$handlePutResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handlePutResourceCalled);
 
         // test PUT collection
         $request->setMethod(Type::METHOD_PUT_COLLECTION);
-
-        $this->assertEquals(0, EmployeeService::$handlePutCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handlePutCollectionCalled);
 
         // test DELETE resource
         $request->setMethod(Type::METHOD_DELETE);
-
-        $this->assertEquals(0, EmployeeService::$handleDeleteResourceCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handleDeleteResourceCalled);
 
         // test DELETE collection
         $request->setMethod(Type::METHOD_DELETE_COLLECTION);
-
-        $this->assertEquals(0, EmployeeService::$handleDeleteCollectionCalled);
         $this->restManager->process($request);
-        $this->assertEquals(1, EmployeeService::$handleDeleteCollectionCalled);
     }
 }
