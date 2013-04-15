@@ -143,17 +143,23 @@ class RequestTest extends BaseTestCase
         $this->assertEquals('test-resource', $this->request->getResource());
     }
 
-    public function testRouteComponents()
+    public function testParameters()
     {
         $components = array(
             'one' => 'valueOne',
             'two' => 'valueTwo'
         );
 
-        $this->request->setRouteComponents($components);
+        $this->request->setParameters($components);
 
-        $this->assertEquals($components, $this->request->getRouteComponents());
-        $this->assertEquals('valueOne', $this->request->getRouteComponent('one'));
-        $this->assertEquals('valueTwo', $this->request->getRouteComponent('two'));
+        $this->assertEquals($components, $this->request->getParameters());
+        $this->assertEquals('valueOne', $this->request->getParameter('one'));
+        $this->assertEquals('valueTwo', $this->request->getParameter('two'));
+        
+        $this->request->setParameter('three', 'valueThree');
+        $this->assertEquals('valueThree', $this->request->getParameter('three'));
+        
+        $this->request->setParameter('two', 'valueTwoModified');
+        $this->assertEquals('valueTwoModified', $this->request->getParameter('two'));
     }
 }

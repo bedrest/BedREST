@@ -42,13 +42,7 @@ class Request
     protected $resource = '';
 
     /**
-     * Components of the route, indexed by name.
-     * @var array
-     */
-    protected $routeComponents = array();
-
-    /**
-     * Query string parameters.
+     * Request parameters, sourced from routing and the query string.
      * @var array
      */
     protected $parameters = array();
@@ -133,38 +127,6 @@ class Request
     public function setResource($resource)
     {
         $this->resource = $resource;
-    }
-
-    /**
-     * Returns a route component.
-     * @param  string $name
-     * @return array
-     */
-    public function getRouteComponent($name)
-    {
-        if (!isset($this->routeComponents[$name])) {
-            return null;
-        }
-
-        return $this->routeComponents[$name];
-    }
-
-    /**
-     * Returns route components indexed by name.
-     * @return array
-     */
-    public function getRouteComponents()
-    {
-        return $this->routeComponents;
-    }
-
-    /**
-     * Replaces the set of route components with the one provided.
-     * @param array $components
-     */
-    public function setRouteComponents(array $components)
-    {
-        $this->routeComponents = $components;
     }
 
     /**

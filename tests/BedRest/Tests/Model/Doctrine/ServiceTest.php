@@ -99,7 +99,7 @@ class ServiceTest extends FunctionalModelTestCase
 
         $request = new Request();
         $request->setContent($content);
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => $id
             )
@@ -117,7 +117,7 @@ class ServiceTest extends FunctionalModelTestCase
         $id = 4;
 
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => $id
             )
@@ -143,7 +143,7 @@ class ServiceTest extends FunctionalModelTestCase
     public function testDeleteNonExistentResource()
     {
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => 100
             )
@@ -156,7 +156,7 @@ class ServiceTest extends FunctionalModelTestCase
     public function testGetResource()
     {
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => 1
             )
@@ -170,7 +170,7 @@ class ServiceTest extends FunctionalModelTestCase
     public function testGetNonExistentResource()
     {
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => 100
             )

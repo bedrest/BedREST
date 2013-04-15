@@ -90,7 +90,7 @@ class Service
      */
     public function get(Request $request)
     {
-        $identifier = $request->getRouteComponent('identifier');
+        $identifier = $request->getParameter('identifier');
 
         $resource = $this->entityManager->find($this->resourceClassName, $identifier);
 
@@ -176,7 +176,7 @@ class Service
      */
     public function update(Request $request)
     {
-        $identifier = $request->getRouteComponent('identifier');
+        $identifier = $request->getParameter('identifier');
         $resource = $this->entityManager->find($this->resourceClassName, $identifier);
 
         // populate the resource with data from the request using a DataMapper
@@ -200,7 +200,7 @@ class Service
      */
     public function delete(Request $request)
     {
-        $identifier = $request->getRouteComponent('identifier');
+        $identifier = $request->getParameter('identifier');
         $resource = $this->entityManager->find($this->resourceClassName, $identifier);
 
         if ($resource === null) {
