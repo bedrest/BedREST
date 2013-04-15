@@ -125,27 +125,15 @@ class RequestTest extends BaseTestCase
         $this->assertEquals($expected, $this->request->getAcceptEncoding()->getEncodings());
     }
 
-    public function testRawBody()
+    public function testContent()
     {
-        $rawBody = '{fieldOne:"valueOne",fieldTwo:"valueTwo}';
-
-        $this->request->setRawBody($rawBody);
-
-        $this->assertEquals($rawBody, $this->request->getBody(false));
-    }
-
-    public function testBodyDecoded()
-    {
-        $rawBody = '{"fieldOne":"valueOne","fieldTwo":"valueTwo"}';
-
-        $decodedBody = array(
+        $content = array(
             'fieldOne' => 'valueOne',
             'fieldTwo' => 'valueTwo'
         );
 
-        $this->request->setRawBody($rawBody);
-
-        $this->assertEquals($decodedBody, $this->request->getBody());
+        $this->request->setContent($content);
+        $this->assertEquals($content, $this->request->getContent());
     }
 
     public function testResource()

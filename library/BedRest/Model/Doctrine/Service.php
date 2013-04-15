@@ -157,7 +157,7 @@ class Service
         $resource = new $this->resourceClassName;
 
         // populate the resource with data from the request using a DataMapper
-        $requestData = (array) $request->getBody();
+        $requestData = (array) $request->getContent();
         $this->dataMapper->map($resource, $requestData);
 
         $this->entityManager->persist($resource);
@@ -180,7 +180,7 @@ class Service
         $resource = $this->entityManager->find($this->resourceClassName, $identifier);
 
         // populate the resource with data from the request using a DataMapper
-        $requestData = (array) $request->getBody();
+        $requestData = (array) $request->getContent();
         $this->dataMapper->map($resource, $requestData);
 
         $this->entityManager->persist($resource);

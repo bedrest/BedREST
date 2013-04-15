@@ -76,31 +76,29 @@ class ServiceTest extends FunctionalModelTestCase
 
     public function testCreateResource()
     {
-        $rawBody = array(
+        $content = array(
             'name' => 'test-creation'
         );
 
         $request = new Request();
-        $request->setContentType('application/json');
-        $request->setRawBody(json_encode($rawBody));
+        $request->setContent($content);
 
         $data = $this->service->create($request);
 
         $this->assertInstanceOf('BedRest\TestFixtures\Models\Company\Asset', $data);
         $this->assertNotNull($data->id);
-        $this->assertEquals($rawBody['name'], $data->name);
+        $this->assertEquals($content['name'], $data->name);
     }
 
     public function testUpdateResource()
     {
         $id = 4;
-        $rawBody = array(
+        $content = array(
             'name' => 'test-update'
         );
 
         $request = new Request();
-        $request->setContentType('application/json');
-        $request->setRawBody(json_encode($rawBody));
+        $request->setContent($content);
         $request->setRouteComponents(
             array(
                 'identifier' => $id
@@ -111,7 +109,7 @@ class ServiceTest extends FunctionalModelTestCase
 
         $this->assertInstanceOf('BedRest\TestFixtures\Models\Company\Asset', $data);
         $this->assertEquals($id, $data->id);
-        $this->assertEquals($rawBody['name'], $data->name);
+        $this->assertEquals($content['name'], $data->name);
     }
 
     public function testDeleteResource()
