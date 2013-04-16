@@ -155,10 +155,10 @@ class RequestTest extends BaseTestCase
         $this->assertEquals($components, $this->request->getParameters());
         $this->assertEquals('valueOne', $this->request->getParameter('one'));
         $this->assertEquals('valueTwo', $this->request->getParameter('two'));
-        
+
         $this->request->setParameter('three', 'valueThree');
         $this->assertEquals('valueThree', $this->request->getParameter('three'));
-        
+
         $this->request->setParameter('two', 'valueTwoModified');
         $this->assertEquals('valueTwoModified', $this->request->getParameter('two'));
     }
