@@ -42,19 +42,13 @@ class Request
     protected $resource = '';
 
     /**
-     * Components of the route, indexed by name.
-     * @var array
-     */
-    protected $routeComponents = array();
-
-    /**
-     * Query string parameters.
+     * Request parameters, sourced from routing and the query string.
      * @var array
      */
     protected $parameters = array();
 
     /**
-     * Content type of the request body.
+     * Request Content-Type.
      * @var string
      */
     protected $contentType = '';
@@ -72,10 +66,10 @@ class Request
     protected $acceptEncoding = array();
 
     /**
-     * Raw body of the request.
+     * Request content.
      * @var mixed
      */
-    protected $body = null;
+    protected $content = null;
 
     /**
      * Constructor.
@@ -136,38 +130,6 @@ class Request
     }
 
     /**
-     * Returns a route component.
-     * @param  string $name
-     * @return array
-     */
-    public function getRouteComponent($name)
-    {
-        if (!isset($this->routeComponents[$name])) {
-            return null;
-        }
-
-        return $this->routeComponents[$name];
-    }
-
-    /**
-     * Returns route components indexed by name.
-     * @return array
-     */
-    public function getRouteComponents()
-    {
-        return $this->routeComponents;
-    }
-
-    /**
-     * Replaces the set of route components with the one provided.
-     * @param array $components
-     */
-    public function setRouteComponents(array $components)
-    {
-        $this->routeComponents = $components;
-    }
-
-    /**
      * Returns the query string parameters.
      * @return array
      */
@@ -211,7 +173,7 @@ class Request
     }
 
     /**
-     * Returns the content type of the request body, usually determined from the 'Content-Type' HTTP header.
+     * Returns the content of the Content-Type header, if supplied.
      * @return string
      */
     public function getContentType()
@@ -220,7 +182,7 @@ class Request
     }
 
     /**
-     * Sets the content type of the request body. If the provided value is null, it is automatically detected
+     * Sets the content type of the request content. If the provided value is null, it is automatically detected
      * from the environment.
      * @param string $contentType
      */
@@ -281,30 +243,20 @@ class Request
     }
 
     /**
-     * Set the request body.
-     * @param mixed $body
+     * Set the request content.
+     * @param mixed $content
      */
-    public function setRawBody($body)
+    public function setContent($content)
     {
-        $this->body = $body;
+        $this->content = $content;
     }
 
     /**
-     * Returns the request body, decoded according to the Content-Type specified in the request.
-     * @param  boolean           $decode
-     * @throws \RuntimeException
+     * Returns the request content.
      * @return mixed
      */
-    public function getBody($decode = true)
+    public function getContent()
     {
-        if (!$decode) {
-            return $this->body;
-        }
-
-        $converter = ContentConverterRegistry::getConverterInstance($this->getContentType());
-
-        $data = $converter->decode($this->body);
-
-        return $data;
+        return $this->content;
     }
 }

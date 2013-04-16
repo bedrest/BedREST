@@ -76,32 +76,30 @@ class ServiceTest extends FunctionalModelTestCase
 
     public function testCreateResource()
     {
-        $rawBody = array(
+        $content = array(
             'name' => 'test-creation'
         );
 
         $request = new Request();
-        $request->setContentType('application/json');
-        $request->setRawBody(json_encode($rawBody));
+        $request->setContent($content);
 
         $data = $this->service->create($request);
 
         $this->assertInstanceOf('BedRest\TestFixtures\Models\Company\Asset', $data);
         $this->assertNotNull($data->id);
-        $this->assertEquals($rawBody['name'], $data->name);
+        $this->assertEquals($content['name'], $data->name);
     }
 
     public function testUpdateResource()
     {
         $id = 4;
-        $rawBody = array(
+        $content = array(
             'name' => 'test-update'
         );
 
         $request = new Request();
-        $request->setContentType('application/json');
-        $request->setRawBody(json_encode($rawBody));
-        $request->setRouteComponents(
+        $request->setContent($content);
+        $request->setParameters(
             array(
                 'identifier' => $id
             )
@@ -111,7 +109,7 @@ class ServiceTest extends FunctionalModelTestCase
 
         $this->assertInstanceOf('BedRest\TestFixtures\Models\Company\Asset', $data);
         $this->assertEquals($id, $data->id);
-        $this->assertEquals($rawBody['name'], $data->name);
+        $this->assertEquals($content['name'], $data->name);
     }
 
     public function testDeleteResource()
@@ -119,7 +117,7 @@ class ServiceTest extends FunctionalModelTestCase
         $id = 4;
 
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => $id
             )
@@ -145,7 +143,7 @@ class ServiceTest extends FunctionalModelTestCase
     public function testDeleteNonExistentResource()
     {
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => 100
             )
@@ -158,7 +156,7 @@ class ServiceTest extends FunctionalModelTestCase
     public function testGetResource()
     {
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => 1
             )
@@ -172,7 +170,7 @@ class ServiceTest extends FunctionalModelTestCase
     public function testGetNonExistentResource()
     {
         $request = new Request();
-        $request->setRouteComponents(
+        $request->setParameters(
             array(
                 'identifier' => 100
             )

@@ -196,7 +196,7 @@ class RestManager
 
         // compose the response body to desired depth
         $mapDepth = (int) $request->getParameter('depth', 1);
-        $response->setBody($dataMapper->reverse($data, $mapDepth));
+        $response->setContent($dataMapper->reverse($data, $mapDepth));
 
         // TODO: generate additional response information (ETag, Cache-Control etc)
         return $response;

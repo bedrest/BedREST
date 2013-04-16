@@ -87,19 +87,18 @@ class ResponseTest extends BaseTestCase
         $this->assertEquals('text/xml', $this->response->getHeader('Content-Type'));
     }
 
-    public function testBody()
+    public function testContent()
     {
-        $this->assertEmpty($this->response->getBody());
+        $this->assertEmpty($this->response->getContent());
 
-        $body = array(
-            'item1' => 'value1',
-            'item2' => 'value2',
-            'item3' => 'value3'
+        $body = json_encode(
+            array(
+                'item1' => 'value1',
+                'item2' => 'value2',
+                'item3' => 'value3'
+            )
         );
-        $this->response->setBody($body);
-        $this->assertEquals($body, $this->response->getBody());
-
-        $this->response->setContentType('application/json');
-        $this->assertEquals(json_encode($body), $this->response->getRawBody());
+        $this->response->setContent($body);
+        $this->assertEquals($body, $this->response->getContent());
     }
 }

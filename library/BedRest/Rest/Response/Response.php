@@ -25,22 +25,10 @@ use BedRest\Content\Converter\Registry as ContentConverterRegistry;
 class Response
 {
     /**
-     * Body content before Content-Type encoding.
+     * Response content.
      * @var mixed
      */
-    protected $body;
-
-    /**
-     * Whether the body has been processed into the raw body string.
-     * @var boolean
-     */
-    protected $bodyProcessed = false;
-
-    /**
-     * Raw body content after Content-Type encoding
-     * @var string
-     */
-    protected $rawBody;
+    protected $content;
 
     /**
      * HTTP headers.
@@ -55,39 +43,21 @@ class Response
     protected $statusCode = 200;
 
     /**
-     * Sets the body content.
-     * @param mixed $body
+     * Sets the response content.
+     * @param mixed $content
      */
-    public function setBody($body)
+    public function setContent($content)
     {
-        $this->body = $body;
-        $this->bodyProcessed = false;
-        $this->rawBody = null;
+        $this->content = $content;
     }
 
     /**
-     * Returns the body content.
+     * Returns the response content.
      * @return mixed
      */
-    public function getBody()
+    public function getContent()
     {
-        return $this->body;
-    }
-
-    /**
-     * Returns the raw body content.
-     * @return string
-     */
-    public function getRawBody()
-    {
-        if (!$this->bodyProcessed) {
-            $converter = ContentConverterRegistry::getConverterInstance($this->getContentType());
-
-            $this->rawBody = $converter->encode($this->body);
-            $this->bodyProcessed = true;
-        }
-
-        return $this->rawBody;
+        return $this->content;
     }
 
     /**
