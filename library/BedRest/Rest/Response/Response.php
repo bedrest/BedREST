@@ -15,8 +15,6 @@
 
 namespace BedRest\Rest\Response;
 
-use BedRest\Content\Converter\Registry as ContentConverterRegistry;
-
 /**
  * Response
  *

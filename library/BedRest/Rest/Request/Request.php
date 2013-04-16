@@ -15,7 +15,6 @@
 
 namespace BedRest\Rest\Request;
 
-use BedRest\Content\Converter\Registry as ContentConverterRegistry;
 use BedRest\Content\Negotiation\EncodingList;
 use BedRest\Content\Negotiation\MediaTypeList;
 
