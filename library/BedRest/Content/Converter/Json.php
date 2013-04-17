@@ -22,7 +22,7 @@ namespace BedRest\Content\Converter;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class JsonConverter implements Converter
+class Json implements ConverterInterface
 {
     public function decode($value)
     {

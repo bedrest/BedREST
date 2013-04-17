@@ -13,16 +13,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Content\Converter;
+namespace BedRest\Content\Negotiation;
 
 /**
- * Converter
+ * Exception
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-interface Converter
+class Exception extends \RuntimeException
 {
-    public function encode($value);
 
-    public function decode($value);
 }
