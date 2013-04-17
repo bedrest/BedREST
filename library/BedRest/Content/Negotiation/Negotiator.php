@@ -41,7 +41,7 @@ class Negotiator
      * Sets the list of supported media types for negotiation.
      *
      * @param array $mediaTypes
-     * 
+     *
      * @throws \BedRest\Content\Negotiation\Exception
      */
     public function setSupportedMediaTypes(array $mediaTypes)
@@ -50,20 +50,20 @@ class Negotiator
             if (!is_string($mediaType)) {
                 throw new Exception('Media type must be a string.');
             }
-            
+
             if (!is_string($converterClass)) {
                 throw new Exception('Converter class name must be a string.');
             }
         }
-        
+
         $this->supportedMediaTypes = $mediaTypes;
     }
 
     /**
      * Negotiates content based on a set of input criteria.
      *
-     * @param  mixed                                      $content
-     * @param  \BedRest\Content\Negotiation\MediaTypeList $mediaTypeList
+     * @param mixed                                      $content
+     * @param \BedRest\Content\Negotiation\MediaTypeList $mediaTypeList
      *
      * @throws \BedRest\Content\Negotiation\Exception
      * @return \BedRest\Content\Negotiation\NegotiatedResult
@@ -74,7 +74,7 @@ class Negotiator
         if (!$contentType) {
             throw new Exception('A suitable Content-Type could not be found.');
         }
-        
+
         // TODO: this should use a service locator of some description
         $converterClass = $this->supportedMediaTypes[$contentType];
         $converter = new $converterClass;

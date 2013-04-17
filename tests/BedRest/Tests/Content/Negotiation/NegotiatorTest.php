@@ -28,7 +28,7 @@ class NegotiatorTest extends BaseTestCase
             'text/xml'          => 'BedRest\TestFixtures\Mocks\Content\Converter\Dummy',
             'application/json'  => 'BedRest\TestFixtures\Mocks\Content\Converter\Dummy'
         );
-        
+
         $this->negotiator->setSupportedMediaTypes($supportedMediaTypes);
 
         $this->assertEquals($supportedMediaTypes, $this->negotiator->getSupportedMediaTypes());
@@ -65,14 +65,14 @@ class NegotiatorTest extends BaseTestCase
             )
         );
     }
-    
+
     /**
      * @dataProvider invalidSupportedMediaTypes
      */
     public function testSupportedMediaTypesWithInvalidMappingThrowsException($value)
     {
         $this->setExpectedException('BedRest\Content\Negotiation\Exception');
-        
+
         $this->negotiator->setSupportedMediaTypes($value);
     }
 
@@ -81,9 +81,9 @@ class NegotiatorTest extends BaseTestCase
         $supportedMediaTypes = array(
             'application/json'  => 'BedRest\TestFixtures\Mocks\Content\Converter\Dummy'
         );
-        
+
         $this->negotiator->setSupportedMediaTypes($supportedMediaTypes);
-        
+
         $mediaTypeList = $this->getMock('BedRest\Content\Negotiation\MediaTypeList', array(), array(), '', false);
         $mediaTypeList->expects($this->any())
             ->method('getBestMatch')
@@ -133,7 +133,7 @@ class NegotiatorTest extends BaseTestCase
         $this->setExpectedException('BedRest\Content\Negotiation\Exception');
         $this->negotiator->negotiate(null, $mediaTypeList);
     }
-    
+
     public function testContentIsConvertedToBestMatch()
     {
         $supportedMediaTypes = array(
@@ -141,15 +141,15 @@ class NegotiatorTest extends BaseTestCase
         );
 
         $this->negotiator->setSupportedMediaTypes($supportedMediaTypes);
-        
+
         // mock media type list
         $mediaTypeList = $this->getMock('BedRest\Content\Negotiation\MediaTypeList', array(), array(), '', false);
         $mediaTypeList->expects($this->any())
             ->method('getBestMatch')
             ->will($this->returnValue('application/json'));
-                
+
         $content = 'raw_data';
-        
+
         $result = $this->negotiator->negotiate($content, $mediaTypeList);
 
         $this->assertInstanceOf('BedRest\Content\Negotiation\NegotiatedResult', $result);
