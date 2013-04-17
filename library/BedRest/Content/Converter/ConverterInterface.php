@@ -16,11 +16,11 @@
 namespace BedRest\Content\Converter;
 
 /**
- * Converter
+ * ConverterInterface
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-interface Converter
+interface ConverterInterface
 {
     public function encode($value);
 

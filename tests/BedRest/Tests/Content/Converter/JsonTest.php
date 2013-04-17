@@ -2,15 +2,15 @@
 
 namespace BedRest\Tests\Content\Converter;
 
-use BedRest\Content\Converter\JsonConverter;
+use BedRest\Content\Converter\Json;
 use BedRest\Tests\BaseTestCase;
 
 /**
- * JsonConverter
+ * JsonTest
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class JsonConverterTest extends BaseTestCase
+class JsonTest extends BaseTestCase
 {
     protected $decodedData = array(
         'one' => '1',
@@ -24,14 +24,14 @@ class JsonConverterTest extends BaseTestCase
     {
         $this->setExpectedException('BedRest\Content\Converter\Exception');
 
-        $converter = new JsonConverter();
+        $converter = new Json();
 
         $converter->decode('{not valid JSON');
     }
 
     public function testBasicEncode()
     {
-        $converter = new JsonConverter();
+        $converter = new Json();
 
         $json = $converter->encode($this->decodedData);
 
@@ -40,7 +40,7 @@ class JsonConverterTest extends BaseTestCase
 
     public function testBasicDecode()
     {
-        $converter = new JsonConverter();
+        $converter = new Json();
 
         $object = $converter->decode($this->encodedString);
 
