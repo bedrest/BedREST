@@ -25,44 +25,63 @@ class Negotiator
     /**
      * @var array
      */
-    public $acceptedTypes = array();
+    public $supportedMediaTypes = array();
 
     /**
-     * Sets the list of supported Content-Types for negotiation.
+     * Retrieves the list of supported media types for negotiation.
      *
      * @return array
      */
-    public function getAcceptedTypes()
+    public function getSupportedMediaTypes()
     {
-        return $this->acceptedTypes;
+        return $this->supportedMediaTypes;
     }
 
     /**
-     * Retrieves the list of supported Content-Types for negotiation.
+     * Sets the list of supported media types for negotiation.
      *
      * @param array $mediaTypes
+     * 
+     * @throws \BedRest\Content\Negotiation\Exception
      */
-    public function setAcceptedTypes(array $mediaTypes)
+    public function setSupportedMediaTypes(array $mediaTypes)
     {
-        $this->acceptedTypes = $mediaTypes;
+        foreach ($mediaTypes as $mediaType => $converterClass) {
+            if (!is_string($mediaType)) {
+                throw new Exception('Media type must be a string.');
+            }
+            
+            if (!is_string($converterClass)) {
+                throw new Exception('Converter class name must be a string.');
+            }
+        }
+        
+        $this->supportedMediaTypes = $mediaTypes;
     }
 
     /**
      * Negotiates content based on a set of input criteria.
      *
-     * @param  \BedRest\Content\Negotiation\MediaTypeList    $mediaTypeList
+     * @param  mixed                                      $content
+     * @param  \BedRest\Content\Negotiation\MediaTypeList $mediaTypeList
+     *
      * @throws \BedRest\Content\Negotiation\Exception
      * @return \BedRest\Content\Negotiation\NegotiatedResult
      */
-    public function negotiate(MediaTypeList $mediaTypeList)
+    public function negotiate($content, MediaTypeList $mediaTypeList)
     {
-        $contentType = $mediaTypeList->getBestMatch($this->acceptedTypes);
+        $contentType = $mediaTypeList->getBestMatch($this->supportedMediaTypes);
         if (!$contentType) {
             throw new Exception('A suitable Content-Type could not be found.');
         }
+        
+        // TODO: this should use a service locator of some description
+        $converterClass = $this->supportedMediaTypes[$contentType];
+        $converter = new $converterClass;
 
         $result = new NegotiatedResult();
         $result->contentType = $contentType;
+        $result->content = $converter->encode($content);
 
         return $result;
     }

@@ -23,9 +23,15 @@ namespace BedRest\Content\Negotiation;
 class NegotiatedResult
 {
     /**
-     * Content-Type of the negotiated result.
+     * Media type of the negotiated result.
      *
      * @var string
      */
     public $contentType;
+
+    /**
+     * Content after negotiation.
+     * @var mixed
+     */
+    public $content;
 }
