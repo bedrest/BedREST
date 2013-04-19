@@ -165,7 +165,6 @@ class ServiceMetadataFactory
             if ($parent) {
                 $class->setClassName($parent->getClassName());
                 $class->setAllListeners($parent->getAllListeners());
-                $class->setType($parent->getType());
             }
 
             // now overlay the metadata from the class itself

@@ -21,15 +21,6 @@ class ServiceMetadataTest extends BaseTestCase
         $this->assertEquals('Service\TestTwo', $meta->getClassName());
     }
 
-    public function testType()
-    {
-        $meta = new ServiceMetadata('Service\Test');
-        $this->assertEquals(ServiceMetadata::TYPE_BASIC, $meta->getType());
-
-        $meta->setType(ServiceMetadata::TYPE_DOCTRINE);
-        $this->assertEquals(ServiceMetadata::TYPE_DOCTRINE, $meta->getType());
-    }
-
     public function testListeners()
     {
         $meta = new ServiceMetadata('Service\Test');

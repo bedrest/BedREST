@@ -56,7 +56,6 @@ class ServiceMetadataFactoryTest extends FunctionalModelTestCase
 
         $expectedMeta = $service->getMetadata();
         $this->assertEquals($expectedMeta['className'], $meta->getClassName());
-        $this->assertEquals($expectedMeta['type'], $meta->getType());
         $this->assertEquals($expectedMeta['listeners']['eventOne'], $meta->getListeners('eventOne'));
         $this->assertEquals($expectedMeta['listeners']['eventTwo'], $meta->getListeners('eventTwo'));
     }

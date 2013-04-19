@@ -93,7 +93,6 @@ class AnnotationDriver implements Driver
         if (isset($classAnnotations[self::ANNOTATION_SERVICE])) {
             $serviceAnnotation = $classAnnotations[self::ANNOTATION_SERVICE];
             $serviceMetadata->setDataMapper($serviceAnnotation->dataMapper);
-            $serviceMetadata->setType($serviceAnnotation->type);
         }
 
         // process events

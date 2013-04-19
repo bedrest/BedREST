@@ -20,9 +20,4 @@ class Generic implements Mapper
     {
         
     }
-    
-    public function setEntityManager()
-    {
-        
-    }
 }

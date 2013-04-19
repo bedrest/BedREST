@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
- * @BedRest\Service(type="DOCTRINE", dataMapper="BedRest\TestFixtures\Services\Company\DataMapper\Generic")
+ * @BedRest\Service(dataMapper="BedRest\TestFixtures\Services\Company\DataMapper\Generic")
  */
 class Generic
 {
@@ -37,7 +37,6 @@ class Generic
     {
         return array(
             'className' => __CLASS__,
-            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_BASIC,
             'listeners' => array(
                 'GET' => array(
                     'get'

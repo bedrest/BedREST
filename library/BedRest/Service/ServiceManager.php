@@ -160,12 +160,6 @@ class ServiceManager
     ) {
         $definition = $this->serviceContainer->register($id, $className);
         $definition->addArgument($this);
-
-        // TODO: this should be drawn from the DataMapper itself perhaps?
-        if ($metadata->getType() == ServiceMetadata::TYPE_DOCTRINE) {
-            $definition
-                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
-        }
     }
 
     /**
@@ -221,10 +215,5 @@ class ServiceManager
         $definition
             ->addArgument($resourceMetadata)
             ->addArgument($this->getDataMapper($className));
-
-        if ($metadata->getType() == ServiceMetadata::TYPE_DOCTRINE) {
-            $definition
-                ->addMethodCall('setEntityManager', array('%doctrine.entityManager%'));
-        }
     }
 }

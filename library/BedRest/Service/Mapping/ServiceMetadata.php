@@ -28,15 +28,6 @@ class ServiceMetadata
      */
     protected $className;
 
-    const TYPE_BASIC = 'BASIC';
-    const TYPE_DOCTRINE = 'DOCTRINE';
-
-    /**
-     * Type of the service.
-     * @var string
-     */
-    protected $type = self::TYPE_BASIC;
-
     /**
      * Event listeners for the service.
      * @var string
@@ -74,24 +65,6 @@ class ServiceMetadata
     public function getClassName()
     {
         return $this->className;
-    }
-
-    /**
-     * Sets the service type.
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Returns the service type.
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
