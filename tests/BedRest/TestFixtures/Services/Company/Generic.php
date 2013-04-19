@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManager;
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
- * @BedRest\Service(type="DOCTRINE", dataMapper="BedRest\Model\Doctrine\Mapper")
+ * @BedRest\Service(type="DOCTRINE", dataMapper="BedRest\TestFixtures\Services\Company\DataMapper\Generic")
  */
 class Generic
 {

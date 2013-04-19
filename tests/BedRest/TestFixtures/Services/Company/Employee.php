@@ -9,7 +9,7 @@ use BedRest\Service\Mapping\Annotation as BedRest;
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
- * @BedRest\Service(type="BASIC", dataMapper="BedRest\Model\Doctrine\Mapper")
+ * @BedRest\Service(type="BASIC", dataMapper="BedRest\TestFixtures\Services\Company\DataMapper\Generic")
  */
 class Employee extends Generic
 {

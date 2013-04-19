@@ -89,7 +89,7 @@ class ServiceManagerTest extends FunctionalModelTestCase
     public function testGetMapperFresh()
     {
         $mapper = $this->serviceManager->getDataMapper('BedRest\TestFixtures\Services\Company\Employee');
-        $this->assertInstanceOf('BedRest\Model\Doctrine\Mapper', $mapper);
+        $this->assertInstanceOf('BedRest\TestFixtures\Services\Company\DataMapper\Generic', $mapper);
 
         $mapperDuplicate = $this->serviceManager->getDataMapper('BedRest\TestFixtures\Services\Company\Employee');
         $this->assertEquals($mapper, $mapperDuplicate);
