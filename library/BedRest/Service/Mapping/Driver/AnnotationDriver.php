@@ -90,10 +90,8 @@ class AnnotationDriver implements Driver
         $classAnnotations = $this->indexAnnotationsByType($classAnnotations);
 
         // load headline service information
-        if (isset($classAnnotations[self::ANNOTATION_SERVICE])) {
-            $serviceAnnotation = $classAnnotations[self::ANNOTATION_SERVICE];
-            $serviceMetadata->setDataMapper($serviceAnnotation->dataMapper);
-            $serviceMetadata->setType($serviceAnnotation->type);
+        if (!isset($classAnnotations[self::ANNOTATION_SERVICE])) {
+            // @todo Throw exception here?
         }
 
         // process events

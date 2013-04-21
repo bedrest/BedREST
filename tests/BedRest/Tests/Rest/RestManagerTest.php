@@ -78,16 +78,17 @@ class RestManagerTest extends BaseTestCase
         return $resourceMetadataFactory;
     }
 
-    /**
-     * Gets a mock BedRest\Service\ServiceManager object.
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function getMockServiceManager()
+    protected function getMockServiceMetadataFactory()
     {
-        $serviceManager = $this->getMock('BedRest\Service\ServiceManager', array(), array(), '', false);
+        $factory = $this->getMock(
+            'BedRest\Service\Mapping\ServiceMetadataFactory',
+            array(),
+            array(),
+            '',
+            false
+        );
 
-        return $serviceManager;
+        return $factory;
     }
 
     public function testConfiguration()
@@ -96,14 +97,6 @@ class RestManagerTest extends BaseTestCase
         $restManager = new RestManager($config);
 
         $this->assertEquals($config, $restManager->getConfiguration());
-    }
-
-    public function testServiceManager()
-    {
-        $serviceManager = $this->getMockServiceManager();
-        $this->restManager->setServiceManager($serviceManager);
-
-        $this->assertEquals($serviceManager, $this->restManager->getServiceManager());
     }
 
     public function testResourceMetadata()
@@ -125,6 +118,22 @@ class RestManagerTest extends BaseTestCase
         $this->assertEquals($factory, $this->restManager->getResourceMetadataFactory());
     }
 
+    public function testServiceMetadataFactory()
+    {
+        $factory = $this->getMockServiceMetadataFactory();
+        $this->restManager->setServiceMetadataFactory($factory);
+
+        $this->assertEquals($factory, $this->restManager->getServiceMetadataFactory());
+    }
+
+    public function testServiceLocator()
+    {
+        $locator = $this->getMock('BedRest\Service\LocatorInterface');
+        $this->restManager->setServiceLocator($locator);
+
+        $this->assertEquals($locator, $this->restManager->getServiceLocator());
+    }
+
     public function testAppropriateServiceListenerCalled()
     {
         $this->restManager->setResourceMetadataFactory($this->getMockResourceMetadataFactory());
@@ -143,6 +152,12 @@ class RestManagerTest extends BaseTestCase
                 'DELETE_COLLECTION' => array('deleteCollection')
             )
         );
+        
+        $serviceMetadataFactory = $this->getMockServiceMetadataFactory();
+        $serviceMetadataFactory
+            ->expects($this->any())
+            ->method('getMetadataFor')
+            ->will($this->returnValue($serviceMetadata));
 
         // service
         $service = $this->getMock('BedRest\TestFixtures\Services\Company\Generic');
@@ -178,27 +193,17 @@ class RestManagerTest extends BaseTestCase
             ->expects($this->once())
             ->method('deleteCollection');
 
-        // data mapper
-        $dataMapper = $this->getMock('BedRest\Service\Data\Mapper');
-
-        $serviceManager = $this->getMockServiceManager();
-        $serviceManager
+        // service locator
+        $serviceLocator = $this->getMock('BedRest\Service\LocatorInterface');
+        $serviceLocator
             ->expects($this->any())
-            ->method('getServiceMetadata')
+            ->method('get')
             ->with('testService')
-            ->will($this->returnValue($serviceMetadata));
-
-        $serviceManager
-            ->expects($this->any())
-            ->method('getService')
             ->will($this->returnValue($service));
-
-        $serviceManager
-            ->expects($this->any())
-            ->method('getDataMapper')
-            ->will($this->returnValue($dataMapper));
-
-        $this->restManager->setServiceManager($serviceManager);
+        
+        // configure the RestManager
+        $this->restManager->setServiceMetadataFactory($serviceMetadataFactory);
+        $this->restManager->setServiceLocator($serviceLocator);
 
         // form a basic request object, enough to get RestManager to process it correctly
         $request = new Request();

@@ -15,20 +15,45 @@
 
 namespace BedRest\Service;
 
+use Symfony\Component\DependencyInjection\Container;
+
 /**
- * Exception
+ * SimpleLocator
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class Exception extends \Exception
+class SimpleLocator implements LocatorInterface
 {
-    public static function serviceNotFound($className)
+    /**
+     * @var \Symfony\Component\DependencyInjection\Container
+     */
+    protected $container;
+
+    /**
+     * Constructor.
+     *
+     * Takes a Symfony DI container and uses it for service resolution.
+     *
+     * @param \Symfony\Component\DependencyInjection\Container $container
+     */
+    public function __construct(Container $container)
     {
-        return new self("Service '{$className}' not found.");
+        $this->container = $container;
     }
 
-    public static function classNotMappedService($className)
+    /**
+     * {@inheritDoc}
+     */
+    public function get($name)
     {
-        return new self("The class '{$className}' is not a mapped service.");
+        return $this->container->get($name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function has($name)
+    {
+        return $this->container->has($name);
     }
 }

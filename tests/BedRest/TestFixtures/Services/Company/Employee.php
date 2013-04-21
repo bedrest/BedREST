@@ -9,7 +9,7 @@ use BedRest\Service\Mapping\Annotation as BedRest;
  *
  * @author Geoff Adams <geoff@dianode.net>
  *
- * @BedRest\Service(type="BASIC", dataMapper="BedRest\Model\Doctrine\Mapper")
+ * @BedRest\Service
  */
 class Employee extends Generic
 {
@@ -21,7 +21,6 @@ class Employee extends Generic
     {
         return array(
             'className' => __CLASS__,
-            'type' => \BedRest\Service\Mapping\ServiceMetadata::TYPE_BASIC,
             'listeners' => array(
                 'eventOne' => array(
                     'listenerOne'

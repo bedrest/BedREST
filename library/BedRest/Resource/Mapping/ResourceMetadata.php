@@ -35,7 +35,7 @@ class ResourceMetadata
     protected $className;
 
     /**
-     * Class name of the service for this resource.
+     * Name of the service for this resource.
      * @var string
      */
     protected $service;

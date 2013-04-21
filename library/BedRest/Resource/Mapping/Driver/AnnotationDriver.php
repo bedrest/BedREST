@@ -19,7 +19,7 @@ use BedRest\Resource\Mapping\Exception;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\Driver\Driver;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Common\Inflector\Inflector;
 
 /**
  * AnnotationDriver

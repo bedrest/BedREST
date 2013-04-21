@@ -35,7 +35,6 @@ happen.
 ## Requirements
 
 * PHP v5.3+
-* Doctrine ORM v2.2+ (if using Doctrine integration)
 
 ## Installation with Composer
 

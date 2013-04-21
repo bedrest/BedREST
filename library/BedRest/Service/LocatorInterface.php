@@ -13,27 +13,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace BedRest\Service\Data;
+namespace BedRest\Service;
 
 /**
- * Mapper
+ * LocatorInterface
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-interface Mapper
+interface LocatorInterface
 {
     /**
-     * Maps data into a resource or set of resources.
-     * @param mixed $resource Resource to map data into.
-     * @param mixed $data     Data to be mapped.
-     */
-    public function map($resource, $data);
-
-    /**
-     * Reverse maps a resource into the desired format.
-     * @param  mixed $resource Data to reverse map.
-     * @param  mixed $depth    Depth to reverse map associations.
+     * Retrieves a service referenced by its name.
+     *
+     * @param  string $name
      * @return mixed
      */
-    public function reverse($resource, $depth);
+    public function get($name);
+
+    /**
+     * Checks for the existence of a service.
+     *
+     * @param  string $name
+     * @return mixed
+     */
+    public function has($name);
 }

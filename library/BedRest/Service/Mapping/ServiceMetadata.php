@@ -28,26 +28,11 @@ class ServiceMetadata
      */
     protected $className;
 
-    const TYPE_BASIC = 'BASIC';
-    const TYPE_DOCTRINE = 'DOCTRINE';
-
-    /**
-     * Type of the service.
-     * @var string
-     */
-    protected $type = self::TYPE_BASIC;
-
     /**
      * Event listeners for the service.
      * @var string
      */
     protected $listeners = array();
-
-    /**
-     * Class name of the DataMapper to use for transforming request and response data for this service.
-     * @var string
-     */
-    protected $dataMapper = '';
 
     /**
      * Constructor.
@@ -74,24 +59,6 @@ class ServiceMetadata
     public function getClassName()
     {
         return $this->className;
-    }
-
-    /**
-     * Sets the service type.
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * Returns the service type.
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -138,23 +105,5 @@ class ServiceMetadata
     public function getAllListeners()
     {
         return $this->listeners;
-    }
-
-    /**
-     * Sets the class name of the DataMapper to use for transforming request and response data for this service.
-     * @param $dataMapper
-     */
-    public function setDataMapper($dataMapper)
-    {
-        $this->dataMapper = $dataMapper;
-    }
-
-    /**
-     * Returns the class name of the DataMapper to use for transforming request and response data for this service.
-     * @return string
-     */
-    public function getDataMapper()
-    {
-        return $this->dataMapper;
     }
 }
