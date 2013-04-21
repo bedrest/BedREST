@@ -15,8 +15,6 @@
 
 namespace BedRest\Service\Mapping\Annotation;
 
-use BedRest\Service\Mapping\ServiceMetadata;
-
 /**
  * Service
  *
@@ -27,9 +25,4 @@ use BedRest\Service\Mapping\ServiceMetadata;
  */
 class Service
 {
-    /**
-     * Class name of the DataMapper to use for transforming request and response data for this service.
-     * @var string
-     */
-    public $dataMapper = '';
 }
