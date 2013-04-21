@@ -2,6 +2,7 @@
 
 namespace BedRest\Tests\Rest;
 
+use BedRest\Content\Negotiation\NegotiatedResult;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Rest\Request\Request;
 use BedRest\Rest\Request\Type;
@@ -152,7 +153,7 @@ class RestManagerTest extends BaseTestCase
                 'DELETE_COLLECTION' => array('deleteCollection')
             )
         );
-        
+
         $serviceMetadataFactory = $this->getMockServiceMetadataFactory();
         $serviceMetadataFactory
             ->expects($this->any())
@@ -200,10 +201,18 @@ class RestManagerTest extends BaseTestCase
             ->method('get')
             ->with('testService')
             ->will($this->returnValue($service));
-        
+
+        // negotiator
+        $negotiator = $this->getMock('BedRest\Content\Negotiation\Negotiator');
+        $negotiator
+            ->expects($this->any())
+            ->method('negotiate')
+            ->will($this->returnValue(new NegotiatedResult()));
+
         // configure the RestManager
         $this->restManager->setServiceMetadataFactory($serviceMetadataFactory);
         $this->restManager->setServiceLocator($serviceLocator);
+        $this->restManager->setContentNegotiator($negotiator);
 
         // form a basic request object, enough to get RestManager to process it correctly
         $request = new Request();

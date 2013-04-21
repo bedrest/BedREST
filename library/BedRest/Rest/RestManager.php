@@ -15,6 +15,7 @@
 
 namespace BedRest\Rest;
 
+use BedRest\Content\Negotiation\Negotiator;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Configuration;
@@ -35,29 +36,26 @@ use BedRest\Service\Mapping\ServiceMetadataFactory;
 class RestManager
 {
     /**
-     * Configuration instance.
-     *
      * @var \BedRest\Rest\Configuration
      */
     protected $configuration;
 
     /**
-     * The resource metadata factory.
-     *
+     * @var \BedRest\Content\Negotiation\Negotiator
+     */
+    protected $contentNegotiator;
+
+    /**
      * @var \BedRest\Resource\Mapping\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
 
     /**
-     * Service locator.
-     *
      * @var \BedRest\Service\LocatorInterface
      */
     protected $serviceLocator;
-    
+
     /**
-     * Service metadata factory.
-     *
      * @var \BedRest\Service\Mapping\ServiceMetadataFactory
      */
     protected $serviceMetadataFactory;
@@ -83,6 +81,16 @@ class RestManager
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    public function setContentNegotiator(Negotiator $negotiator)
+    {
+        $this->contentNegotiator = $negotiator;
+    }
+
+    public function getContentNegotiator()
+    {
+        return $this->contentNegotiator;
     }
 
     /**
@@ -168,29 +176,6 @@ class RestManager
     }
 
     /**
-     * Creates and prepares a new Response object, using the supplied Request object where needed.
-     *
-     * @param  \BedRest\Rest\Request\Request   $request
-     * @return \BedRest\Rest\Response\Response
-     */
-    protected function createResponse(Request $request)
-    {
-        // create an empty response
-        $response = new Response($this->configuration);
-
-        // establish the best content type
-        $contentType = $request->getAccept()->getBestMatch($this->configuration->getContentTypes());
-
-        if (!$contentType) {
-            throw Exception::notAcceptable();
-        }
-
-        $response->setContentType($contentType);
-
-        return $response;
-    }
-
-    /**
      * Processes a REST request, returning a Response object.
      *
      * @param  \BedRest\Rest\Request\Request   $request
@@ -199,8 +184,6 @@ class RestManager
      */
     public function process(Request $request)
     {
-        $response = $this->createResponse($request);
-
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
 
         $service = $this->serviceLocator->get($resourceMetadata->getService());
@@ -217,7 +200,11 @@ class RestManager
             $data = reset($data);
         }
 
-        $response->setContent($data);
+        $result = $this->contentNegotiator->negotiate($data, $request->getAccept());
+
+        $response = new Response();
+        $response->setContentType($result->contentType);
+        $response->setContent($result->content);
 
         // TODO: generate additional response information (ETag, Cache-Control etc)
         return $response;
