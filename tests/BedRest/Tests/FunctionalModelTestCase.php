@@ -7,6 +7,7 @@ use BedRest\Resource\Mapping\Driver\AnnotationDriver as ResourceAnnotationDriver
 use BedRest\Rest\Configuration as RestConfiguration;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver as ServiceAnnotationDriver;
+use BedRest\Service\SimpleLocator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -72,13 +73,13 @@ class FunctionalModelTestCase extends BaseTestCase
     }
 
     /**
-     * Returns a ContainerBuilder instance, pre-configured with the Doctrine EntityManager.
+     * Returns a SimpleLocator service locator.
      *
-     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     * @return \BedRest\Service\LocatorInterface
      */
-    protected function getServiceContainer()
+    protected function getServiceLocator()
     {
-        return new ContainerBuilder();
+        return new SimpleLocator(new ContainerBuilder());
     }
 
     /**

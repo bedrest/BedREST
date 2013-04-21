@@ -20,7 +20,8 @@ use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Configuration;
 use BedRest\Rest\Request\Request;
 use BedRest\Rest\Response\Response;
-use BedRest\Service\ServiceManager;
+use BedRest\Service\LocatorInterface;
+use BedRest\Service\Mapping\ServiceMetadataFactory;
 
 /**
  * RestManager
@@ -41,18 +42,25 @@ class RestManager
     protected $configuration;
 
     /**
-     * Service manager instance.
-     *
-     * @var \BedRest\Service\ServiceManager
-     */
-    protected $serviceManager;
-
-    /**
      * The resource metadata factory.
      *
      * @var \BedRest\Resource\Mapping\ResourceMetadataFactory
      */
     protected $resourceMetadataFactory;
+
+    /**
+     * Service locator.
+     *
+     * @var \BedRest\Service\LocatorInterface
+     */
+    protected $serviceLocator;
+    
+    /**
+     * Service metadata factory.
+     *
+     * @var \BedRest\Service\Mapping\ServiceMetadataFactory
+     */
+    protected $serviceMetadataFactory;
 
     /**
      * Constructor.
@@ -75,26 +83,6 @@ class RestManager
     public function getConfiguration()
     {
         return $this->configuration;
-    }
-
-    /**
-     * Sets the ServiceManager instance to use for service instantiation and configuration.
-     *
-     * @param \BedRest\Service\ServiceManager $serviceManager
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-    }
-
-    /**
-     * Returns the ServiceManager instance.
-     *
-     * @return \BedRest\Service\ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
     }
 
     /**
@@ -140,6 +128,46 @@ class RestManager
     }
 
     /**
+     * Sets the service container.
+     *
+     * @param \BedRest\Service\LocatorInterface $locator
+     */
+    public function setServiceLocator(LocatorInterface $locator)
+    {
+        $this->serviceLocator = $locator;
+    }
+
+    /**
+     * Returns the service container.
+     *
+     * @return \BedRest\Service\LocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * Sets the ServiceMetadataFactory instance.
+     *
+     * @param \BedRest\Service\Mapping\ServiceMetadataFactory $factory
+     */
+    public function setServiceMetadataFactory(ServiceMetadataFactory $factory)
+    {
+        $this->serviceMetadataFactory = $factory;
+    }
+
+    /**
+     * Returns the service metadata factory.
+     *
+     * @return \BedRest\Service\Mapping\ServiceMetadataFactory
+     */
+    public function getServiceMetadataFactory()
+    {
+        return $this->serviceMetadataFactory;
+    }
+
+    /**
      * Creates and prepares a new Response object, using the supplied Request object where needed.
      *
      * @param  \BedRest\Rest\Request\Request   $request
@@ -173,16 +201,11 @@ class RestManager
     {
         $response = $this->createResponse($request);
 
-        // get information about the requested resource
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
 
-        // get the service and data mapper
-        $serviceManager = $this->getServiceManager();
-        $serviceMetadata = $serviceManager->getServiceMetadata($resourceMetadata->getService());
-        $service = $serviceManager->getService($resourceMetadata);
-        $dataMapper = $serviceManager->getDataMapper($resourceMetadata->getService());
+        $service = $this->serviceLocator->get($resourceMetadata->getService());
+        $serviceMetadata = $this->serviceMetadataFactory->getMetadataFor(get_class($service));
 
-        // handle the request
         $listeners = $serviceMetadata->getListeners($request->getMethod());
 
         $data = array();
@@ -194,9 +217,7 @@ class RestManager
             $data = reset($data);
         }
 
-        // compose the response body to desired depth
-        $mapDepth = (int) $request->getParameter('depth', 1);
-        $response->setContent($dataMapper->reverse($data, $mapDepth));
+        $response->setContent($data);
 
         // TODO: generate additional response information (ETag, Cache-Control etc)
         return $response;
