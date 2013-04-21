@@ -22,5 +22,4 @@ namespace BedRest\Content\Negotiation;
  */
 class Exception extends \RuntimeException
 {
-
 }

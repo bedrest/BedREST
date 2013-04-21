@@ -28,27 +28,22 @@ namespace BedRest\Rest;
 class Configuration
 {
     /**
-     * Default service class name.
+     * Default service name.
+     * 
      * @var string
      */
-    protected $defaultService = 'BedRest\Model\Doctrine\Service';
-
-    /**
-     * Allowable content types with associated converters.
-     * @var array
-     */
-    protected $contentTypes = array(
-        'application/json'
-    );
+    protected $defaultService = 'default_service';
 
     /**
      * Array of paths where resources should be auto-discovered.
+     * 
      * @var array
      */
     protected $resourcePaths = array();
 
     /**
-     * Sets the default service class name.
+     * Sets the default service name.
+     * 
      * @param string $className
      */
     public function setDefaultService($className)
@@ -58,6 +53,7 @@ class Configuration
 
     /**
      * Returns the default service class name.
+     * 
      * @return string
      */
     public function getDefaultService()
@@ -66,25 +62,8 @@ class Configuration
     }
 
     /**
-     * Sets the allowed content types for responses.
-     * @param array $contentTypes
-     */
-    public function setContentTypes(array $contentTypes)
-    {
-        $this->contentTypes = $contentTypes;
-    }
-
-    /**
-     * Returns the allowable content types for responses.
-     * @return array
-     */
-    public function getContentTypes()
-    {
-        return $this->contentTypes;
-    }
-
-    /**
      * Sets a group of paths in which resources can be auto-discovered.
+     * 
      * @param array $paths
      */
     public function setResourcePaths(array $paths)
@@ -94,6 +73,7 @@ class Configuration
 
     /**
      * Returns the paths in which resources can be auto-discovered.
+     * 
      * @return array
      */
     public function getResourcePaths()

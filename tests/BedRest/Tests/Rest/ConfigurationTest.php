@@ -14,19 +14,6 @@ use BedRest\Rest\Configuration;
  */
 class ConfigurationTest extends BaseTestCase
 {
-    public function testContentTypes()
-    {
-        $config = new Configuration();
-        $contentTypes = array(
-            'application/json',
-            'text/xml'
-        );
-
-        $config->setContentTypes($contentTypes);
-
-        $this->assertEquals($contentTypes, $config->getContentTypes());
-    }
-
     public function testDefaultService()
     {
         $config = new Configuration();
