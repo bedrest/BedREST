@@ -70,7 +70,7 @@ class Negotiator
      */
     public function negotiate($content, MediaTypeList $mediaTypeList)
     {
-        $contentType = $mediaTypeList->getBestMatch($this->supportedMediaTypes);
+        $contentType = $mediaTypeList->getBestMatch(array_keys($this->supportedMediaTypes));
         if (!$contentType) {
             throw new Exception('A suitable Content-Type could not be found.');
         }

@@ -87,6 +87,7 @@ class NegotiatorTest extends BaseTestCase
         $mediaTypeList = $this->getMock('BedRest\Content\Negotiation\MediaTypeList', array(), array(), '', false);
         $mediaTypeList->expects($this->any())
             ->method('getBestMatch')
+            ->with(array_keys($supportedMediaTypes))
             ->will($this->returnValue('application/json'));
 
         $result = $this->negotiator->negotiate(null, $mediaTypeList);
@@ -107,7 +108,7 @@ class NegotiatorTest extends BaseTestCase
         $mediaTypeList = $this->getMock('BedRest\Content\Negotiation\MediaTypeList', array(), array(), '', false);
         $mediaTypeList->expects($this->any())
             ->method('getBestMatch')
-            ->with($supportedMediaTypes)
+            ->with(array_keys($supportedMediaTypes))
             ->will($this->returnValue('application/json'));
 
         $result = $this->negotiator->negotiate(null, $mediaTypeList);
@@ -127,7 +128,7 @@ class NegotiatorTest extends BaseTestCase
         $mediaTypeList = $this->getMock('BedRest\Content\Negotiation\MediaTypeList', array(), array(), '', false);
         $mediaTypeList->expects($this->any())
             ->method('getBestMatch')
-            ->with($supportedMediaTypes)
+            ->with(array_keys($supportedMediaTypes))
             ->will($this->returnValue(false));
 
         $this->setExpectedException('BedRest\Content\Negotiation\Exception');
@@ -146,6 +147,7 @@ class NegotiatorTest extends BaseTestCase
         $mediaTypeList = $this->getMock('BedRest\Content\Negotiation\MediaTypeList', array(), array(), '', false);
         $mediaTypeList->expects($this->any())
             ->method('getBestMatch')
+            ->with(array_keys($supportedMediaTypes))
             ->will($this->returnValue('application/json'));
 
         $content = 'raw_data';
