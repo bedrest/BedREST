@@ -16,7 +16,6 @@
 namespace BedRest\Resource\Mapping;
 
 use BedRest\Resource\Mapping\Driver\Driver;
-use BedRest\Rest\Configuration;
 use BedRest\Resource\Mapping\Exception;
 use Doctrine\Common\Cache\Cache;
 
@@ -40,13 +39,6 @@ class ResourceMetadataFactory
      * @var string
      */
     protected $cacheSuffix = '\$RESOURCEMETADATA';
-
-    /**
-     * Configuration object.
-     *
-     * @var \BedRest\Rest\Configuration
-     */
-    protected $configuration;
 
     /**
      * Cache driver to use.
@@ -78,15 +70,12 @@ class ResourceMetadataFactory
 
     /**
      * Constructor.
-     * Initialises the factory with the set configuration.
      *
-     * @param \BedRest\Rest\Configuration             $configuration
      * @param \BedRest\Resource\Mapping\Driver\Driver $driver
      * @param \Doctrine\Common\Cache\Cache            $cache
      */
-    public function __construct(Configuration $configuration, Driver $driver, Cache $cache = null)
+    public function __construct(Driver $driver, Cache $cache = null)
     {
-        $this->configuration = $configuration;
         $this->driver = $driver;
         $this->cache = $cache;
     }
@@ -187,12 +176,9 @@ class ResourceMetadataFactory
     protected function loadMetadata($className)
     {
         $resource = new ResourceMetadata($className);
-        $resource->setService($this->configuration->getDefaultService());
 
-        // use the driver to load metadata
         $this->driver->loadMetadataForClass($className, $resource);
 
-        // store the metadata
         $this->loadedMetadata[$className] = $resource;
         $this->resourceClassMap[$resource->getName()] = $className;
     }

@@ -5,18 +5,15 @@ namespace BedRest\Tests\Resource\Mapping;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Resource\Mapping\Driver\AnnotationDriver;
 use BedRest\TestFixtures\Mocks\TestCache;
-use BedRest\Tests\FunctionalModelTestCase;
+use BedRest\Tests\BaseTestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * ResourceMetadataFactoryTest
  *
  * @author Geoff Adams <geoff@dianode.net>
- *
- * @todo This is a functional test suite, can be refactored to be a true unit test.
- * @todo Remove references to $this->getConfiguration()
  */
-class ResourceMetadataFactoryTest extends FunctionalModelTestCase
+class ResourceMetadataFactoryTest extends BaseTestCase
 {
     /**
      * Class under test.
@@ -37,8 +34,6 @@ class ResourceMetadataFactoryTest extends FunctionalModelTestCase
      */
     protected function createFactory()
     {
-        $configuration = $this->getConfiguration();
-
         $reader = new AnnotationReader();
         $driver = new AnnotationDriver($reader);
         $driver->addPaths(
@@ -48,7 +43,7 @@ class ResourceMetadataFactoryTest extends FunctionalModelTestCase
             )
         );
 
-        return new ResourceMetadataFactory($configuration, $driver);
+        return new ResourceMetadataFactory($driver);
     }
 
     public function testGetMetadata()
@@ -95,13 +90,11 @@ class ResourceMetadataFactoryTest extends FunctionalModelTestCase
 
     public function testGetMetadataWithDefaultValues()
     {
-        $config = $this->getConfiguration();
         $meta = $this->factory->getMetadataByResourceName('defaults');
 
         $this->assertInstanceOf('BedRest\Resource\Mapping\ResourceMetadata', $meta);
 
         $this->assertEquals('defaults', $meta->getName());
-        $this->assertEquals($config->getDefaultService(), $meta->getService());
     }
 
     public function testCache()

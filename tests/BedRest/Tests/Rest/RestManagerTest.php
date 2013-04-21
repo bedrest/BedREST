@@ -35,13 +35,7 @@ class RestManagerTest extends BaseTestCase
     {
         parent::setUp();
 
-        $this->configuration = $this->getMock('BedRest\Rest\Configuration');
-        $this->configuration
-            ->expects($this->any())
-            ->method('getContentTypes')
-            ->will($this->returnValue(array('application/json')));
-
-        $this->restManager = new RestManager($this->configuration);
+        $this->restManager = new RestManager();
     }
 
     /**
@@ -90,14 +84,6 @@ class RestManagerTest extends BaseTestCase
         );
 
         return $factory;
-    }
-
-    public function testConfiguration()
-    {
-        $config = $this->getMock('BedRest\Rest\Configuration');
-        $restManager = new RestManager($config);
-
-        $this->assertEquals($config, $restManager->getConfiguration());
     }
 
     public function testResourceMetadata()

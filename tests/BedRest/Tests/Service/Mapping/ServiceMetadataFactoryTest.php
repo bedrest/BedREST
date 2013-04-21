@@ -2,22 +2,19 @@
 
 namespace BedRest\Tests\Service\Mapping;
 
-use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 use BedRest\Service\Mapping\Driver\AnnotationDriver;
 use BedRest\TestFixtures\Mocks\TestCache;
 use BedRest\TestFixtures\Services\Company\Employee as EmployeeService;
-use BedRest\Tests\FunctionalModelTestCase;
+use BedRest\Tests\BaseTestCase;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
  * ServiceMetadataFactoryTest
  *
  * @author Geoff Adams <geoff@dianode.net>
- *
- * @todo This is a functional test suite, can be refactored to be a true unit test.
  */
-class ServiceMetadataFactoryTest extends FunctionalModelTestCase
+class ServiceMetadataFactoryTest extends BaseTestCase
 {
     /**
      * Class under test.

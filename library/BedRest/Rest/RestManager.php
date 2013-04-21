@@ -18,7 +18,6 @@ namespace BedRest\Rest;
 use BedRest\Content\Negotiation\Negotiator;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
-use BedRest\Rest\Configuration;
 use BedRest\Rest\Request\Request;
 use BedRest\Rest\Response\Response;
 use BedRest\Service\LocatorInterface;
@@ -35,11 +34,6 @@ use BedRest\Service\Mapping\ServiceMetadataFactory;
  */
 class RestManager
 {
-    /**
-     * @var \BedRest\Rest\Configuration
-     */
-    protected $configuration;
-
     /**
      * @var \BedRest\Content\Negotiation\Negotiator
      */
@@ -61,33 +55,20 @@ class RestManager
     protected $serviceMetadataFactory;
 
     /**
-     * Constructor.
+     * Sets the content negotiator instance for negotiating response content.
      *
-     * @param \BedRest\Rest\Configuration $configuration
-     *
-     * @return \BedRest\Rest\RestManager
+     * @param \BedRest\Content\Negotiation\Negotiator $negotiator
      */
-    public function __construct(
-        Configuration $configuration
-    ) {
-        $this->configuration = $configuration;
-    }
-
-    /**
-     * Returns the configuration object.
-     *
-     * @return \BedRest\Rest\Configuration
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
-    }
-
     public function setContentNegotiator(Negotiator $negotiator)
     {
         $this->contentNegotiator = $negotiator;
     }
 
+    /**
+     * Returns the content negotiator.
+     *
+     * @return \BedRest\Content\Negotiation\Negotiator
+     */
     public function getContentNegotiator()
     {
         return $this->contentNegotiator;

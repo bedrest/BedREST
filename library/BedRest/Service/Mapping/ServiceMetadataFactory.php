@@ -63,7 +63,6 @@ class ServiceMetadataFactory
 
     /**
      * Constructor.
-     * Initialises the factory with the set configuration.
      *
      * @param \BedRest\Service\Mapping\Driver\Driver $driver
      * @param \Doctrine\Common\Cache\Cache           $cache

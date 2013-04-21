@@ -13,7 +13,7 @@ namespace BedRest\Resource\Mapping\Annotation;
 class Handler
 {
     /**
-     * Fully-qualified class name (without preceding slash) of the service for this resource.
+     * Name of the service for this resource.
      * @var string
      */
     public $service;
