@@ -75,14 +75,54 @@ class Negotiator
             throw new Exception('A suitable Content-Type could not be found.');
         }
 
-        // TODO: this should use a service locator of some description
-        $converterClass = $this->supportedMediaTypes[$contentType];
-        $converter = new $converterClass;
-
         $result = new NegotiatedResult();
         $result->contentType = $contentType;
-        $result->content = $converter->encode($content);
+        $result->content = $this->encode($content, $contentType);
 
         return $result;
+    }
+
+    /**
+     * @todo This should use a service locator.
+     * 
+     * @param string $contentType
+     * 
+     * @return mixed
+     */
+    protected function getConverter($contentType)
+    {
+        if (!isset($this->supportedMediaTypes[$contentType])) {
+            throw new Exception("No converter found for content type '$contentType'");
+        }
+        
+        $converterClass = $this->supportedMediaTypes[$contentType];
+
+        return new $converterClass;
+    }
+
+    /**
+     * @param mixed  $content
+     * @param string $contentType
+     * 
+     * @return mixed
+     */
+    public function encode($content, $contentType)
+    {
+        $converter = $this->getConverter($contentType);
+        
+        return $converter->encode($content);
+    }
+
+    /**
+     * @param mixed  $content
+     * @param string $contentType
+     * 
+     * @return mixed
+     */
+    public function decode($content, $contentType)
+    {
+        $converter = $this->getConverter($contentType);
+
+        return $converter->decode($content);
     }
 }

@@ -17,7 +17,7 @@ set_include_path(
     )
 );
 
-// Load the Composer autoloader and point it at the TCol namespace
+// Load the Composer autoloader and point it at the BedREST namespaces
 require_once VENDOR_PATH . '/autoload.php';
 $loader = new Composer\Autoload\ClassLoader();
 
