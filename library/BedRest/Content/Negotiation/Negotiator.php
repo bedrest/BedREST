@@ -84,9 +84,9 @@ class Negotiator
 
     /**
      * @todo This should use a service locator.
-     * 
+     *
      * @param string $contentType
-     * 
+     *
      * @return mixed
      */
     protected function getConverter($contentType)
@@ -94,7 +94,7 @@ class Negotiator
         if (!isset($this->supportedMediaTypes[$contentType])) {
             throw new Exception("No converter found for content type '$contentType'");
         }
-        
+
         $converterClass = $this->supportedMediaTypes[$contentType];
 
         return new $converterClass;
@@ -103,20 +103,20 @@ class Negotiator
     /**
      * @param mixed  $content
      * @param string $contentType
-     * 
+     *
      * @return mixed
      */
     public function encode($content, $contentType)
     {
         $converter = $this->getConverter($contentType);
-        
+
         return $converter->encode($content);
     }
 
     /**
      * @param mixed  $content
      * @param string $contentType
-     * 
+     *
      * @return mixed
      */
     public function decode($content, $contentType)

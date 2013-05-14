@@ -13,7 +13,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once __DIR__ . '/Annotation/Handler.php';
-require_once __DIR__ . '/Annotation/Property.php';
-require_once __DIR__ . '/Annotation/Resource.php';
-require_once __DIR__ . '/Annotation/SubResource.php';
+namespace BedRest\Resource\Mapping\Annotation;
+
+/**
+ * SubResource
+ *
+ * @author Geoff Adams <geoff@dianode.net>
+ *
+ * @Annotation
+ * @Target("PROPERTY")
+ */
+class SubResource
+{
+    /**
+     * Resource name, used for routing, amongst other things.
+     * @var string
+     */
+    public $name;
+}

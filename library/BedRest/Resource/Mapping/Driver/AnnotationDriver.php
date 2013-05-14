@@ -15,6 +15,7 @@
 
 namespace BedRest\Resource\Mapping\Driver;
 
+use BedRest\Mapping\Driver\AbstractAnnotationDriver;
 use BedRest\Resource\Mapping\Exception;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\Driver\Driver;
@@ -26,7 +27,7 @@ use Doctrine\Common\Inflector\Inflector;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class AnnotationDriver implements Driver
+class AnnotationDriver extends AbstractAnnotationDriver implements Driver
 {
     /**
      * Annotation reader instance.
@@ -85,19 +86,14 @@ class AnnotationDriver implements Driver
         $reflClass = new \ReflectionClass($className);
 
         $classAnnotations = $this->reader->getClassAnnotations($reflClass);
+        $classAnnotations = $this->indexAnnotationsByType($classAnnotations);
 
-        // if we are receiving annotations indexed by number, transform it to by class name
-        if ($classAnnotations && is_numeric(key($classAnnotations))) {
-            foreach ($classAnnotations as $annotation) {
-                $classAnnotations[get_class($annotation)] = $annotation;
-            }
-        }
+        $resourceAnnotation = $this->getAnnotation(
+            $classAnnotations,
+            'BedRest\Resource\Mapping\Annotation\Resource'
+        );
 
-        // load headline resource information
-        if (isset($classAnnotations['BedRest\Resource\Mapping\Annotation\Resource'])) {
-            $resourceAnnotation = $classAnnotations['BedRest\Resource\Mapping\Annotation\Resource'];
-
-            // resource name
+        if ($resourceAnnotation !== false) {
             if (!empty($resourceAnnotation->name)) {
                 $resourceMetadata->setName($resourceAnnotation->name);
             } else {
@@ -106,15 +102,31 @@ class AnnotationDriver implements Driver
             }
         }
 
-        // load handler information
-        if (isset($classAnnotations['BedRest\Resource\Mapping\Annotation\Handler'])) {
-            $handlerAnnotation = $classAnnotations['BedRest\Resource\Mapping\Annotation\Handler'];
-
-            // service
+        $handlerAnnotation = $this->getAnnotation($classAnnotations, 'BedRest\Resource\Mapping\Annotation\Handler');
+        if ($handlerAnnotation !== false) {
             if (!empty($handlerAnnotation->service)) {
                 $resourceMetadata->setService($handlerAnnotation->service);
             }
         }
+
+        // properties
+        $subResources = array();
+
+        foreach ($reflClass->getProperties() as $reflProp) {
+            $propAnnotations = $this->reader->getPropertyAnnotations($reflProp);
+            $propAnnotations = $this->indexAnnotationsByType($propAnnotations);
+
+            $subResourceAnnotation = $this->getAnnotation(
+                $propAnnotations,
+                'BedRest\Resource\Mapping\Annotation\SubResource'
+            );
+
+            if ($subResourceAnnotation !== false) {
+                $subResources[$subResourceAnnotation->name] = $reflProp->name;
+            }
+        }
+
+        $resourceMetadata->setSubResources($subResources);
     }
 
     /**

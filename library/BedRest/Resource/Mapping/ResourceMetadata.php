@@ -47,6 +47,12 @@ class ResourceMetadata
     protected $identifierFields = array();
 
     /**
+     * A set of allowable sub-resources belonging to this resource.
+     * @var array
+     */
+    protected $subResources = array();
+
+    /**
      * Constructor.
      * @param $className
      * @return \BedRest\Resource\Mapping\ResourceMetadata
@@ -108,5 +114,41 @@ class ResourceMetadata
     public function getClassName()
     {
         return $this->className;
+    }
+
+    /**
+     * Sets the set of allowable sub-resources.
+     * @param  array                               $subResources
+     * @throws \BedRest\Resource\Mapping\Exception
+     */
+    public function setSubResources(array $subResources)
+    {
+        // ensure we have an associative array
+        if (!empty($subResources) && (array_values($subResources) === $subResources)) {
+            throw Exception::invalidSubResources($this->className);
+        }
+
+        $this->subResources = $subResources;
+    }
+
+    /**
+     * Returns the set of allowable sub-resources.
+     * @return array
+     */
+    public function getSubResources()
+    {
+        return $this->subResources;
+    }
+
+    /**
+     * Whether the specified sub-resource exists or not.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasSubResource($name)
+    {
+        return isset($this->subResources[$name]);
     }
 }

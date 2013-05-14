@@ -23,8 +23,10 @@ namespace BedRest\Resource\Mapping;
 class Exception extends \Exception
 {
     /**
-     * Exception for when a class is not a mapped resource.
-     * @param  string                              $className
+     * Thrown when a class is not a mapped resource.
+     *
+     * @param string $className
+     *
      * @return \BedRest\Resource\Mapping\Exception
      */
     public static function classIsNotMappedResource($className)
@@ -33,8 +35,10 @@ class Exception extends \Exception
     }
 
     /**
-     * Exception for when a resource cannot be found.
-     * @param  string                              $resourceName
+     * Thrown when a resource cannot be found.
+     *
+     * @param string $resourceName
+     *
      * @return \BedRest\Resource\Mapping\Exception
      */
     public static function resourceNotFound($resourceName)
@@ -43,7 +47,8 @@ class Exception extends \Exception
     }
 
     /**
-     * Exception for when no paths have been supplied.
+     * Thrown when no paths have been supplied.
+     *
      * @return \BedRest\Resource\Mapping\Exception
      */
     public static function pathsRequired()
@@ -52,12 +57,26 @@ class Exception extends \Exception
     }
 
     /**
-     * Exception for when an invalid path has been supplied.
+     * Thrown when an invalid path has been supplied.
+     *
      * @param $path
+     *
      * @return \BedRest\Resource\Mapping\Exception
      */
     public static function invalidPath($path)
     {
         return new self("The path '{$path}' is invalid.");
+    }
+
+    /**
+     * Thrown when a set of invalid sub-resources have been supplied.
+     *
+     * @param string $className
+     *
+     * @return \BedRest\Resource\Mapping\Exception
+     */
+    public static function invalidSubResources($className)
+    {
+        return new self("Invalid set of sub-resources supplied for class '$className''.");
     }
 }

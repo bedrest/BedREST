@@ -15,6 +15,7 @@
 
 namespace BedRest\Service\Mapping\Driver;
 
+use BedRest\Mapping\Driver\AbstractAnnotationDriver;
 use BedRest\Service\Mapping\Exception;
 use BedRest\Service\Mapping\ServiceMetadata;
 use BedRest\Service\Mapping\Driver\Driver;
@@ -25,7 +26,7 @@ use Doctrine\Common\Annotations\Reader;
  *
  * @author Geoff Adams <geoff@dianode.net>
  */
-class AnnotationDriver implements Driver
+class AnnotationDriver extends AbstractAnnotationDriver implements Driver
 {
     const ANNOTATION_SERVICE = 'BedRest\Service\Mapping\Annotation\Service';
     const ANNOTATION_LISTENER = 'BedRest\Service\Mapping\Annotation\Listener';
@@ -90,8 +91,9 @@ class AnnotationDriver implements Driver
         $classAnnotations = $this->indexAnnotationsByType($classAnnotations);
 
         // load headline service information
-        if (!isset($classAnnotations[self::ANNOTATION_SERVICE])) {
-            // @todo Throw exception here?
+        $serviceAnnotation = $this->getAnnotation($classAnnotations, self::ANNOTATION_SERVICE);
+        if ($serviceAnnotation === false) {
+            throw Exception::classIsNotMappedService($className);
         }
 
         // process events
@@ -100,13 +102,13 @@ class AnnotationDriver implements Driver
             $methodAnnotations = $this->indexAnnotationsByType($methodAnnotations);
 
             // process listeners
-            if (isset($methodAnnotations[self::ANNOTATION_LISTENER])) {
-                if (!is_array($methodAnnotations[self::ANNOTATION_LISTENER])) {
-                    $methodAnnotations[self::ANNOTATION_LISTENER]
-                        = array($methodAnnotations[self::ANNOTATION_LISTENER]);
+            $listenerAnnotations = $this->getAnnotation($methodAnnotations, self::ANNOTATION_LISTENER);
+            if ($listenerAnnotations !== false) {
+                if (!is_array($listenerAnnotations)) {
+                    $listenerAnnotations = array($listenerAnnotations);
                 }
 
-                foreach ($methodAnnotations[self::ANNOTATION_LISTENER] as $listenerAnnotation) {
+                foreach ($listenerAnnotations as $listenerAnnotation) {
                     // ensure we don't double-up listener entries
                     $existingListeners = $serviceMetadata->getListeners($listenerAnnotation->event);
                     if (!in_array($reflMethod->getName(), $existingListeners)) {
@@ -173,37 +175,11 @@ class AnnotationDriver implements Driver
      */
     public function isService($className)
     {
-        $annotation = $this->reader->getClassAnnotation(
-            new \ReflectionClass($className),
-            'BedRest\Service\Mapping\Annotation\Service'
-        );
-
-        if ($annotation) {
+        $annotation = $this->reader->getClassAnnotation(new \ReflectionClass($className), self::ANNOTATION_SERVICE);
+        if (!empty($annotation)) {
             return true;
         }
 
         return false;
-    }
-
-    protected function indexAnnotationsByType($annotations)
-    {
-        $indexed = array();
-
-        // if we are receiving annotations indexed by number, transform it to by class name
-        if ($annotations && is_numeric(key($annotations))) {
-            foreach ($annotations as $annotation) {
-                $annotationType = get_class($annotation);
-
-                if (isset($indexed[$annotationType]) && !is_array($indexed[$annotationType])) {
-                    $indexed[$annotationType] = array($indexed[$annotationType], $annotation);
-                } elseif (isset($indexed[$annotationType])) {
-                    $indexed[$annotationType][] = $annotation;
-                } else {
-                    $indexed[$annotationType] = $annotation;
-                }
-            }
-        }
-
-        return $indexed;
     }
 }

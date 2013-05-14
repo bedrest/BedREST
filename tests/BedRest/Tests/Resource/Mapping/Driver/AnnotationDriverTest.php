@@ -71,4 +71,18 @@ class AnnotationDriverTest extends BaseTestCase
 
         $this->assertEquals('employee', $rm->getName());
     }
+
+    public function testSubResources()
+    {
+        $this->driver->addPath(TESTS_BASEDIR . '/BedRest/TestFixtures/Models/Company/');
+
+        $modelClass = 'BedRest\TestFixtures\Models\Company\Employee';
+        $rm = new ResourceMetadata($modelClass);
+        $this->driver->loadMetadataForClass($modelClass, $rm);
+
+        $subResources = array(
+            'assets' => 'Assets'
+        );
+        $this->assertEquals($subResources, $rm->getSubResources());
+    }
 }

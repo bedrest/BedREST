@@ -53,6 +53,7 @@ class Employee
     /**
      * Assets associated with this employee.
      * @var \Doctrine\Common\Collections\Collection
+     * @BedRest\SubResource(name="assets")
      */
     protected $Assets;
 

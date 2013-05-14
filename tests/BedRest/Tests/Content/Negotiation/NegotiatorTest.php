@@ -158,19 +158,19 @@ class NegotiatorTest extends BaseTestCase
         $this->assertEquals('application/json', $result->contentType);
         $this->assertEquals('encoded_data', $result->content);
     }
-    
+
     public function testEncodeUsesCorrectConverter()
     {
         $supportedMediaTypes = array(
             'application/json' => 'BedRest\TestFixtures\Mocks\Content\Converter\Dummy'
         );
-        
+
         $this->negotiator->setSupportedMediaTypes($supportedMediaTypes);
-        
+
         $result = $this->negotiator->encode('raw_data', 'application/json');
         $this->assertEquals('encoded_data', $result);
     }
-    
+
     public function testDecodeUsesCorrectConverter()
     {
         $supportedMediaTypes = array(
@@ -182,13 +182,13 @@ class NegotiatorTest extends BaseTestCase
         $result = $this->negotiator->decode('raw_data', 'application/json');
         $this->assertEquals('decoded_data', $result);
     }
-    
+
     public function testEncodeWithInvalidContentTypeThrowsException()
     {
         $this->setExpectedException('\BedRest\Content\Negotiation\Exception');
         $this->negotiator->encode('raw_data', 'application/json');
     }
-    
+
     public function testDecodeWithInvalidContentTypeThrowsException()
     {
         $this->setExpectedException('\BedRest\Content\Negotiation\Exception');

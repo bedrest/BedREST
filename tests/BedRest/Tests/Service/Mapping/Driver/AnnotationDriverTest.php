@@ -58,4 +58,12 @@ class AnnotationDriverTest extends BaseTestCase
         $this->assertContains('testpath', $paths);
         $this->assertContains('testpath2', $paths);
     }
+
+    public function testLoadMetadataForInvalidServiceThrowsException()
+    {
+        $this->setExpectedException('BedRest\Service\Mapping\Exception');
+
+        $sm = $this->getMock('BedRest\Service\Mapping\ServiceMetadata', array(), array(), '', false);
+        $this->driver->loadMetadataForClass('BedRest\TestFixtures\Services\InvalidService', $sm);
+    }
 }
