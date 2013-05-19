@@ -13,7 +13,8 @@
         "doctrine/cache": ">=1",
         "doctrine/annotations": ">=1",
         "doctrine/inflector": ">=1",
-        "symfony/dependency-injection": ">=2.1.0"
+        "symfony/dependency-injection": ">=2.1.0",
+        "bedrest/events": "v0.1.2"
     },
     "require-dev": {
         "phing/phing": ">=2.5.0",

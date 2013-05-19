@@ -18,26 +18,25 @@ namespace BedRest\Rest;
 use BedRest\Content\Negotiation\Negotiator;
 use BedRest\Resource\Mapping\ResourceMetadata;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
+use BedRest\Rest\Event\Event;
 use BedRest\Rest\Request\Request;
 use BedRest\Rest\Response\Response;
 use BedRest\Service\LocatorInterface;
 use BedRest\Service\Mapping\ServiceMetadataFactory;
 
 /**
- * RestManager
+ * Dispatcher
  *
  * Responsible for dispatching REST actions to the correct services. Sits between controllers and the service layer.
  *
  * @author Geoff Adams <geoff@dianode.net>
- *
- * @todo Should this be called a 'RequestHandler' since that is actually what it does?
  */
-class RestManager
+class Dispatcher
 {
     /**
-     * @var \BedRest\Content\Negotiation\Negotiator
+     * @var \BedRest\Events\EventManager
      */
-    protected $contentNegotiator;
+    protected $eventManager;
 
     /**
      * @var \BedRest\Resource\Mapping\ResourceMetadataFactory
@@ -55,33 +54,23 @@ class RestManager
     protected $serviceMetadataFactory;
 
     /**
-     * Sets the content negotiator instance for negotiating response content.
-     *
-     * @param \BedRest\Content\Negotiation\Negotiator $negotiator
+     * Returns the event manager.
+     * 
+     * @return \BedRest\Events\EventManager
      */
-    public function setContentNegotiator(Negotiator $negotiator)
+    public function getEventManager()
     {
-        $this->contentNegotiator = $negotiator;
+        return $this->eventManager;
     }
 
     /**
-     * Returns the content negotiator.
-     *
-     * @return \BedRest\Content\Negotiation\Negotiator
+     * Sets the event manager instance.
+     * 
+     * @param \BedRest\Events\EventManager $eventManager
      */
-    public function getContentNegotiator()
+    public function setEventManager($eventManager)
     {
-        return $this->contentNegotiator;
-    }
-
-    /**
-     * Sets the ResourceMetadataFactory used for retrieving resource metadata.
-     *
-     * @param \BedRest\Resource\Mapping\ResourceMetadataFactory $factory
-     */
-    public function setResourceMetadataFactory(ResourceMetadataFactory $factory)
-    {
-        $this->resourceMetadataFactory = $factory;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -92,6 +81,16 @@ class RestManager
     public function getResourceMetadataFactory()
     {
         return $this->resourceMetadataFactory;
+    }
+
+    /**
+     * Sets the ResourceMetadataFactory used for retrieving resource metadata.
+     *
+     * @param \BedRest\Resource\Mapping\ResourceMetadataFactory $factory
+     */
+    public function setResourceMetadataFactory(ResourceMetadataFactory $factory)
+    {
+        $this->resourceMetadataFactory = $factory;
     }
 
     /**
@@ -117,16 +116,6 @@ class RestManager
     }
 
     /**
-     * Sets the service container.
-     *
-     * @param \BedRest\Service\LocatorInterface $locator
-     */
-    public function setServiceLocator(LocatorInterface $locator)
-    {
-        $this->serviceLocator = $locator;
-    }
-
-    /**
      * Returns the service container.
      *
      * @return \BedRest\Service\LocatorInterface
@@ -137,13 +126,13 @@ class RestManager
     }
 
     /**
-     * Sets the ServiceMetadataFactory instance.
+     * Sets the service container.
      *
-     * @param \BedRest\Service\Mapping\ServiceMetadataFactory $factory
+     * @param \BedRest\Service\LocatorInterface $locator
      */
-    public function setServiceMetadataFactory(ServiceMetadataFactory $factory)
+    public function setServiceLocator(LocatorInterface $locator)
     {
-        $this->serviceMetadataFactory = $factory;
+        $this->serviceLocator = $locator;
     }
 
     /**
@@ -157,37 +146,51 @@ class RestManager
     }
 
     /**
+     * Sets the ServiceMetadataFactory instance.
+     *
+     * @param \BedRest\Service\Mapping\ServiceMetadataFactory $factory
+     */
+    public function setServiceMetadataFactory(ServiceMetadataFactory $factory)
+    {
+        $this->serviceMetadataFactory = $factory;
+    }
+
+    /**
      * Processes a REST request, returning a Response object.
      *
      * @param  \BedRest\Rest\Request\Request   $request
      * @throws \BedRest\Rest\Exception
      * @return \BedRest\Rest\Response\Response
      */
-    public function process(Request $request)
+    public function dispatch(Request $request)
     {
         $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
 
         $service = $this->serviceLocator->get($resourceMetadata->getService());
+        $this->registerListeners($service);
+        
+        $event = new Event();
+        $event->setRequest($request);
+        
+        $this->eventManager->dispatch($request->getMethod(), $event);
+        
+        return $event->getData();
+    }
+
+    /**
+     * Registers listeners for the supplied service instance. Listeners are obtained from ServiceMetadata for
+     * the class of the instance.
+     * 
+     * @param object $service
+     */
+    protected function registerListeners($service)
+    {
         $serviceMetadata = $this->serviceMetadataFactory->getMetadataFor(get_class($service));
 
-        $listeners = $serviceMetadata->getListeners($request->getMethod());
-
-        $data = array();
-        foreach ($listeners as $listener) {
-            $data = $service->$listener($request);
+        foreach ($serviceMetadata->getAllListeners() as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                $this->eventManager->addListeners($event, array($service, $listener));
+            }
         }
-
-        if (count($data) === 1) {
-            $data = reset($data);
-        }
-
-        $result = $this->contentNegotiator->negotiate($data, $request->getAccept());
-
-        $response = new Response();
-        $response->setContentType($result->contentType);
-        $response->setContent($result->content);
-
-        // TODO: generate additional response information (ETag, Cache-Control etc)
-        return $response;
     }
 }
