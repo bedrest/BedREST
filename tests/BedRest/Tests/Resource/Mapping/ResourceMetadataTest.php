@@ -40,8 +40,14 @@ class ResourceMetadataTest extends BaseTestCase
     public function testSubResources()
     {
         $subResources = array(
-            'sub1' => 'assoc1',
-            'sub2' => 'assoc2',
+            'sub1' => array(
+                'fieldName' => 'assoc1',
+                'service'   => null,
+            ),
+            'sub2' => array(
+                'fieldName' => 'assoc2',
+                'service'   => 'sub2Service'
+            )
         );
 
         $meta = new ResourceMetadata('Resource\Test');
@@ -57,6 +63,57 @@ class ResourceMetadataTest extends BaseTestCase
         $subResources = array(
             'sub1',
             'sub2',
+        );
+
+        $meta = new ResourceMetadata('Resource\Test');
+
+        $this->setExpectedException('BedRest\Resource\Mapping\Exception');
+        $meta->setSubResources($subResources);
+    }
+    
+    public function testSubResourcesEnforcesArrayValues()
+    {
+        $subResources = array(
+            'sub1' => 'not_an_array',
+        );
+        
+        $meta = new ResourceMetadata('Resource\Test');
+
+        $this->setExpectedException('BedRest\Resource\Mapping\Exception');
+        $meta->setSubResources($subResources);
+    }
+    
+    public function testSubResourcesEnforcesFullDataSetForEachEntry()
+    {
+        $providedSubResources = array(
+            'sub1' => array(
+                'fieldName' => 'assoc1',
+                'service'   => 'sub1Service',
+            ),
+            'sub2' => array(
+                'fieldName' => 'assoc2',
+            )
+        );
+        
+        $expectedSubResources = $providedSubResources;
+        $expectedSubResources['sub2']['service'] = null;
+
+        $meta = new ResourceMetadata('Resource\Test');
+        
+        $meta->setSubResources($providedSubResources);
+        $this->assertEquals($expectedSubResources, $meta->getSubResources());
+    }
+    
+    public function testSubResourceWithoutFieldNameThrowsException()
+    {
+        $subResources = array(
+            'sub1' => array(
+                'fieldName' => 'assoc1',
+                'service'   => 'sub1Service',
+            ),
+            'sub2' => array(
+                'service' => 'sub2Service',
+            )
         );
 
         $meta = new ResourceMetadata('Resource\Test');

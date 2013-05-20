@@ -26,8 +26,14 @@ namespace BedRest\Resource\Mapping\Annotation;
 class SubResource
 {
     /**
-     * Resource name, used for routing, amongst other things.
+     * Sub-resource name, used for routing, amongst other things.
      * @var string
      */
     public $name;
+
+    /**
+     * Service for handling this sub-resource.
+     * @var string
+     */
+    public $service;
 }

@@ -122,7 +122,10 @@ class AnnotationDriver extends AbstractAnnotationDriver implements Driver
             );
 
             if ($subResourceAnnotation !== false) {
-                $subResources[$subResourceAnnotation->name] = $reflProp->name;
+                $subResources[$subResourceAnnotation->name] = array(
+                    'fieldName' => $reflProp->name,
+                    'service'   => $subResourceAnnotation->service,
+                );
             }
         }
 

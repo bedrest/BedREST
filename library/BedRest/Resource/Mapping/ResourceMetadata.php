@@ -123,12 +123,21 @@ class ResourceMetadata
      */
     public function setSubResources(array $subResources)
     {
-        // ensure we have an associative array
-        if (!empty($subResources) && (array_values($subResources) === $subResources)) {
-            throw Exception::invalidSubResources($this->className);
+        foreach ($subResources as $name => $mapping) {
+            if (!is_string($name) || !is_array($mapping)) {
+                throw Exception::invalidSubResources($this->className);
+            }
+            
+            if (!isset($mapping['fieldName'])) {
+                throw Exception::invalidSubResources($this->className);
+            }
+            
+            if (!isset($mapping['service'])) {
+                $mapping['service'] = null;
+            }
+            
+            $this->subResources[$name] = $mapping;
         }
-
-        $this->subResources = $subResources;
     }
 
     /**

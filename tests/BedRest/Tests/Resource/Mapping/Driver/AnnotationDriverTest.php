@@ -81,7 +81,10 @@ class AnnotationDriverTest extends BaseTestCase
         $this->driver->loadMetadataForClass($modelClass, $rm);
 
         $subResources = array(
-            'assets' => 'Assets'
+            'assets' => array(
+                'fieldName' => 'Assets',
+                'service'   => 'EmployeeAssetsService'
+            )
         );
         $this->assertEquals($subResources, $rm->getSubResources());
     }
