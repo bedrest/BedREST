@@ -321,13 +321,6 @@ class DispatcherTest extends BaseTestCase
         $request->setResource($resourceName);
         $request->setMethod($method);
 
-        // register listeners for the event on both services
-        $event = $method;
-        $listener = strtolower($event) . 'Listener';
-
-        $this->testServiceMeta->addListener($event, $listener);
-        $this->testSubServiceMeta->addListener($event, $listener);
-
         // test an exception is thrown
         $this->setExpectedException('BedRest\Rest\Exception', '', 404);
 
@@ -353,13 +346,6 @@ class DispatcherTest extends BaseTestCase
         $request = new Request();
         $request->setResource('testResource/nonExistentSub');
         $request->setMethod($method);
-
-        // register listeners for the event on both services
-        $event = $method;
-        $listener = strtolower($event) . 'Listener';
-
-        $this->testServiceMeta->addListener($event, $listener);
-        $this->testSubServiceMeta->addListener($event, $listener);
 
         // test an exception is thrown
         $this->setExpectedException('BedRest\Rest\Exception', '', 404);
