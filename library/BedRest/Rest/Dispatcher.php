@@ -15,8 +15,7 @@
 
 namespace BedRest\Rest;
 
-use BedRest\Content\Negotiation\Negotiator;
-use BedRest\Resource\Mapping\ResourceMetadata;
+use BedRest\Resource\Mapping\Exception as ResourceMappingException;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
 use BedRest\Rest\Event\Event;
 use BedRest\Rest\Request\Request;
@@ -55,7 +54,7 @@ class Dispatcher
 
     /**
      * Returns the event manager.
-     * 
+     *
      * @return \BedRest\Events\EventManager
      */
     public function getEventManager()
@@ -65,7 +64,7 @@ class Dispatcher
 
     /**
      * Sets the event manager instance.
-     * 
+     *
      * @param \BedRest\Events\EventManager $eventManager
      */
     public function setEventManager($eventManager)
@@ -91,28 +90,6 @@ class Dispatcher
     public function setResourceMetadataFactory(ResourceMetadataFactory $factory)
     {
         $this->resourceMetadataFactory = $factory;
-    }
-
-    /**
-     * Returns resource metadata for a class.
-     *
-     * @param  string                                     $className
-     * @return \BedRest\Resource\Mapping\ResourceMetadata
-     */
-    public function getResourceMetadata($className)
-    {
-        return $this->resourceMetadataFactory->getMetadataFor($className);
-    }
-
-    /**
-     * Returns resource metadata by resource name.
-     *
-     * @param  string                                     $name
-     * @return \BedRest\Resource\Mapping\ResourceMetadata
-     */
-    public function getResourceMetadataByName($name)
-    {
-        return $this->resourceMetadataFactory->getMetadataByResourceName($name);
     }
 
     /**
@@ -164,23 +141,46 @@ class Dispatcher
      */
     public function dispatch(Request $request)
     {
-        $resourceMetadata = $this->getResourceMetadataByName($request->getResource());
+        // determine resource
+        $resourceParts = explode('/', $request->getResource());
+        $resourceName = $resourceParts[0];
+        $subResourceName = false;
+        if (count($resourceParts) > 1) {
+            $subResourceName = $resourceParts[1];
+        }
 
-        $service = $this->serviceLocator->get($resourceMetadata->getService());
+        try {
+            $resourceMetadata = $this->resourceMetadataFactory->getMetadataByResourceName($resourceName);
+        } catch (ResourceMappingException $e) {
+            throw Exception::resourceNotFound($resourceName, 404, $e);
+        }
+
+        // determine service
+        if ($subResourceName) {
+            if (!$resourceMetadata->hasSubResource($subResourceName)) {
+                throw Exception::resourceNotFound($request->getResource());
+            }
+
+            $subResourceMapping = $resourceMetadata->getSubResource($subResourceName);
+            $service = $this->serviceLocator->get($subResourceMapping['service']);
+        } else {
+            $service = $this->serviceLocator->get($resourceMetadata->getService());
+        }
+
         $this->registerListeners($service);
-        
+
         $event = new Event();
         $event->setRequest($request);
-        
+
         $this->eventManager->dispatch($request->getMethod(), $event);
-        
+
         return $event->getData();
     }
 
     /**
      * Registers listeners for the supplied service instance. Listeners are obtained from ServiceMetadata for
      * the class of the instance.
-     * 
+     *
      * @param object $service
      */
     protected function registerListeners($service)

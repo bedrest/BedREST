@@ -127,15 +127,15 @@ class ResourceMetadata
             if (!is_string($name) || !is_array($mapping)) {
                 throw Exception::invalidSubResources($this->className);
             }
-            
+
             if (!isset($mapping['fieldName'])) {
                 throw Exception::invalidSubResources($this->className);
             }
-            
+
             if (!isset($mapping['service'])) {
                 $mapping['service'] = null;
             }
-            
+
             $this->subResources[$name] = $mapping;
         }
     }
@@ -159,5 +159,21 @@ class ResourceMetadata
     public function hasSubResource($name)
     {
         return isset($this->subResources[$name]);
+    }
+
+    /**
+     * Retrieves a sub-resource by name.
+     *
+     * @param string $name
+     *
+     * @return array|null
+     */
+    public function getSubResource($name)
+    {
+        if ($this->hasSubResource($name)) {
+            return $this->subResources[$name];
+        }
+
+        return null;
     }
 }

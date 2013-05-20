@@ -22,6 +22,11 @@ namespace BedRest\Rest;
  */
 class Exception extends \Exception
 {
+    public static function resourceNotFound($resource, $code = 404, $previous = null)
+    {
+        return new self("Resource '$resource' Not Found'", $code, $previous);
+    }
+
     public static function methodNotAllowed()
     {
         return new self("Method Not Allowed", 405);

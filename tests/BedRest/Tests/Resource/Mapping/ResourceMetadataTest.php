@@ -56,6 +56,8 @@ class ResourceMetadataTest extends BaseTestCase
 
         $this->assertTrue($meta->hasSubResource('sub1'));
         $this->assertFalse($meta->hasSubResource('sub3'));
+
+        $this->assertEquals($subResources['sub1'], $meta->getSubResource('sub1'));
     }
 
     public function testSubResourcesEnforcesKeyValueMapping()
@@ -70,19 +72,19 @@ class ResourceMetadataTest extends BaseTestCase
         $this->setExpectedException('BedRest\Resource\Mapping\Exception');
         $meta->setSubResources($subResources);
     }
-    
+
     public function testSubResourcesEnforcesArrayValues()
     {
         $subResources = array(
             'sub1' => 'not_an_array',
         );
-        
+
         $meta = new ResourceMetadata('Resource\Test');
 
         $this->setExpectedException('BedRest\Resource\Mapping\Exception');
         $meta->setSubResources($subResources);
     }
-    
+
     public function testSubResourcesEnforcesFullDataSetForEachEntry()
     {
         $providedSubResources = array(
@@ -94,16 +96,16 @@ class ResourceMetadataTest extends BaseTestCase
                 'fieldName' => 'assoc2',
             )
         );
-        
+
         $expectedSubResources = $providedSubResources;
         $expectedSubResources['sub2']['service'] = null;
 
         $meta = new ResourceMetadata('Resource\Test');
-        
+
         $meta->setSubResources($providedSubResources);
         $this->assertEquals($expectedSubResources, $meta->getSubResources());
     }
-    
+
     public function testSubResourceWithoutFieldNameThrowsException()
     {
         $subResources = array(
