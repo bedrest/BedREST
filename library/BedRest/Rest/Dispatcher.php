@@ -189,7 +189,7 @@ class Dispatcher
 
         foreach ($serviceMetadata->getAllListeners() as $event => $listeners) {
             foreach ($listeners as $listener) {
-                $this->eventManager->addListeners($event, array($service, $listener));
+                $this->eventManager->addListener($event, array($service, $listener));
             }
         }
     }

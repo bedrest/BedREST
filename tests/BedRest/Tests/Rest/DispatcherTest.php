@@ -29,6 +29,9 @@ class DispatcherTest extends BaseTestCase
      */
     protected $testResourceMeta;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     protected $testService;
 
     /**
@@ -36,6 +39,9 @@ class DispatcherTest extends BaseTestCase
      */
     protected $testServiceMeta;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     protected $testSubService;
 
     /**
@@ -63,7 +69,9 @@ class DispatcherTest extends BaseTestCase
 
         $this->testService = $this->getMock(
             'BedRest\TestFixtures\Services\Company\Generic',
-            array(),
+            array(
+                'getListener'
+            ),
             array(),
             'testService'
         );
@@ -71,7 +79,9 @@ class DispatcherTest extends BaseTestCase
 
         $this->testSubService = $this->getMock(
             'BedRest\TestFixtures\Services\Company\Generic',
-            array(),
+            array(
+                'getListener'
+            ),
             array(),
             'testSubService'
         );
@@ -211,6 +221,48 @@ class DispatcherTest extends BaseTestCase
         );
     }
 
+    public function testDispatchBindsCallableListeners()
+    {
+        // configure the Dispatcher with the necessary dependencies
+        $this->dispatcher->setResourceMetadataFactory($this->getMockResourceMetadataFactory());
+        $this->dispatcher->setServiceMetadataFactory($this->getMockServiceMetadataFactory());
+        $this->dispatcher->setServiceLocator($this->getMockServiceLocator());
+
+        $eventManager = $this->getMock('BedRest\Events\EventManager');
+        $eventManager
+            ->expects($this->any())
+            ->method('dispatch');
+        $this->dispatcher->setEventManager($eventManager);
+
+        // form a basic request
+        $method = Type::METHOD_GET;
+
+        $request = new Request();
+        $request->setResource('testResource');
+        $request->setMethod($method);
+
+        // register listeners for the event
+        $event = $method;
+        $listener = strtolower($event) . 'Listener';
+
+        $this->testServiceMeta->addListener($event, $listener);
+
+        // test add listener is called with callables
+        $eventManager
+            ->expects($this->atLeastOnce())
+            ->method('addListener')
+            ->with(
+                $this->isType('string'),
+                $this->callback(
+                    function ($value) {
+                        return is_callable($value);
+                    }
+                )
+            );
+
+        $this->dispatcher->dispatch($request);
+    }
+
     /**
      * @dataProvider requests
      *
@@ -226,7 +278,7 @@ class DispatcherTest extends BaseTestCase
         $eventManager = $this->getMock('BedRest\Events\EventManager');
         $eventManager
             ->expects($this->any())
-            ->method('addListeners');
+            ->method('addListener');
         $this->dispatcher->setEventManager($eventManager);
 
         // form a basic request
@@ -279,7 +331,7 @@ class DispatcherTest extends BaseTestCase
         // test the right service has its listeners registered
         $eventManager
             ->expects($this->any())
-            ->method('addListeners')
+            ->method('addListener')
             ->with($event, array($this->testSubService, $listener));
 
         $this->dispatcher->dispatch($request);
