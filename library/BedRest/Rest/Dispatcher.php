@@ -17,7 +17,7 @@ namespace BedRest\Rest;
 
 use BedRest\Resource\Mapping\Exception as ResourceMappingException;
 use BedRest\Resource\Mapping\ResourceMetadataFactory;
-use BedRest\Rest\Event\Event;
+use BedRest\Rest\Event\RequestEvent;
 use BedRest\Rest\Request\Request;
 use BedRest\Rest\Response\Response;
 use BedRest\Service\LocatorInterface;
@@ -169,7 +169,7 @@ class Dispatcher
 
         $this->registerListeners($service);
 
-        $event = new Event();
+        $event = new RequestEvent();
         $event->setRequest($request);
 
         $this->eventManager->dispatch($request->getMethod(), $event);
